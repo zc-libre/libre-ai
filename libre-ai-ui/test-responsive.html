@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式边距测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 模拟修改后的样式 */
+        .test-container {
+            padding: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .test-container {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .test-container {
+                padding: 2rem;
+            }
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .test-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.25rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .test-grid {
+                gap: 1.25rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .test-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1280px) {
+            .test-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .test-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            min-height: 200px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (min-width: 768px) {
+            .test-card {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .test-card {
+                padding: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="test-container">
+        <h1 class="text-2xl font-bold mb-6">知识库管理 - 边距测试</h1>
+        
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-5 lg:p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">搜索表单区域</h2>
+            <p>这里模拟搜索表单的边距效果</p>
+        </div>
+        
+        <div class="test-grid">
+            <div class="test-card border-2 border-dashed border-blue-200">
+                <h3 class="font-semibold text-center">创建知识库</h3>
+                <p class="text-sm text-gray-500 text-center mt-2">创建新的知识库</p>
+            </div>
+            
+            <div class="test-card">
+                <h3 class="font-semibold">知识库 1</h3>
+                <p class="text-sm text-gray-500 mt-2">这是一个测试知识库</p>
+            </div>
+            
+            <div class="test-card">
+                <h3 class="font-semibold">知识库 2</h3>
+                <p class="text-sm text-gray-500 mt-2">这是另一个测试知识库</p>
+            </div>
+            
+            <div class="test-card">
+                <h3 class="font-semibold">知识库 3</h3>
+                <p class="text-sm text-gray-500 mt-2">第三个测试知识库</p>
+            </div>
+        </div>
+        
+        <div class="flex justify-center sm:justify-end mt-8 md:mt-10 lg:mt-12">
+            <div class="bg-white px-4 py-2 rounded border">分页组件</div>
+        </div>
+    </div>
+    
+    <div class="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded">
+        <span id="screen-size"></span>
+    </div>
+    
+    <script>
+        function updateScreenSize() {
+            const width = window.innerWidth;
+            const element = document.getElementById('screen-size');
+            element.textContent = `${width}px`;
+        }
+        
+        window.addEventListener('resize', updateScreenSize);
+        updateScreenSize();
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+server:
+  port: 9191
+
+
+
+spring:
+  datasource:
+    #    driver-class-name: org.postgresql.Driver
+    #    url: jdbc:postgresql://127.0.0.1:5432/libre?reWriteBatchedInserts=true
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/libre_ai
+    username: libre
+    password: ***REMOVED***
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 1000000
+      maximum-pool-size: 5
+      max-lifetime: 0
+      minimum-idle: 1
+      connection-test-query: SELECT 1
+
+# Dashboard Generator模块配置
+# 遵循配置外部化原则：所有配置通过环境变量或配置文件管理
+dashboard:
+  # OpenAI配置
+  openai:
+    # API密钥，建议通过环境变量OPENAI_API_KEY设置
+    api-key: ${OPENAI_API_KEY:sk-dhyxvZsb9SY9UnTvZq3cE4Nq1f0cRMBEdx98EyZKQLOnVYtY}
+    # API基础URL，支持代理或自定义端点
+    base-url: ${OPENAI_BASE_URL:https://api.zclibre.org/v1}
+    # 使用的模型名称
+    model-name: ${OPENAI_MODEL_NAME:qwen3}
+
+    # 温度参数，控制输出随机性（0-1）
+    temperature: ${OPENAI_TEMPERATURE:1}
+    # 最大输出token数
+    max-tokens: ${OPENAI_MAX_TOKENS:12800}
+
+  # 代码生成配置
+  generation:
+    # AI调用超时时间（秒）
+    timeout: ${DASHBOARD_TIMEOUT:120000}
+    # 最大重试次数
+    max-retries: ${DASHBOARD_MAX_RETRIES:3}
+    # 是否启用结果缓存
+    enable-cache: ${DASHBOARD_ENABLE_CACHE:false}
+
+# 日志配置（可选）
+logging:
+  level:
+    org.libre.ai.modules.dashboard: debug
+    dev.langchain4j: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

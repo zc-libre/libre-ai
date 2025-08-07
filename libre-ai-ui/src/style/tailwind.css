@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .flex-c {
+    @apply flex justify-center items-center;
+  }
+
+  .flex-ac {
+    @apply flex justify-around items-center;
+  }
+
+  .flex-bc {
+    @apply flex justify-between items-center;
+  }
+
+  .navbar-bg-hover {
+    @apply dark:text-white dark:hover:!bg-[#242424];
+  }
+
+  /* 通用布局样式 - 确保views组件占满容器 */
+  .view-container {
+    @apply w-full h-full min-h-0;
+  }
+
+  .view-content {
+    @apply w-full h-full flex flex-col;
+  }
+
+  .view-main {
+    @apply flex-1 w-full min-h-0;
+  }
+
+  .view-centered {
+    @apply w-full h-full flex items-center justify-center;
+  }
+
+  .view-full-screen {
+    @apply w-full min-h-screen flex flex-col;
+  }
+
+  .view-scrollable {
+    @apply w-full h-full overflow-y-auto;
+  }
+
+  .view-grid-responsive {
+    @apply w-full grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  /* 响应式网格布局 */
+  .view-grid-1 {
+    @apply grid-cols-1;
+  }
+
+  .view-grid-2 {
+    @apply grid-cols-1 md:grid-cols-2;
+  }
+
+  .view-grid-3 {
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .view-grid-4 {
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  /* 错误页面专用样式 */
+  .error-page-container {
+    @apply w-full h-full min-h-[calc(100vh-200px)] flex items-center justify-center;
+  }
+
+  /* 聊天页面专用样式 */
+  .chat-container {
+    @apply w-full h-full flex flex-col;
+  }
+
+  .chat-content {
+    @apply flex-1 w-full min-h-0 overflow-hidden;
+  }
+}

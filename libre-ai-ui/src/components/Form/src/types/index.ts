@@ -1,0 +1,16 @@
+export type ComponentType =
+  | 'ElInput'
+  | 'ElInputNumber'
+  | 'ElSelect'
+  | 'ElTreeSelect'
+  | 'ElRadioGroup'
+  | 'ElCheckbox'
+  | 'ElCheckboxGroup'
+  | 'ElAutoComplete'
+  | 'ElCascader'
+  | 'ElDatePicker'
+  | 'ElTimePicker'
+  | 'ElSwitch'
+  | 'ElUpload'
+  | 'ElSlider'
+  | 'ElRate';
