@@ -18,8 +18,6 @@ import java.util.List;
 /**
  * 仪表板生成请求对象
  *
- * 遵循数据验证最佳实践，确保输入数据质量 体现KISS原则：简单直观的字段设计
- *
  * @author AI Assistant
  * @since 2025-01-15
  */
@@ -33,22 +31,18 @@ public class DashboardRequest {
 	 * 仪表板用途
 	 */
 	@NotBlank(message = "用途不能为空")
-	@Pattern(regexp = "^(analytics|project|sales|monitoring)$",
-			message = "用途必须为: analytics, project, sales, monitoring 之一")
 	private String purpose;
 
 	/**
 	 * 布局样式
 	 */
 	@NotBlank(message = "布局样式不能为空")
-	@Pattern(regexp = "^(grid|sidebar|fullscreen)$", message = "布局必须为: grid, sidebar, fullscreen 之一")
 	private String layout;
 
 	/**
 	 * 主题配色
 	 */
 	@NotBlank(message = "主题配色不能为空")
-	@Pattern(regexp = "^(modern-blue|dark-purple|green-nature|orange-warm)$", message = "主题必须为指定选项之一")
 	private String theme;
 
 	/**

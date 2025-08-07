@@ -30,7 +30,7 @@ public class DashboardStreamController {
 
 	/**
 	 * 流式生成仪表板代码
-	 *
+	 * <p>
 	 * 使用WebFlux的Flux实现流式响应 返回SSE格式的事件流，兼容前端接收
 	 * @param request 生成请求参数
 	 * @return 流式响应

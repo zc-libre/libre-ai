@@ -8,17 +8,10 @@ import org.libre.ai.modules.dashboard.dto.DashboardTemplates;
 import org.libre.ai.modules.dashboard.dto.GenerationResult;
 import org.libre.ai.modules.dashboard.service.IDashboardService;
 import org.libre.ai.modules.rag.utils.R;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-
-import java.time.Duration;
-import java.util.Map;
 
 /**
  * 仪表板生成器核心API控制器
- *
- * 遵循 SRP（单一职责原则）：专注于核心生成功能 遵循RESTful设计规范
  * 
  * @author AI Assistant
  * @since 2025-01-15
@@ -56,7 +49,7 @@ public class DashboardController {
 
 	/**
 	 * 获取模板配置数据
-	 *
+	 * <p>
 	 * 前端初始化时获取所有配置选项
 	 * @return 模板配置集合
 	 */
@@ -73,19 +66,6 @@ public class DashboardController {
 			log.error("获取模板配置失败", e);
 			return R.fail("获取模板配置失败: " + e.getMessage());
 		}
-	}
-
-	/**
-	 * 健康检查接口
-	 *
-	 * 用于系统监控和负载均衡
-	 * @return 健康状态
-	 */
-	@GetMapping("/health")
-	public R<Map<String, Object>> health() {
-		Map<String, Object> status = Map.of("status", "UP", "service", "dashboard-generator", "timestamp",
-				System.currentTimeMillis());
-		return R.ok(status);
 	}
 
 }
