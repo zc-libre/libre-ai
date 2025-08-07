@@ -82,9 +82,14 @@
 import { ref, computed } from 'vue';
 import { Grid, Check, InfoFilled } from '@element-plus/icons-vue';
 import GridLayoutPreview from '../previews/GridLayoutPreview.vue';
-import SidebarLayoutPreview from '../previews/SidebarLayoutPreview.vue';
 import FullscreenLayoutPreview from '../previews/FullscreenLayoutPreview.vue';
 import MasonryLayoutPreview from '../previews/MasonryLayoutPreview.vue';
+// 新增布局预览组件（稍后创建）
+import HeaderMainLayoutPreview from '../previews/HeaderMainLayoutPreview.vue';
+import SplitScreenLayoutPreview from '../previews/SplitScreenLayoutPreview.vue';
+import RadialLayoutPreview from '../previews/RadialLayoutPreview.vue';
+import TimelineLayoutPreview from '../previews/TimelineLayoutPreview.vue';
+import DashboardLayoutPreview from '../previews/DashboardLayoutPreview.vue';
 
 // Props
 interface Props {
@@ -106,46 +111,90 @@ const layoutOptions = [
   {
     id: 'grid',
     title: '网格布局',
-    description: '规整的卡片网格排列，适合展示多个同等重要的数据模块',
+    description: '经典的卡片网格排列，适合展示多个同等重要的指标',
     detailedDescription:
-      '适合展示多个数据指标、图表组件，每个组件占用相等的空间，整体布局规整美观',
-    bestFor: '多指标展示',
+      '最常用的看板布局，将数据卡片整齐排列成网格，每个卡片展示一个关键指标或图表，布局清晰，信息密度适中',
+    bestFor: '通用数据看板',
     responsive: true,
     previewComponent: GridLayoutPreview,
-    recommendedComponents: ['KPI卡片', '图表组件', '数据表格', '进度条']
+    recommendedComponents: ['KPI卡片', '折线图', '柱状图', '饼图', '数据表格']
   },
   {
-    id: 'sidebar',
-    title: '侧边栏布局',
-    description: '左侧导航栏配合主内容区域，适合有层级结构的数据展示',
+    id: 'header-main',
+    title: 'KPI顶置布局',
+    description: '顶部KPI指标栏 + 下方详细图表区域',
     detailedDescription:
-      '左侧提供导航菜单，右侧展示详细内容，适合有多个数据分类或需要切换视图的场景',
-    bestFor: '分类数据展示',
+      '顶部横向展示3-5个核心KPI指标，下方区域展示详细的图表分析。用户可以快速了解关键指标，同时查看详细数据',
+    bestFor: '运营/销售看板',
     responsive: true,
-    previewComponent: SidebarLayoutPreview,
-    recommendedComponents: ['导航菜单', '详情面板', '数据列表', '筛选器']
+    previewComponent: HeaderMainLayoutPreview,
+    recommendedComponents: ['KPI指标条', '趋势图', '区域图', '排行榜', '数据明细']
+  },
+  {
+    id: 'split-screen',
+    title: '左右分屏布局',
+    description: '屏幕垂直分割，适合对比展示两组数据',
+    detailedDescription:
+      '将屏幕分为左右两个独立区域，可以同时展示两个维度的数据，方便对比分析。支持调整左右比例',
+    bestFor: '对比分析看板',
+    responsive: true,
+    previewComponent: SplitScreenLayoutPreview,
+    recommendedComponents: ['对比图表', '双轴图', '平行坐标图', 'KPI对比卡', '趋势对比']
+  },
+  {
+    id: 'radial',
+    title: '中心辐射布局',
+    description: '核心指标居中，相关指标环绕四周',
+    detailedDescription:
+      '将最重要的指标或图表放在中心位置，相关的次要指标环绕排列。强调核心数据，展示数据关联性',
+    bestFor: '关键指标监控',
+    responsive: true,
+    previewComponent: RadialLayoutPreview,
+    recommendedComponents: ['雷达图', '关系图', '仪表盘', '环形图', '指标卡片']
+  },
+  {
+    id: 'timeline',
+    title: '时间轴布局',
+    description: '按时间顺序展示数据变化，支持横向滚动',
+    detailedDescription:
+      '数据按时间顺序排列，可以展示业务发展历程、项目进度、历史趋势等。支持时间轴缩放和滚动',
+    bestFor: '进度/趋势看板',
+    responsive: true,
+    previewComponent: TimelineLayoutPreview,
+    recommendedComponents: ['时间轴', '甘特图', '里程碑', '趋势图', '事件列表']
+  },
+  {
+    id: 'dashboard',
+    title: '仪表盘布局',
+    description: '模拟汽车仪表盘，适合实时监控场景',
+    detailedDescription:
+      '使用仪表盘、环形进度条等组件，模拟物理仪表盘效果。直观展示当前状态和阈值，适合实时监控',
+    bestFor: '性能监控看板',
+    responsive: true,
+    previewComponent: DashboardLayoutPreview,
+    recommendedComponents: ['仪表盘', '进度环', '状态灯', '实时曲线', '告警列表']
   },
   {
     id: 'fullscreen',
-    title: '全屏布局',
-    description: '单一大型组件占据全屏，适合展示重要的核心数据',
+    title: '全屏大屏布局',
+    description: '充分利用屏幕空间的大屏展示布局',
     detailedDescription:
-      '整个屏幕专注展示一个核心内容，适合重要指标监控、大屏展示等场景',
-    bestFor: '核心指标监控',
+      '专为大屏展示设计，去除多余装饰，最大化数据展示区域。支持自动轮播、动画效果和深色主题',
+    bestFor: '指挥中心大屏',
     responsive: true,
     previewComponent: FullscreenLayoutPreview,
-    recommendedComponents: ['大型图表', '实时监控', '地图组件', '视频展示']
+    recommendedComponents: ['3D地图', '大型图表', '实时数据流', '动态排行', '视频监控']
   },
   {
     id: 'masonry',
     title: '瀑布流布局',
-    description: '不规则卡片排列，适合展示不同尺寸的内容模块',
+    description: '自适应高度的卡片流式排列',
     detailedDescription:
-      '组件可以有不同的高度，自动排列形成瀑布流效果，适合内容长度不一的场景',
-    bestFor: '动态内容展示',
+      '卡片根据内容自适应高度，自动填充空间形成瀑布流效果。适合内容长度不固定的场景，空间利用率高',
+    bestFor: '信息汇总看板',
     responsive: true,
     previewComponent: MasonryLayoutPreview,
-    recommendedComponents: ['动态卡片', '新闻列表', '产品展示', '活动信息']
+    recommendedComponents: ['动态卡片', '信息列表', '社交动态', '新闻资讯', '日志记录']
   }
 ];
 
@@ -206,7 +255,7 @@ const selectLayout = (layout: any) => {
 
 .layout-card {
   flex: 0 0 calc(25% - 15px);
-  min-width: 280px;
+  min-width: 260px;
   border: 2px solid #ebeef5;
   border-radius: 12px;
   overflow: hidden;

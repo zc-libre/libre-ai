@@ -62,7 +62,6 @@ logs/
 *~
 
 ### AI Models ###
-models/
 *.bin
 *.onnx
 

@@ -67,7 +67,6 @@ public class AIGenerationService implements IAIGenerationService {
 			tokenStream.onPartialResponse(buffer::append) // 每个 token 追加
 				.onCompleteResponse(r -> {
 					String full = buffer.toString(); // 最终文本
-					System.out.println("完整内容：\n" + full);
 					latch.countDown(); // 完成后释放锁
 				})
 				.onError(e -> {
