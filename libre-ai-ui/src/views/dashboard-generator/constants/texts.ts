@@ -22,45 +22,25 @@ export const APP_TEXTS: AppTexts = {
         '首先选择您的看板使用场景和目的，这将帮助我们为您生成更符合需求的专业看板界面。',
       purposeQuestion: '您的看板用于什么场景？',
       purposes: {
-        dataAnalysis: {
-          title: '数据分析看板',
-          description: '数据洞察、趋势分析、KPI监控等'
+        shelf: {
+          title: '货架监控看板',
+          description: '货架状态、库存分布、拣选效率'
         },
-        projectManagement: {
-          title: '项目管理看板',
-          description: '项目进度、任务跟踪、团队协作等'
+        location: {
+          title: '仓位监控看板',
+          description: '仓位利用率、占用状态、物料分布'
         },
-        salesMonitoring: {
-          title: '销售监控看板',
-          description: '销售业绩、客户转化、渠道分析等'
+        transport: {
+          title: '搬运任务监控',
+          description: 'AGV任务、路径规划、设备状态'
         },
-        operationOverview: {
-          title: '运营概览看板',
-          description: '业务指标、运营效率、用户分析等'
+        mixed: {
+          title: '混合监控看板',
+          description: '全局监控、多维分析、综合指标'
         },
-        financialReport: {
-          title: '财务报表看板',
-          description: '财务数据、预算执行、成本分析等'
-        },
-        businessIntelligence: {
-          title: '商业智能看板',
-          description: '市场洞察、竞争分析、决策支持等'
-        },
-        performanceTracking: {
-          title: '绩效跟踪看板',
-          description: '员工绩效、团队效率、目标达成等'
-        },
-        customerService: {
-          title: '客户服务看板',
-          description: '客户满意度、服务质量、支持统计等'
-        },
-        marketingCampaign: {
-          title: '营销活动看板',
-          description: '活动效果、渠道表现、ROI分析等'
-        },
-        riskManagement: {
-          title: '风险管理看板',
-          description: '风险识别、合规监控、安全指标等'
+        custom: {
+          title: '自定义用途',
+          description: '自定义配置、灵活定制、个性化'
         }
       }
     },

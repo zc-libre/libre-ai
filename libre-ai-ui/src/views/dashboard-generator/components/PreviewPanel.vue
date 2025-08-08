@@ -18,7 +18,10 @@
             class="preview-controls flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center"
           >
             <!-- 视图切换按钮组（只在代码生成完成后显示） -->
-            <el-button-group v-if="generatedHtml && !isStreaming" class="view-switcher">
+            <el-button-group
+              v-if="generatedHtml && !isStreaming"
+              class="view-switcher"
+            >
               <el-button
                 :type="viewMode === 'code' ? 'primary' : 'default'"
                 :icon="Document"
@@ -38,7 +41,10 @@
             </el-button-group>
 
             <!-- 设备预览模式（只在预览模式下显示） -->
-            <el-button-group v-if="viewMode === 'preview'" class="flex-1 sm:flex-none">
+            <el-button-group
+              v-if="viewMode === 'preview'"
+              class="flex-1 sm:flex-none"
+            >
               <el-button
                 :type="previewMode === 'desktop' ? 'primary' : 'default'"
                 :icon="Monitor"
@@ -226,24 +232,28 @@ const isFullscreen = ref(false);
 const previewPanelRef = ref<HTMLElement>();
 
 // 监听流式生成状态变化
-watch(() => props.isStreaming, (newVal) => {
-  if (newVal) {
-    // 开始流式生成时，自动切换到代码视图
-    viewMode.value = 'code';
+watch(
+  () => props.isStreaming,
+  newVal => {
+    if (newVal) {
+      // 开始流式生成时，自动切换到代码视图
+      viewMode.value = 'code';
+    }
   }
-});
-
+);
 
 // 监听生成完成
-watch(() => props.generatedHtml, (newVal) => {
-  if (newVal && !props.isStreaming) {
-    // 生成完成后，自动切换到预览视图
-    setTimeout(() => {
-      viewMode.value = 'preview';
-    }, 500); // 短暂延迟，让用户看到生成完成
+watch(
+  () => props.generatedHtml,
+  newVal => {
+    if (newVal && !props.isStreaming) {
+      // 生成完成后，自动切换到预览视图
+      setTimeout(() => {
+        viewMode.value = 'preview';
+      }, 500); // 短暂延迟，让用户看到生成完成
+    }
   }
-});
-
+);
 
 // 方法
 const handleSwitchToPreview = () => {

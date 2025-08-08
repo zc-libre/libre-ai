@@ -34,43 +34,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DashboardService implements IDashboardService {
 
-	private final IAIGenerationService aiGenerationService;
-
 	private final IDashboardTemplateService templateService;
 
 	private final DashboardHistoryMapper historyMapper;
 
 	public final IDashboardStreamService streamService;
-
-	/**
-	 * 生成仪表板代码
-	 *
-	 * 体现核心业务流程：验证 -> 生成 -> 记录
-	 * @param request 生成请求
-	 * @return 生成结果
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public GenerationResult generateDashboard(DashboardRequest request) {
-		log.info("开始生成仪表板，用户配置: {}", request);
-
-		try {
-			// 1. 参数验证（已通过@Valid注解完成）
-
-			// 2. 调用AI生成代码
-			GenerationResult result = aiGenerationService.generateCode(request);
-
-			// 3. 记录生成日志
-			log.info("仪表板生成完成，耗时: {}秒", result.getMetadata().getGenerationTime());
-
-			return result;
-
-		}
-		catch (Exception e) {
-			log.error("仪表板生成失败", e);
-			throw new RuntimeException("生成失败: " + e.getMessage());
-		}
-	}
 
 	/**
 	 * 保存历史记录
@@ -215,7 +183,7 @@ public class DashboardService implements IDashboardService {
 		}
 
 		try {
-			int deleted = historyMapper.deleteBatchIds(ids);
+			int deleted = historyMapper.deleteByIds(ids);
 			log.info("批量删除历史记录成功，删除数量: {}", deleted);
 			return deleted;
 		}
@@ -223,21 +191,6 @@ public class DashboardService implements IDashboardService {
 			log.error("批量删除历史记录失败", e);
 			throw new RuntimeException("删除失败: " + e.getMessage());
 		}
-	}
-
-	/**
-	 * 流式生成仪表板代码
-	 * 
-	 * 使用Reactor的Flux实现响应式流处理
-	 * @param request 生成请求
-	 * @return Flux<String> 响应式流
-	 */
-	@Override
-	public Flux<String> generateDashboardStream(DashboardRequest request) {
-		log.info("开始流式生成仪表板，用户配置: {}", request);
-
-		// 调用AI服务的流式生成方法
-		return streamService.generateDashboardStream(request);
 	}
 
 }

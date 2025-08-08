@@ -11,9 +11,12 @@
           <el-step title="主题组件" description="配置主题色彩和组件" />
           <el-step title="生成看板" description="AI 智能生成看板代码" />
         </el-steps>
-        
+
         <!-- 重置按钮（只在有配置数据时显示） -->
-        <div v-if="store.currentStep > 1 || store.wizardData.generatedResult" class="flex gap-2">
+        <div
+          v-if="store.currentStep > 1 || store.wizardData.generatedResult"
+          class="flex gap-2"
+        >
           <el-tooltip content="保存当前配置并创建新看板" placement="bottom">
             <el-button
               type="success"
@@ -49,7 +52,9 @@
           :current-step="store.currentStep"
           :wizard-data="store.wizardData"
           :is-generating="store.isStreaming"
-          :has-generated="!!generatedDashboard || !!store.wizardData.generatedResult"
+          :has-generated="
+            !!generatedDashboard || !!store.wizardData.generatedResult
+          "
           @step-change="handleStepChange"
           @data-update="handleDataUpdate"
         />
@@ -57,7 +62,13 @@
 
       <!-- 右侧预览面板 - 只在第4步且有生成内容时显示 -->
       <div
-        v-if="store.currentStep === 4 && (store.showPreview || generatedDashboard || store.isStreaming || store.streamingCode)"
+        v-if="
+          store.currentStep === 4 &&
+          (store.showPreview ||
+            generatedDashboard ||
+            store.isStreaming ||
+            store.streamingCode)
+        "
         class="preview-container flex-1 min-w-0 lg:min-w-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden min-h-0 flex flex-col"
       >
         <PreviewPanel
@@ -167,32 +178,35 @@ const handleNewDashboard = () => {
   if (store.isConfigComplete) {
     store.saveToHistory();
   }
-  
+
   // 立即清空显示数据，避免延迟
   generatedDashboard.value = '';
-  
+
   // 重置向导状态
   store.resetWizard();
-  
+
   // 确保所有相关状态都被清空
   store.setStreamingCode('');
   store.setIsStreaming(false);
   store.setShowPreview(false); // 隐藏预览面板
-  
+
   ElMessage.success('已重置，可以开始新的看板配置');
 };
 
 // 监听生成结果变化
-watch(() => store.wizardData.generatedResult, (newResult) => {
-  if (newResult?.html) {
-    generatedDashboard.value = newResult.html;
-    console.log('Generated result updated, length:', newResult.html.length);
-  } else {
-    // 当结果被清空时，也要清空显示
-    generatedDashboard.value = '';
-    console.log('Generated result cleared');
+watch(
+  () => store.wizardData.generatedResult,
+  newResult => {
+    if (newResult?.html) {
+      generatedDashboard.value = newResult.html;
+      console.log('Generated result updated, length:', newResult.html.length);
+    } else {
+      // 当结果被清空时，也要清空显示
+      generatedDashboard.value = '';
+      console.log('Generated result cleared');
+    }
   }
-});
+);
 </script>
 
 <style scoped>

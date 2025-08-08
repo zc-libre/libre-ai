@@ -128,7 +128,13 @@ const layoutOptions = [
     bestFor: '运营/销售看板',
     responsive: true,
     previewComponent: HeaderMainLayoutPreview,
-    recommendedComponents: ['KPI指标条', '趋势图', '区域图', '排行榜', '数据明细']
+    recommendedComponents: [
+      'KPI指标条',
+      '趋势图',
+      '区域图',
+      '排行榜',
+      '数据明细'
+    ]
   },
   {
     id: 'split-screen',
@@ -139,7 +145,13 @@ const layoutOptions = [
     bestFor: '对比分析看板',
     responsive: true,
     previewComponent: SplitScreenLayoutPreview,
-    recommendedComponents: ['对比图表', '双轴图', '平行坐标图', 'KPI对比卡', '趋势对比']
+    recommendedComponents: [
+      '对比图表',
+      '双轴图',
+      '平行坐标图',
+      'KPI对比卡',
+      '趋势对比'
+    ]
   },
   {
     id: 'radial',
@@ -172,7 +184,13 @@ const layoutOptions = [
     bestFor: '性能监控看板',
     responsive: true,
     previewComponent: DashboardLayoutPreview,
-    recommendedComponents: ['仪表盘', '进度环', '状态灯', '实时曲线', '告警列表']
+    recommendedComponents: [
+      '仪表盘',
+      '进度环',
+      '状态灯',
+      '实时曲线',
+      '告警列表'
+    ]
   },
   {
     id: 'fullscreen',
@@ -183,7 +201,13 @@ const layoutOptions = [
     bestFor: '指挥中心大屏',
     responsive: true,
     previewComponent: FullscreenLayoutPreview,
-    recommendedComponents: ['3D地图', '大型图表', '实时数据流', '动态排行', '视频监控']
+    recommendedComponents: [
+      '3D地图',
+      '大型图表',
+      '实时数据流',
+      '动态排行',
+      '视频监控'
+    ]
   },
   {
     id: 'masonry',
@@ -194,7 +218,13 @@ const layoutOptions = [
     bestFor: '信息汇总看板',
     responsive: true,
     previewComponent: MasonryLayoutPreview,
-    recommendedComponents: ['动态卡片', '信息列表', '社交动态', '新闻资讯', '日志记录']
+    recommendedComponents: [
+      '动态卡片',
+      '信息列表',
+      '社交动态',
+      '新闻资讯',
+      '日志记录'
+    ]
   }
 ];
 

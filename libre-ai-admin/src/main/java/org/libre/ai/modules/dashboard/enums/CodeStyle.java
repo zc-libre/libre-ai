@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * 代码风格枚举
- *
+ * <p>
  * 遵循 OCP（开闭原则）：可扩展新风格而无需修改现有代码
  *
  * @author AI Assistant

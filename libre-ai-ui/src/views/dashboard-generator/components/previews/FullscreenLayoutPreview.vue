@@ -6,7 +6,7 @@
         <div class="title-placeholder"></div>
         <div class="time-placeholder"></div>
       </div>
-      
+
       <!-- 主体内容区 -->
       <div class="main-content">
         <!-- 左侧大图表 -->
@@ -16,7 +16,7 @@
             <div class="chart-body"></div>
           </div>
         </div>
-        
+
         <!-- 右侧指标区 -->
         <div class="right-section">
           <div class="metric-card" v-for="i in 3" :key="i">
@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 底部滚动区 -->
       <div class="footer-bar">
         <div class="scroll-item" v-for="i in 5" :key="i"></div>

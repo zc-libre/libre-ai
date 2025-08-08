@@ -3,6 +3,7 @@ package org.libre.ai.modules.dashboard.dto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.libre.ai.modules.dashboard.enums.DashboardLayout;
 import org.libre.ai.modules.dashboard.enums.DashboardPurpose;
-import org.libre.ai.modules.dashboard.enums.DashboardTheme;
 
 import java.util.List;
 
@@ -40,10 +40,11 @@ public class DashboardRequest {
 	private String layout;
 
 	/**
-	 * 主题配色
+	 * 主题配置
 	 */
-	@NotBlank(message = "主题配色不能为空")
-	private String theme;
+	@NotNull(message = "主题配置不能为空")
+	@Valid
+	private ThemeConfig theme;
 
 	/**
 	 * 组件列表
@@ -78,8 +79,21 @@ public class DashboardRequest {
 	 * 获取主题显示文本
 	 */
 	public String getThemeText() {
-		DashboardTheme themeEnum = DashboardTheme.fromCode(theme);
-		return themeEnum != null ? themeEnum.getName() : theme;
+		return theme != null ? theme.getName() : "";
+	}
+	
+	/**
+	 * 获取主题颜色配置描述
+	 */
+	public String getThemeColors() {
+		if (theme != null && theme.getColors() != null) {
+			ThemeConfig.ThemeColors colors = theme.getColors();
+			return String.format("主色:%s, 辅助色:%s, 强调色:%s",
+				colors.getPrimary(),
+				colors.getSecondary(),
+				colors.getAccent());
+		}
+		return "";
 	}
 
 }

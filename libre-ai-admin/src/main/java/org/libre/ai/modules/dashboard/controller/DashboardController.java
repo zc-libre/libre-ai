@@ -26,28 +26,6 @@ public class DashboardController {
 	private final IDashboardService dashboardService;
 
 	/**
-	 * AI生成仪表板代码
-	 *
-	 * 核心功能接口：根据用户配置生成完整的仪表板代码
-	 * @param request 生成请求参数
-	 * @return 生成结果
-	 */
-	@PostMapping("/generate")
-	public R<GenerationResult> generate(@RequestBody @Valid DashboardRequest request) {
-		log.info("收到仪表板生成请求: {}", request);
-
-		try {
-			GenerationResult result = dashboardService.generateDashboard(request);
-			log.info("仪表板生成成功，耗时: {}秒", result.getMetadata().getGenerationTime());
-			return R.ok(result);
-		}
-		catch (Exception e) {
-			log.error("仪表板生成失败", e);
-			return R.fail("生成失败: " + e.getMessage());
-		}
-	}
-
-	/**
 	 * 获取模板配置数据
 	 * <p>
 	 * 前端初始化时获取所有配置选项

@@ -53,7 +53,7 @@
         >
           {{ props.isGenerating ? '生成中...' : '生成看板' }}
         </el-button>
-        
+
         <!-- 重新生成按钮 - 只在已生成时显示 -->
         <el-button
           v-if="currentStep === 4 && props.hasGenerated && !props.isGenerating"
@@ -92,7 +92,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   'step-change': [step: number];
   'data-update': [data: any];
-  'generate': [];
+  generate: [];
 }>();
 
 // 状态（已移除 isGenerating，使用 props 传入）

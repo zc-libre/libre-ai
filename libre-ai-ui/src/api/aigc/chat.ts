@@ -9,15 +9,11 @@ export function chat(
   controller: AbortController,
   onDownloadProgress?: (progressEvent: any) => void
 ) {
-  return http.request(
-    'post',
-    '/aigc/chat/completions',
-    {
-      data,
-      signal: controller.signal,
-      onDownloadProgress: onDownloadProgress
-    }
-  );
+  return http.request('post', '/aigc/chat/completions', {
+    data,
+    signal: controller.signal,
+    onDownloadProgress: onDownloadProgress
+  });
 }
 
 export function chatMessage(params: any) {

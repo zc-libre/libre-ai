@@ -140,7 +140,6 @@
       </el-card>
     </div>
 
-
     <!-- 生成结果 -->
     <div v-if="generatedResult && !isStreaming" class="generation-result">
       <el-card>
@@ -274,7 +273,7 @@ const generateDashboard = async () => {
 
   // 更新store中的生成选项
   store.updateGenerationOptions(generationOptions);
-  
+
   // 开始生成时显示预览面板
   store.setShowPreview(true);
 
@@ -329,18 +328,18 @@ const regenerateDashboard = async () => {
     generatedResult: null,
     generationOptions: { ...generationOptions }
   });
-  
+
   // 清空store中的流式代码和生成结果
   store.setStreamingCode('');
   generatedResultData.value = null;
-  
+
   ElMessage.info('正在重新生成看板...');
-  
+
   // 短暂延迟后重新生成，让用户看到清空效果
   setTimeout(async () => {
     // 更新store中的生成选项
     store.updateGenerationOptions(generationOptions);
-    
+
     // 确保预览面板显示
     store.setShowPreview(true);
 

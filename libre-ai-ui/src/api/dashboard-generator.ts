@@ -1,9 +1,21 @@
-import {http} from '@/utils/http';
+import { http } from '@/utils/http';
+
+export type ThemeConfig = {
+  name: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background?: string;
+    surface?: string;
+    text?: string;
+  };
+};
 
 export type DashboardRequest = {
   purpose: string;
   layout: string;
-  theme: string;
+  theme: ThemeConfig;
   components: string[];
   options?: {
     codeStyle?: string;
@@ -96,7 +108,7 @@ export type HistoryResponse = {
  * 生成仪表板代码
  */
 export function generateDashboard(data: DashboardRequest) {
-  return http.request('post', '/dashboard/generate', {data});
+  return http.request('post', '/dashboard/generate', { data });
 }
 
 /**
@@ -144,7 +156,7 @@ export async function generateDashboardStream(
 
     // 5. 循环读取流中的数据
     while (true) {
-      const {done, value} = await reader.read();
+      const { done, value } = await reader.read();
       if (done) {
         // 处理剩余的缓冲区数据
         if (buffer.startsWith('data:')) {
@@ -163,11 +175,11 @@ export async function generateDashboardStream(
       }
 
       // 将接收到的数据块 (Uint8Array) 解码成字符串
-      const chunk = decoder.decode(value, {stream: true});
+      const chunk = decoder.decode(value, { stream: true });
 
       // 将新数据添加到缓冲区
       buffer += chunk;
-     // console.log("bufferValue: ", buffer);
+      // console.log("bufferValue: ", buffer);
       // 处理完整的行
       const lines = buffer.split('\n\n');
       // 保留最后一个可能不完整的行
@@ -204,10 +216,7 @@ export async function generateDashboardStream(
 function postProcessSvgPaths(content: string): string {
   // 修复 SVG path 属性中的换行符问题
   // 使用更精确的正则表达式来处理 d 属性内的换行符
-  return content.replace(
-    /(<path[^>]*\bd\s*=\s*"[^"]*?)(\n)([^"]*?")/g,
-    '$1$3'
-  );
+  return content.replace(/(<path[^>]*\bd\s*=\s*"[^"]*?)(\n)([^"]*?")/g, '$1$3');
 }
 
 /**
@@ -255,21 +264,21 @@ export function saveHistory(data: {
   generatedJs?: string;
   previewImage?: string;
 }) {
-  return http.request('post', '/dashboard/history', {data});
+  return http.request('post', '/dashboard/history', { data });
 }
 
 /**
  * 获取历史记录
  */
 export function getHistory(params?: HistoryParams) {
-  return http.request('get', '/dashboard/history', {params});
+  return http.request('get', '/dashboard/history', { params });
 }
 
 /**
  * 批量删除历史记录
  */
 export function deleteHistory(ids: string[]) {
-  return http.request('delete', '/dashboard/history/batch', {data: ids});
+  return http.request('delete', '/dashboard/history/batch', { data: ids });
 }
 
 /**

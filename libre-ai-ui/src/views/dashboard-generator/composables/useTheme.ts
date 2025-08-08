@@ -10,6 +10,7 @@ export interface ThemeOption {
     surface?: string;
     text?: string;
   };
+  isCustom?: boolean;
 }
 
 export const useTheme = () => {
@@ -118,6 +119,46 @@ export const useTheme = () => {
         surface: '#ffffff',
         text: '#303133'
       }
+    },
+    {
+      id: 'teal-calm',
+      name: '静谧蓝绿',
+      description: '平静舒适的蓝绿主题',
+      colors: {
+        primary: '#14B8A6',
+        secondary: '#5EEAD4',
+        accent: '#99F6E4',
+        background: '#f0fdfa',
+        surface: '#ffffff',
+        text: '#303133'
+      }
+    },
+    {
+      id: 'amber-golden',
+      name: '金色光辉',
+      description: '高贵典雅的金色主题',
+      colors: {
+        primary: '#F59E0B',
+        secondary: '#FBBF24',
+        accent: '#FCD34D',
+        background: '#fffbeb',
+        surface: '#ffffff',
+        text: '#303133'
+      }
+    },
+    {
+      id: 'custom',
+      name: '自定义',
+      description: '创建您的专属配色',
+      colors: {
+        primary: '#6366F1',
+        secondary: '#818CF8',
+        accent: '#A5B4FC',
+        background: '#f5f5f5',
+        surface: '#ffffff',
+        text: '#303133'
+      },
+      isCustom: true
     }
   ];
 
@@ -136,28 +177,38 @@ export const useTheme = () => {
   };
 
   // 获取主题颜色
-  const getThemeColors = (themeId: string) => {
+  const getThemeColors = (themeId: string, customColors?: any) => {
+    if (themeId === 'custom' && customColors) {
+      return {
+        primary: customColors.primary,
+        secondary: customColors.secondary,
+        accent: customColors.accent,
+        background: customColors.background || '#f5f5f5',
+        surface: customColors.surface || '#ffffff',
+        text: customColors.text || '#303133'
+      };
+    }
     const theme = getThemeById(themeId);
     return theme?.colors || {};
   };
 
   // 应用主题到CSS变量
-  const applyTheme = (themeId: string) => {
-    const theme = getThemeById(themeId);
-    if (!theme) return;
+  const applyTheme = (themeId: string, customColors?: any) => {
+    const colors = getThemeColors(themeId, customColors);
+    if (!colors) return;
 
     const root = document.documentElement;
-    Object.entries(theme.colors).forEach(([key, value]) => {
-      root.style.setProperty(`--theme-${key}`, value);
+    Object.entries(colors).forEach(([key, value]) => {
+      root.style.setProperty(`--theme-${key}`, value as string);
     });
   };
 
   // 生成主题CSS
-  const generateThemeCSS = (themeId: string): string => {
-    const theme = getThemeById(themeId);
-    if (!theme) return '';
+  const generateThemeCSS = (themeId: string, customColors?: any): string => {
+    const colors = getThemeColors(themeId, customColors);
+    if (!colors) return '';
 
-    const cssVars = Object.entries(theme.colors)
+    const cssVars = Object.entries(colors)
       .map(([key, value]) => `  --theme-${key}: ${value};`)
       .join('\n');
 
@@ -176,9 +227,44 @@ export const useTheme = () => {
   };
 
   // 检查是否为深色主题
-  const isDarkTheme = (themeId: string): boolean => {
+  const isDarkTheme = (themeId: string, customColors?: any): boolean => {
+    if (themeId === 'custom' && customColors) {
+      // 根据背景色判断是否为深色主题
+      const bgColor = customColors.background || '#f5f5f5';
+      const hex = bgColor.replace('#', '');
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      return brightness < 128;
+    }
     const darkThemes = ['dark-purple'];
     return darkThemes.includes(themeId);
+  };
+
+  // 创建自定义主题
+  const createCustomTheme = (colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background?: string;
+    surface?: string;
+    text?: string;
+  }): ThemeOption => {
+    return {
+      id: 'custom',
+      name: '自定义',
+      description: '用户自定义配色方案',
+      colors: {
+        primary: colors.primary,
+        secondary: colors.secondary,
+        accent: colors.accent,
+        background: colors.background || '#f5f5f5',
+        surface: colors.surface || '#ffffff',
+        text: colors.text || '#303133'
+      },
+      isCustom: true
+    };
   };
 
   return {
@@ -190,6 +276,7 @@ export const useTheme = () => {
     applyTheme,
     generateThemeCSS,
     getContrastColor,
-    isDarkTheme
+    isDarkTheme,
+    createCustomTheme
   };
 };

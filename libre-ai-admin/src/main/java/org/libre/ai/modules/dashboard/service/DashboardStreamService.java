@@ -2,10 +2,11 @@ package org.libre.ai.modules.dashboard.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.libre.ai.modules.dashboard.assistant.StreamDashboardAiAssistant;
 import org.libre.ai.modules.dashboard.dto.DashboardRequest;
+import org.libre.ai.modules.dashboard.dto.ThemeConfig;
 import org.libre.ai.modules.dashboard.enums.CodeStyle;
 import org.libre.ai.modules.dashboard.enums.DashboardComponent;
-import org.libre.ai.modules.dashboard.enums.DashboardTheme;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * 仪表板流式生成服务实现
- *
+ * <p>
  * 使用WebFlux响应式编程模型 集成LangChain4j的TokenStream实现流式AI生成
  *
  * @author AI Assistant
@@ -40,12 +41,13 @@ public class DashboardStreamService implements IDashboardStreamService {
 
 		// 构建AI提示词
 		String prompt = buildDashboardPrompt(request);
+		log.debug("完整提示词： {}", prompt);
 		return streamDashboardAiAssistant.generateDashboardFlux(prompt);
 	}
 
 	/**
 	 * 构建AI提示词
-	 *
+	 * <p>
 	 * 根据用户配置生成详细的提示词，使用语义化的描述文本
 	 * @param request 请求对象
 	 * @return 提示词字符串
@@ -113,7 +115,7 @@ public class DashboardStreamService implements IDashboardStreamService {
 						           </script>
 						           </html>
 						""",
-				request.getPurposeText(), request.getLayoutText(), buildThemeDescription(request.getTheme()),
+				request.getPurposeText(), request.getLayoutText(), buildThemeDescription(request),
 				buildComponentsDescription(request.getComponents()),
 				buildCodeStyleDescription(
 						request.getOptions() != null ? request.getOptions().getCodeStyle() : "modern"),
@@ -129,18 +131,20 @@ public class DashboardStreamService implements IDashboardStreamService {
 
 	/**
 	 * 构建主题的详细描述信息
-	 *
-	 * 遵循KISS原则：简单直观的主题信息构建
-	 * @param themeCode 主题代码
+	 * <p>
+	 * 遵循KISS原则：简单直观的主题信息构建 支持预设主题和自定义主题
+	 * @param request 请求对象
 	 * @return 包含颜色信息的主题描述
 	 */
-	private String buildThemeDescription(String themeCode) {
-		DashboardTheme theme = DashboardTheme.fromCode(themeCode);
-		if (theme != null) {
-			return String.format("%s (主色调: %s, 辅助色: %s, 强调色: %s)", theme.getName(), theme.getPrimaryColor(),
-					theme.getSecondaryColor(), theme.getAccentColor());
+	private String buildThemeDescription(DashboardRequest request) {
+		// 使用统一的主题配置结构
+		if (request.getTheme() != null) {
+			ThemeConfig theme = request.getTheme();
+			ThemeConfig.ThemeColors colors = theme.getColors();
+			return String.format("%s (主色调: %s, 辅助色: %s, 强调色: %s)", theme.getName(), colors.getPrimary(),
+					colors.getSecondary(), colors.getAccent());
 		}
-		return themeCode;
+		return "默认主题";
 	}
 
 	/**
@@ -176,7 +180,7 @@ public class DashboardStreamService implements IDashboardStreamService {
 
 	/**
 	 * 构建布尔值的中文描述
-	 *
+	 * <p>
 	 * 遵循KISS原则：简单的布尔值转换
 	 * @param value 布尔值
 	 * @param trueText 真值描述
