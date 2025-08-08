@@ -1,5 +1,5 @@
 <template>
-  <div class="step2-layout-selector">
+  <div class="step3-layout-selector">
     <div class="step-header">
       <h2 class="step-title">
         <el-icon class="step-icon" :size="24" color="#6366F1">
@@ -8,7 +8,7 @@
         选择布局样式
       </h2>
       <p class="step-description">
-        选择最适合您看板内容的布局方式，不同布局适用于不同的数据展示需求。
+        基于您选择的组件，选择最适合的布局方式。我们已根据您的组件类型优先推荐合适的布局。
       </p>
     </div>
 
@@ -248,7 +248,7 @@ const selectLayout = (layout: any) => {
 </script>
 
 <style scoped>
-.step2-layout-selector {
+.step3-layout-selector {
   margin: 0 auto;
 }
 

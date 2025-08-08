@@ -7,6 +7,7 @@ import org.libre.ai.modules.dashboard.dto.DashboardRequest;
 import org.libre.ai.modules.dashboard.dto.ThemeConfig;
 import org.libre.ai.modules.dashboard.enums.CodeStyle;
 import org.libre.ai.modules.dashboard.enums.DashboardComponent;
+import org.libre.ai.modules.dashboard.enums.DashboardPurpose;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -48,18 +49,21 @@ public class DashboardStreamService implements IDashboardStreamService {
 	/**
 	 * 构建AI提示词
 	 * <p>
-	 * 根据用户配置生成详细的提示词，使用语义化的描述文本
+	 * 根据用户配置生成详细的提示词，结合预设场景和用户自定义内容
 	 * @param request 请求对象
 	 * @return 提示词字符串
 	 */
 	private String buildDashboardPrompt(DashboardRequest request) {
+		// 构建场景描述，结合预设和用户自定义
+		String purposeDescription = buildPurposeDescription(request);
+
 		return String.format(
 				"""
 						# 角色定义
-						你是一个资深的前端架构师，精通HTML5、CSS3、JavaScript和现代前端框架。
+						你是一个资深的前端架构师，精通HTML5、CSS3、JavaScript和现代前端框架，专注于物流仓储行业的可视化解决方案。
 
 						# 任务要求
-						根据以下用户配置，生成一个完整、专业、可用的仪表板页面，输出结果绝对禁止使用markdown语法包裹代码块，直接输出完整代码：
+						根据以下用户配置，生成一个完整、专业、可用的大屏监控页面，输出结果绝对禁止使用markdown语法包裹代码块，直接输出完整代码：
 
 						## 用户配置
 						- 业务场景: %s
@@ -80,7 +84,7 @@ public class DashboardStreamService implements IDashboardStreamService {
 						6. 确保跨浏览器兼容性
 						%s
 						%s
-
+						
 						# 输出格式
 						请生成一个完整的、可直接运行的HTML文件，包含所有内容。
 						返回标准html格式,完整的HTML文档，必须包含<!DOCTYPE html>声明，<html>标签，<head>中内嵌完整的<style>标签包含所有CSS，<body>中包含所有HTML内容，</body>前内嵌<script>标签包含所有JavaScript代码
@@ -97,25 +101,8 @@ public class DashboardStreamService implements IDashboardStreamService {
 						- 输出为标准的html，禁止添加任何解释性文字,禁止使用markdown语法，返回和输出格式示例必须完全一致
 						- 输出的代码合适需要符合html的最佳实现，包含必要的缩进符和换行符等
 						- 绝对禁止使用markdown语法包裹代码块
-						- 必须是下面标准的html结构, 禁止使用其他格式,返回结构示例：
-						  <!DOCTYPE html>
-						           <html lang="zh-CN">
-						           <head>
-						               <meta charset="UTF-8">
-						               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-						               <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-						               <style>
-						               </style>
-						           </head>
-						           <body>
-						               <div></div>
-						           </body>
-						           <!-- JavaScript -->
-						           <script>
-						           </script>
-						           </html>
 						""",
-				request.getPurposeText(), request.getLayoutText(), buildThemeDescription(request),
+				purposeDescription, request.getLayoutText(), buildThemeDescription(request),
 				buildComponentsDescription(request.getComponents()),
 				buildCodeStyleDescription(
 						request.getOptions() != null ? request.getOptions().getCodeStyle() : "modern"),
@@ -123,10 +110,56 @@ public class DashboardStreamService implements IDashboardStreamService {
 						"支持响应式设计", "不支持响应式设计"),
 				buildBooleanDescription(request.getOptions() != null ? request.getOptions().getIncludeData() : true,
 						"包含示例数据", "不包含示例数据"),
-				request.getOptions() != null && request.getOptions().getAdditionalRequirements() != null
-						? "\n- 特殊需求: " + request.getOptions().getAdditionalRequirements() : "",
+				buildCustomRequirements(request),
 				request.getOptions() != null && request.getOptions().getResponsive() ? "\n7. 实现完整的响应式设计" : "",
 				request.getOptions() != null && request.getOptions().getIncludeData() ? "\n8. 包含合理的示例数据" : "");
+	}
+
+	/**
+	 * 构建场景描述，结合预设和用户自定义内容
+	 * @param request 请求对象
+	 * @return 完整的场景描述
+	 */
+	private String buildPurposeDescription(DashboardRequest request) {
+		StringBuilder description = new StringBuilder();
+
+		// 获取基础场景名称
+		DashboardPurpose purposeEnum = DashboardPurpose.fromCode(request.getPurpose());
+		String basePurpose = purposeEnum != null ? purposeEnum.getName() : request.getPurpose();
+		description.append(basePurpose);
+
+		// 添加场景细节
+		if (request.getPurposeDetail() != null && !request.getPurposeDetail().trim().isEmpty()) {
+			description.append(" - ").append(request.getPurposeDetail());
+		}
+
+		// 添加重点监控指标
+		if (request.getFocusMetrics() != null && !request.getFocusMetrics().trim().isEmpty()) {
+			description.append("，重点监控：").append(request.getFocusMetrics());
+		}
+
+		return description.toString();
+	}
+
+	/**
+	 * 构建自定义需求描述
+	 * @param request 请求对象
+	 * @return 自定义需求描述
+	 */
+	private String buildCustomRequirements(DashboardRequest request) {
+		StringBuilder requirements = new StringBuilder();
+
+		// 优先使用新的 customRequirements 字段
+		if (request.getCustomRequirements() != null && !request.getCustomRequirements().trim().isEmpty()) {
+			requirements.append("\n- 特殊需求: ").append(request.getCustomRequirements());
+		}
+		// 向后兼容：如果没有新字段，使用旧的 additionalRequirements
+		else if (request.getOptions() != null && request.getOptions().getAdditionalRequirements() != null
+				&& !request.getOptions().getAdditionalRequirements().trim().isEmpty()) {
+			requirements.append("\n- 特殊需求: ").append(request.getOptions().getAdditionalRequirements());
+		}
+
+		return requirements.toString();
 	}
 
 	/**

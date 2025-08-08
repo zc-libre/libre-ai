@@ -35,7 +35,7 @@
             v-for="feature in option.features"
             :key="feature"
             size="small"
-            :type="selectedPurpose === option.id ? 'info' : 'default'"
+            :type="selectedPurpose === option.id ? 'info' : ''"
           >
             {{ feature }}
           </el-tag>
@@ -43,24 +43,96 @@
       </div>
     </div>
 
-    <!-- 自定义用途输入 -->
-    <div v-if="selectedPurpose === 'custom'" class="custom-purpose">
-      <el-input
-        v-model="customPurposeText"
-        placeholder="请描述您的看板用途..."
-        type="textarea"
-        :rows="3"
-        maxlength="200"
-        show-word-limit
-        @input="updateCustomPurpose"
-      />
+    <!-- 场景细化配置 -->
+    <div v-if="selectedPurpose" class="purpose-detail-config">
+      <el-divider>
+        <span class="divider-text">
+          <el-icon><Setting /></el-icon>
+          场景细化配置
+        </span>
+      </el-divider>
+      
+      <div class="config-grid">
+        <!-- 场景细节 -->
+        <div class="config-item">
+          <label class="config-label">
+            <el-icon><InfoFilled /></el-icon>
+            场景细节
+            <el-tooltip content="描述具体的监控场景，如：冷链货架、危险品仓位、高值物料等" placement="top">
+              <el-icon class="help-icon"><QuestionFilled /></el-icon>
+            </el-tooltip>
+          </label>
+          <el-input
+            v-model="purposeDetail"
+            :placeholder="getPurposeDetailPlaceholder()"
+            maxlength="100"
+            show-word-limit
+            clearable
+            @input="updatePurposeDetail"
+          />
+        </div>
+
+        <!-- 重点指标 -->
+        <div class="config-item">
+          <label class="config-label">
+            <el-icon><DataLine /></el-icon>
+            重点指标
+            <el-tooltip content="需要重点监控的业务指标，如：温度湿度、库存周转率、拣选效率等" placement="top">
+              <el-icon class="help-icon"><QuestionFilled /></el-icon>
+            </el-tooltip>
+          </label>
+          <el-input
+            v-model="focusMetrics"
+            :placeholder="getFocusMetricsPlaceholder()"
+            maxlength="100"
+            show-word-limit
+            clearable
+            @input="updateFocusMetrics"
+          />
+        </div>
+
+        <!-- 补充需求 -->
+        <div class="config-item config-item-full">
+          <label class="config-label">
+            <el-icon><Document /></el-icon>
+            补充需求
+            <el-tooltip content="其他特殊需求或定制化要求" placement="top">
+              <el-icon class="help-icon"><QuestionFilled /></el-icon>
+            </el-tooltip>
+          </label>
+          <el-input
+            v-model="customRequirements"
+            type="textarea"
+            :placeholder="getCustomRequirementsPlaceholder()"
+            :rows="2"
+            maxlength="200"
+            show-word-limit
+            @input="updateCustomRequirements"
+          />
+        </div>
+      </div>
+
+      <!-- 场景示例提示 -->
+      <div v-if="selectedPurpose !== 'custom'" class="example-tips">
+        <el-alert type="info" :closable="false">
+          <template #title>
+            <span class="tips-title">
+              <el-icon><Promotion /></el-icon>
+              {{ getExampleTips() }}
+            </span>
+          </template>
+        </el-alert>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Box, Location, Van, Grid, More } from '@element-plus/icons-vue';
+import { 
+  Box, Location, Van, Grid, More, Setting, 
+  InfoFilled, DataLine, Document, QuestionFilled, Promotion 
+} from '@element-plus/icons-vue';
 
 // Props
 interface Props {
@@ -76,7 +148,9 @@ const emit = defineEmits<{
 
 // 状态
 const selectedPurpose = ref(props.wizardData.purpose || '');
-const customPurposeText = ref(props.wizardData.purposeText || '');
+const purposeDetail = ref(props.wizardData.purposeDetail || '');
+const focusMetrics = ref(props.wizardData.focusMetrics || '');
+const customRequirements = ref(props.wizardData.customRequirements || '');
 
 // 看板用途选项 - 物流仓储监控
 const purposeOptions = [
@@ -133,21 +207,75 @@ const selectPurpose = (option: any) => {
 
   const updateData = {
     purpose: option.id,
-    purposeText:
-      option.id === 'custom' ? customPurposeText.value : option.title,
-    purposeOption: option
+    purposeText: option.title,
+    purposeOption: option,
+    // 清空之前的配置
+    purposeDetail: '',
+    focusMetrics: '',
+    customRequirements: ''
   };
+
+  // 重置本地状态
+  purposeDetail.value = '';
+  focusMetrics.value = '';
+  customRequirements.value = '';
 
   emit('update', updateData);
 };
 
-const updateCustomPurpose = () => {
-  if (selectedPurpose.value === 'custom') {
-    emit('update', {
-      purpose: 'custom',
-      purposeText: customPurposeText.value
-    });
-  }
+const updatePurposeDetail = () => {
+  emit('update', {
+    purposeDetail: purposeDetail.value
+  });
+};
+
+const updateFocusMetrics = () => {
+  emit('update', {
+    focusMetrics: focusMetrics.value
+  });
+};
+
+const updateCustomRequirements = () => {
+  emit('update', {
+    customRequirements: customRequirements.value
+  });
+};
+
+// 获取占位符文本
+const getPurposeDetailPlaceholder = () => {
+  const placeholders: Record<string, string> = {
+    shelf: '例如：冷链货架、危险品货架、高值物料货架',
+    location: '例如：原料仓、成品仓、立体仓库、露天堆场',
+    transport: '例如：AGV小车、叉车、输送线、机械手',
+    mixed: '例如：整体仓库、特定区域、跨仓协同',
+    custom: '请描述您的具体场景...'
+  };
+  return placeholders[selectedPurpose.value] || '请输入场景细节...';
+};
+
+const getFocusMetricsPlaceholder = () => {
+  const placeholders: Record<string, string> = {
+    shelf: '例如：占用率、周转率、拣选效率、货位准确率',
+    location: '例如：利用率、库存准确率、呆滞料分析、ABC分类',
+    transport: '例如：任务完成率、设备利用率、路径优化、故障率',
+    mixed: '例如：整体OEE、订单完成率、库存周转、人效分析',
+    custom: '请输入需要监控的关键指标...'
+  };
+  return placeholders[selectedPurpose.value] || '请输入重点监控指标...';
+};
+
+const getCustomRequirementsPlaceholder = () => {
+  return '请输入其他特殊需求，如数据更新频率、特殊交互功能、品牌色彩等...';
+};
+
+const getExampleTips = () => {
+  const tips: Record<string, string> = {
+    shelf: '💡 提示：可以针对不同货架类型定制监控方案，如冷链需要温度监控，危险品需要安全预警',
+    location: '💡 提示：不同仓库类型有不同的管理重点，立体仓注重设备状态，平库注重空间利用',
+    transport: '💡 提示：可根据搬运设备类型优化监控重点，AGV关注路径规划，叉车关注作业效率',
+    mixed: '💡 提示：综合看板可以整合多个子系统数据，建议明确主要监控维度'
+  };
+  return tips[selectedPurpose.value] || '';
 };
 </script>
 
@@ -237,8 +365,63 @@ const updateCustomPurpose = () => {
   justify-content: center;
 }
 
-.custom-purpose {
+.purpose-detail-config {
+  margin-top: 40px;
+  padding: 20px;
+  background: #f5f7fa;
+  border-radius: 12px;
+}
+
+.divider-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #606266;
+  font-weight: 500;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.config-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.config-item-full {
+  grid-column: span 2;
+}
+
+.config-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #606266;
+  font-weight: 500;
+}
+
+.help-icon {
+  color: #909399;
+  cursor: help;
+  font-size: 14px;
+}
+
+.example-tips {
   margin-top: 20px;
+}
+
+.tips-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
 
 /* 响应式设计 - 与项目整体断点保持一致 */

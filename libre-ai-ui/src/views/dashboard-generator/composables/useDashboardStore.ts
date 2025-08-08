@@ -5,6 +5,9 @@ export interface DashboardConfig {
   purpose: string;
   purposeText: string;
   purposeOption?: any;
+  purposeDetail?: string;
+  focusMetrics?: string;
+  customRequirements?: string;
   layout: string;
   layoutText: string;
   layoutOption?: any;

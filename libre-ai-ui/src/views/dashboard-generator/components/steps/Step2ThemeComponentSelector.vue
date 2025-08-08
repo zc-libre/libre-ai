@@ -1,15 +1,65 @@
 <template>
-  <div class="step3-theme-component-selector">
+  <div class="step2-theme-component-selector">
     <div class="step-header">
       <h2 class="step-title">
         <el-icon class="step-icon" :size="24" color="#6366F1">
           <Setting />
         </el-icon>
-        主题配色与组件选择
+        组件选择与主题配色
       </h2>
       <p class="step-description">
-        选择您喜欢的主题配色方案，并选择需要的组件来构建您的看板。
+        选择您需要的数据组件和喜欢的主题配色，我们将基于您的选择推荐合适的布局。
       </p>
+    </div>
+
+    <!-- 组件选择 -->
+    <div class="section">
+      <h3 class="section-title">选择看板组件</h3>
+      <p class="section-subtitle">根据您的看板用途，我们推荐以下组件：</p>
+
+      <div class="component-categories">
+        <el-tabs v-model="activeComponentTab" type="border-card">
+          <el-tab-pane
+            v-for="category in componentCategories"
+            :key="category.id"
+            :label="category.name"
+            :name="category.id"
+          >
+            <div class="component-grid">
+              <div
+                v-for="component in category.components"
+                :key="component.id"
+                class="component-card"
+                :class="{ selected: selectedComponents.includes(component.id) }"
+                @click="toggleComponent(component)"
+              >
+                <div class="component-icon">
+                  <el-icon
+                    :size="24"
+                    :color="
+                      selectedComponents.includes(component.id)
+                        ? '#fff'
+                        : component.color
+                    "
+                  >
+                    <component :is="component.icon" />
+                  </el-icon>
+                </div>
+                <h4 class="component-name">{{ component.name }}</h4>
+                <p class="component-description">{{ component.description }}</p>
+                <div
+                  v-if="selectedComponents.includes(component.id)"
+                  class="selected-indicator"
+                >
+                  <el-icon :size="16" color="#fff">
+                    <Check />
+                  </el-icon>
+                </div>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
 
     <!-- 主题选择 -->
@@ -162,56 +212,6 @@
           </el-card>
         </div>
       </el-collapse-transition>
-    </div>
-
-    <!-- 组件选择 -->
-    <div class="section">
-      <h3 class="section-title">选择看板组件</h3>
-      <p class="section-subtitle">根据您的看板用途，我们推荐以下组件：</p>
-
-      <div class="component-categories">
-        <el-tabs v-model="activeComponentTab" type="border-card">
-          <el-tab-pane
-            v-for="category in componentCategories"
-            :key="category.id"
-            :label="category.name"
-            :name="category.id"
-          >
-            <div class="component-grid">
-              <div
-                v-for="component in category.components"
-                :key="component.id"
-                class="component-card"
-                :class="{ selected: selectedComponents.includes(component.id) }"
-                @click="toggleComponent(component)"
-              >
-                <div class="component-icon">
-                  <el-icon
-                    :size="24"
-                    :color="
-                      selectedComponents.includes(component.id)
-                        ? '#fff'
-                        : component.color
-                    "
-                  >
-                    <component :is="component.icon" />
-                  </el-icon>
-                </div>
-                <h4 class="component-name">{{ component.name }}</h4>
-                <p class="component-description">{{ component.description }}</p>
-                <div
-                  v-if="selectedComponents.includes(component.id)"
-                  class="selected-indicator"
-                >
-                  <el-icon :size="16" color="#fff">
-                    <Check />
-                  </el-icon>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
     </div>
 
     <!-- 选择总结 -->
@@ -556,7 +556,7 @@ const updateData = () => {
 </script>
 
 <style scoped>
-.step3-theme-component-selector {
+.step2-theme-component-selector {
   margin: 0 auto;
 }
 

@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public interface IDashboardService {
 
-
 	/**
 	 * 保存历史记录
 	 * @param history 历史记录对象

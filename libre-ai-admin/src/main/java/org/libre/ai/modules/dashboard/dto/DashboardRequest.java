@@ -34,6 +34,24 @@ public class DashboardRequest {
 	private String purpose;
 
 	/**
+	 * 场景细节描述（如：冷链货架、危险品仓位、高值物料等）
+	 */
+	@Size(max = 100, message = "场景细节描述不能超过100字符")
+	private String purposeDetail;
+
+	/**
+	 * 重点监控指标（如：温度湿度、库存周转率、拣选效率等）
+	 */
+	@Size(max = 100, message = "重点监控指标不能超过100字符")
+	private String focusMetrics;
+
+	/**
+	 * 用户补充需求（更详细的定制化需求描述）
+	 */
+	@Size(max = 200, message = "补充需求描述不能超过200字符")
+	private String customRequirements;
+
+	/**
 	 * 布局样式
 	 */
 	@NotBlank(message = "布局样式不能为空")
@@ -81,17 +99,15 @@ public class DashboardRequest {
 	public String getThemeText() {
 		return theme != null ? theme.getName() : "";
 	}
-	
+
 	/**
 	 * 获取主题颜色配置描述
 	 */
 	public String getThemeColors() {
 		if (theme != null && theme.getColors() != null) {
 			ThemeConfig.ThemeColors colors = theme.getColors();
-			return String.format("主色:%s, 辅助色:%s, 强调色:%s",
-				colors.getPrimary(),
-				colors.getSecondary(),
-				colors.getAccent());
+			return String.format("主色:%s, 辅助色:%s, 强调色:%s", colors.getPrimary(), colors.getSecondary(),
+					colors.getAccent());
 		}
 		return "";
 	}

@@ -222,7 +222,7 @@ const generatedResult = computed(() => generatedResultData.value);
 
 // 生成选项
 const generationOptions = reactive({
-  codeStyle: 'modern',
+  codeStyle: 'modern' as 'modern' | 'minimal' | 'enterprise',
   responsive: true,
   includeData: true,
   additionalRequirements: ''

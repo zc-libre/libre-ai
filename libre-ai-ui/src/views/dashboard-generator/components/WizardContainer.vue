@@ -74,8 +74,8 @@ import { computed, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { ArrowLeft, ArrowRight, Check, Refresh } from '@element-plus/icons-vue';
 import Step1PurposeSelector from './steps/Step1PurposeSelector.vue';
-import Step2LayoutSelector from './steps/Step2LayoutSelector.vue';
-import Step3ThemeComponentSelector from './steps/Step3ThemeComponentSelector.vue';
+import Step2ThemeComponentSelector from './steps/Step2ThemeComponentSelector.vue';
+import Step3LayoutSelector from './steps/Step3LayoutSelector.vue';
 import Step4DashboardGenerator from './steps/Step4DashboardGenerator.vue';
 
 // Props
@@ -102,8 +102,8 @@ const currentStepRef = ref<any>(null);
 const currentStepComponent = computed(() => {
   const components = {
     1: Step1PurposeSelector,
-    2: Step2LayoutSelector,
-    3: Step3ThemeComponentSelector,
+    2: Step2ThemeComponentSelector,
+    3: Step3LayoutSelector,
     4: Step4DashboardGenerator
   };
   return components[props.currentStep] || Step1PurposeSelector;
@@ -114,9 +114,9 @@ const canProceed = computed(() => {
     case 1:
       return !!props.wizardData.purpose;
     case 2:
-      return !!props.wizardData.layout;
-    case 3:
       return !!props.wizardData.theme;
+    case 3:
+      return !!props.wizardData.layout;
     default:
       return true;
   }
