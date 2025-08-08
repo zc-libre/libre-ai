@@ -1,7 +1,7 @@
-import {computed, ref} from 'vue';
-import {ElMessage} from 'element-plus';
-import {useDashboardStore} from './useDashboardStore';
-import type {DashboardRequest} from '@/api/dashboard-generator';
+import { computed, ref } from 'vue';
+import { ElMessage } from 'element-plus';
+import { useDashboardStore } from './useDashboardStore';
+import type { DashboardRequest } from '@/api/dashboard-generator';
 import {
   generateDashboard as apiGenerateDashboard,
   generateDashboardStream,
@@ -85,7 +85,14 @@ export const useDashboardGenerator = () => {
         const request: DashboardRequest = {
           purpose: wizardData.purpose,
           layout: wizardData.layout,
-          theme: wizardData.theme,
+          theme: {
+            name: wizardData.themeText || wizardData.theme,
+            colors: wizardData.themeColors || {
+              primary: '#409EFF',
+              secondary: '#79BBFF',
+              accent: '#A0CFFF'
+            }
+          },
           components: wizardData.componentIds,
           options: {
             codeStyle: generationOptions.codeStyle || 'modern',
@@ -111,7 +118,10 @@ export const useDashboardGenerator = () => {
           (chunk: string) => {
             streamingCode.value += chunk;
             console.log('chunk', chunk);
-            console.log('containsNewLine', chunk.includes('\n') || chunk.includes('\r'));
+            console.log(
+              'containsNewLine',
+              chunk.includes('\n') || chunk.includes('\r')
+            );
             store.setStreamingCode(streamingCode.value); // 更新store中的流式代码
 
             // 动态更新进度
@@ -224,7 +234,18 @@ export const useDashboardGenerator = () => {
           codeStyle: generationOptions.codeStyle || 'modern',
           responsive: generationOptions.responsive !== false,
           includeData: generationOptions.includeData !== false,
-          additionalRequirements: generationOptions.additionalRequirements || ''
+          additionalRequirements: generationOptions.additionalRequirements || '',
+          ...(wizardData.theme === 'custom'
+            ? {
+                customTheme: {
+                  primary: wizardData.themeColors?.primary,
+                  secondary: wizardData.themeColors?.secondary,
+                  accent: wizardData.themeColors?.accent,
+                  background: wizardData.themeColors?.background,
+                  text: wizardData.themeColors?.text
+                }
+              }
+            : {})
         }
       };
 

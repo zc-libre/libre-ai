@@ -20,19 +20,6 @@ import java.util.Map;
  */
 public interface IDashboardService {
 
-	/**
-	 * 生成仪表板代码
-	 * @param request 生成请求
-	 * @return 生成结果
-	 */
-	GenerationResult generateDashboard(DashboardRequest request);
-
-	/**
-	 * 流式生成仪表板代码
-	 * @param request 生成请求
-	 * @return Flux<String> 响应式流
-	 */
-	Flux<String> generateDashboardStream(DashboardRequest request);
 
 	/**
 	 * 保存历史记录

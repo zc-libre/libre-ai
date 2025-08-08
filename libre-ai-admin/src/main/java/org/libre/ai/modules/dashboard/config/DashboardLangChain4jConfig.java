@@ -1,6 +1,5 @@
 package org.libre.ai.modules.dashboard.config;
 
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -8,8 +7,8 @@ import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.libre.ai.modules.dashboard.service.DashboardAiAssistant;
-import org.libre.ai.modules.dashboard.service.StreamDashboardAiAssistant;
+import org.libre.ai.modules.dashboard.assistant.DashboardAiAssistant;
+import org.libre.ai.modules.dashboard.assistant.StreamDashboardAiAssistant;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,7 +57,6 @@ public class DashboardLangChain4jConfig {
 			.baseUrl(openaiConfig.getBaseUrl())
 			.modelName(openaiConfig.getModelName())
 			.temperature(openaiConfig.getTemperature())
-			// .maxTokens(openaiConfig.getMaxTokens())
 			.maxRetries(generationConfig.getMaxRetries())
 			.timeout(Duration.ofMinutes(10))
 			.logRequests(true)
@@ -74,8 +72,6 @@ public class DashboardLangChain4jConfig {
 			.baseUrl(openaiConfig.getBaseUrl())
 			.apiKey(openaiConfig.getApiKey())
 			.modelName(openaiConfig.getModelName())
-			// .maxTokens(12800)
-			// .httpClientBuilder(springRestClientBuilder)
 			.timeout(Duration.ofMinutes(5))
 			.parallelToolCalls(true)
 			.logRequests(false)

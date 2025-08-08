@@ -31,7 +31,7 @@ if (typeof window !== 'undefined') {
       return new editorWorker();
     }
   };
-  
+
   // 设置 TypeScript 编译选项
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     target: monaco.languages.typescript.ScriptTarget.ES2020,
@@ -45,11 +45,11 @@ if (typeof window !== 'undefined') {
     allowJs: true,
     typeRoots: ['node_modules/@types']
   });
-  
+
   // 启用 TypeScript 语言服务
   monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
   monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
-  
+
   // 设置诊断选项
   monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
     noSemanticValidation: false,
@@ -77,9 +77,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   'update:modelValue': [value: string];
-  'change': [value: string];
-  'blur': [];
-  'focus': [];
+  change: [value: string];
+  blur: [];
+  focus: [];
 }>();
 
 const editorContainer = ref<HTMLElement>();
@@ -92,8 +92,10 @@ const initEditor = async () => {
   try {
     // 确保容器有高度
     if (editorContainer.value) {
-      const height = typeof props.height === 'number' ? `${props.height}px` : props.height;
-      const width = typeof props.width === 'number' ? `${props.width}px` : props.width;
+      const height =
+        typeof props.height === 'number' ? `${props.height}px` : props.height;
+      const width =
+        typeof props.width === 'number' ? `${props.width}px` : props.width;
       editorContainer.value.style.height = height;
       editorContainer.value.style.width = width;
     }
@@ -116,7 +118,8 @@ const initEditor = async () => {
       lineNumbers: 'on',
       renderWhitespace: 'selection',
       fontSize: 14,
-      fontFamily: "'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+      fontFamily:
+        "'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
       fontLigatures: true,
       tabSize: 2,
       insertSpaces: true,
@@ -197,12 +200,14 @@ const initEditor = async () => {
 // 更新编辑器尺寸
 const updateEditorSize = () => {
   if (editorContainer.value) {
-    const height = typeof props.height === 'number' ? `${props.height}px` : props.height;
-    const width = typeof props.width === 'number' ? `${props.width}px` : props.width;
-    
+    const height =
+      typeof props.height === 'number' ? `${props.height}px` : props.height;
+    const width =
+      typeof props.width === 'number' ? `${props.width}px` : props.width;
+
     editorContainer.value.style.height = height;
     editorContainer.value.style.width = width;
-    
+
     // 触发编辑器布局更新
     nextTick(() => {
       monacoEditor?.layout();
@@ -211,33 +216,45 @@ const updateEditorSize = () => {
 };
 
 // 监听 modelValue 变化
-watch(() => props.modelValue, (newValue) => {
-  if (monacoEditor && monacoEditor.getValue() !== newValue) {
-    monacoEditor.setValue(newValue || '');
-  }
-});
-
-// 监听语言变化
-watch(() => props.language, (newLanguage) => {
-  if (monacoEditor) {
-    const model = monacoEditor.getModel();
-    if (model) {
-      monaco.editor.setModelLanguage(model, newLanguage);
+watch(
+  () => props.modelValue,
+  newValue => {
+    if (monacoEditor && monacoEditor.getValue() !== newValue) {
+      monacoEditor.setValue(newValue || '');
     }
   }
-});
+);
+
+// 监听语言变化
+watch(
+  () => props.language,
+  newLanguage => {
+    if (monacoEditor) {
+      const model = monacoEditor.getModel();
+      if (model) {
+        monaco.editor.setModelLanguage(model, newLanguage);
+      }
+    }
+  }
+);
 
 // 监听主题变化
-watch(() => props.theme, (newTheme) => {
-  monaco.editor.setTheme(newTheme);
-});
+watch(
+  () => props.theme,
+  newTheme => {
+    monaco.editor.setTheme(newTheme);
+  }
+);
 
 // 监听只读状态变化
-watch(() => props.readOnly, (newReadOnly) => {
-  if (monacoEditor) {
-    monacoEditor.updateOptions({ readOnly: newReadOnly });
+watch(
+  () => props.readOnly,
+  newReadOnly => {
+    if (monacoEditor) {
+      monacoEditor.updateOptions({ readOnly: newReadOnly });
+    }
   }
-});
+);
 
 // 监听尺寸变化
 watch([() => props.height, () => props.width], () => {

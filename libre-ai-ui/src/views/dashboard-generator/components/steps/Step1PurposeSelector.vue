@@ -60,16 +60,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import {
-  DataAnalysis,
-  Management,
-  TrendCharts,
-  Monitor,
-  ShoppingCart,
-  User,
-  Setting,
-  More
-} from '@element-plus/icons-vue';
+import { Box, Location, Van, Grid, More } from '@element-plus/icons-vue';
 
 // Props
 interface Props {
@@ -87,39 +78,47 @@ const emit = defineEmits<{
 const selectedPurpose = ref(props.wizardData.purpose || '');
 const customPurposeText = ref(props.wizardData.purposeText || '');
 
-// 看板用途选项 - 与后端保持一致
+// 看板用途选项 - 物流仓储监控
 const purposeOptions = [
   {
-    id: 'analytics',
-    icon: DataAnalysis,
-    title: '数据分析看板',
-    description: '展示业务数据、KPI指标和趋势分析',
+    id: 'shelf',
+    icon: Box,
+    title: '货架监控看板',
+    description: '实时监控货架状态、库存分布和拣选效率',
     color: '#409EFF',
-    features: ['图表展示', '数据统计', '趋势分析']
+    features: ['货架状态', '库存分布', '拣选效率']
   },
   {
-    id: 'project',
-    icon: Management,
-    title: '项目管理看板',
-    description: '跟踪项目进度、任务状态和团队协作',
+    id: 'location',
+    icon: Location,
+    title: '仓位监控看板',
+    description: '监控仓位利用率、占用状态和物料分布',
     color: '#67C23A',
-    features: ['进度跟踪', '任务管理', '团队协作']
+    features: ['仓位利用率', '占用状态', '物料分布']
   },
   {
-    id: 'sales',
-    icon: TrendCharts,
-    title: '销售监控看板',
-    description: '监控销售业绩、客户数据和市场趋势',
+    id: 'transport',
+    icon: Van,
+    title: '搬运任务监控',
+    description: 'AGV搬运任务跟踪、路径规划和设备状态',
     color: '#E6A23C',
-    features: ['销售统计', '客户分析', '业绩监控']
+    features: ['AGV任务', '路径规划', '设备状态']
   },
   {
-    id: 'monitoring',
-    icon: Monitor,
-    title: '系统监控看板',
-    description: '实时监控系统状态、性能指标和告警信息',
+    id: 'mixed',
+    icon: Grid,
+    title: '混合监控看板',
+    description: '综合展示仓储、物料和搬运全流程监控',
     color: '#F56C6C',
-    features: ['实时监控', '性能指标', '告警管理']
+    features: ['全局监控', '多维分析', '综合指标']
+  },
+  {
+    id: 'custom',
+    icon: More,
+    title: '自定义用途',
+    description: '根据您的具体需求定制专属监控看板',
+    color: '#909399',
+    features: ['自定义配置', '灵活定制', '个性化']
   }
 ];
 
@@ -189,8 +188,8 @@ const updateCustomPurpose = () => {
 }
 
 .purpose-card {
-  flex: 0 0 calc(25% - 12px);
-  min-width: 200px;
+  flex: 0 0 calc(20% - 13px);
+  min-width: 180px;
   border: 2px solid #ebeef5;
   border-radius: 12px;
   padding: 20px;

@@ -2,7 +2,12 @@
   <div class="timeline-preview">
     <div class="timeline-container">
       <div class="timeline-line"></div>
-      <div class="timeline-item" v-for="i in 5" :key="i" :style="{ left: `${(i - 1) * 22}%` }">
+      <div
+        class="timeline-item"
+        v-for="i in 5"
+        :key="i"
+        :style="{ left: `${(i - 1) * 22}%` }"
+      >
         <div class="timeline-point"></div>
         <div class="timeline-content"></div>
       </div>

@@ -26,23 +26,142 @@
           <div class="theme-preview">
             <div
               class="color-bar primary"
-              :style="{ backgroundColor: theme.colors.primary }"
+              :style="{ backgroundColor: theme.isCustom && theme.id === selectedTheme ? customColors.primary : theme.colors.primary }"
             />
             <div
               class="color-bar secondary"
-              :style="{ backgroundColor: theme.colors.secondary }"
+              :style="{ backgroundColor: theme.isCustom && theme.id === selectedTheme ? customColors.secondary : theme.colors.secondary }"
             />
             <div
               class="color-bar accent"
-              :style="{ backgroundColor: theme.colors.accent }"
+              :style="{ backgroundColor: theme.isCustom && theme.id === selectedTheme ? customColors.accent : theme.colors.accent }"
             />
           </div>
           <div class="theme-info">
             <h4 class="theme-name">{{ theme.name }}</h4>
             <p class="theme-description">{{ theme.description }}</p>
           </div>
+          <div v-if="theme.isCustom" class="custom-indicator">
+            <el-icon :size="18" color="#6366F1">
+              <Edit />
+            </el-icon>
+          </div>
         </div>
       </div>
+      
+      <!-- 自定义颜色面板 -->
+      <el-collapse-transition>
+        <div v-if="selectedTheme === 'custom'" class="custom-color-panel">
+          <el-card>
+            <template #header>
+              <span class="panel-title">自定义配色方案</span>
+            </template>
+            <div class="color-pickers">
+              <div class="color-picker-item">
+                <label>主色调</label>
+                <div class="color-input-group">
+                  <el-color-picker
+                    v-model="customColors.primary"
+                    show-alpha
+                    :predefine="[
+                      '#409EFF',
+                      '#6366F1',
+                      '#8B5CF6',
+                      '#EC4899',
+                      '#F56C6C',
+                      '#E6A23C',
+                      '#67C23A',
+                      '#17A2B8'
+                    ]"
+                    @change="updateCustomTheme"
+                  />
+                  <el-input
+                    v-model="customColors.primary"
+                    placeholder="#6366F1"
+                    size="small"
+                    @input="updateCustomTheme"
+                  />
+                </div>
+              </div>
+              <div class="color-picker-item">
+                <label>辅助色</label>
+                <div class="color-input-group">
+                  <el-color-picker
+                    v-model="customColors.secondary"
+                    show-alpha
+                    :predefine="[
+                      '#79BBFF',
+                      '#818CF8',
+                      '#A78BFA',
+                      '#F472B6',
+                      '#F78989',
+                      '#EEBE77',
+                      '#85CE61',
+                      '#46B5D1'
+                    ]"
+                    @change="updateCustomTheme"
+                  />
+                  <el-input
+                    v-model="customColors.secondary"
+                    placeholder="#818CF8"
+                    size="small"
+                    @input="updateCustomTheme"
+                  />
+                </div>
+              </div>
+              <div class="color-picker-item">
+                <label>强调色</label>
+                <div class="color-input-group">
+                  <el-color-picker
+                    v-model="customColors.accent"
+                    show-alpha
+                    :predefine="[
+                      '#A0CFFF',
+                      '#A5B4FC',
+                      '#C4B5FD',
+                      '#FBCFE8',
+                      '#FAB6B6',
+                      '#F3D19E',
+                      '#B3E19D',
+                      '#7CC7D8'
+                    ]"
+                    @change="updateCustomTheme"
+                  />
+                  <el-input
+                    v-model="customColors.accent"
+                    placeholder="#A5B4FC"
+                    size="small"
+                    @input="updateCustomTheme"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="color-preview">
+              <div class="preview-title">预览</div>
+              <div class="preview-content">
+                <div
+                  class="preview-bar"
+                  :style="{ backgroundColor: customColors.primary }"
+                >
+                  <span>主色调</span>
+                </div>
+                <div
+                  class="preview-bar"
+                  :style="{ backgroundColor: customColors.secondary }"
+                >
+                  <span>辅助色</span>
+                </div>
+                <div
+                  class="preview-bar"
+                  :style="{ backgroundColor: customColors.accent }"
+                >
+                  <span>强调色</span>
+                </div>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-collapse-transition>
     </div>
 
     <!-- 组件选择 -->
@@ -140,7 +259,8 @@ import {
   Calendar,
   Clock,
   User,
-  Setting
+  Setting,
+  Edit
 } from '@element-plus/icons-vue';
 
 // Props
@@ -159,6 +279,12 @@ const emit = defineEmits<{
 const selectedTheme = ref(props.wizardData.theme || '');
 const selectedComponents = ref(props.wizardData.componentIds || []);
 const activeComponentTab = ref('charts');
+const showColorPicker = ref(false);
+const customColors = ref({
+  primary: props.wizardData.customColors?.primary || '#6366F1',
+  secondary: props.wizardData.customColors?.secondary || '#818CF8',
+  accent: props.wizardData.customColors?.accent || '#A5B4FC'
+});
 
 // 主题选项
 const themeOptions = [
@@ -201,6 +327,77 @@ const themeOptions = [
       secondary: '#EEBE77',
       accent: '#F3D19E'
     }
+  },
+  {
+    id: 'red-energy',
+    name: '活力红',
+    description: '充满活力的红色主题',
+    colors: {
+      primary: '#F56C6C',
+      secondary: '#F78989',
+      accent: '#FAB6B6'
+    }
+  },
+  {
+    id: 'cyan-fresh',
+    name: '清新青',
+    description: '清新淡雅的青色主题',
+    colors: {
+      primary: '#17A2B8',
+      secondary: '#46B5D1',
+      accent: '#7CC7D8'
+    }
+  },
+  {
+    id: 'indigo-deep',
+    name: '深邃靛',
+    description: '深邃沉稳的靛色主题',
+    colors: {
+      primary: '#6366F1',
+      secondary: '#818CF8',
+      accent: '#A5B4FC'
+    }
+  },
+  {
+    id: 'pink-soft',
+    name: '柔和粉',
+    description: '温柔浪漫的粉色主题',
+    colors: {
+      primary: '#EC4899',
+      secondary: '#F472B6',
+      accent: '#FBCFE8'
+    }
+  },
+  {
+    id: 'teal-calm',
+    name: '静谧蓝绿',
+    description: '平静舒适的蓝绿主题',
+    colors: {
+      primary: '#14B8A6',
+      secondary: '#5EEAD4',
+      accent: '#99F6E4'
+    }
+  },
+  {
+    id: 'amber-golden',
+    name: '金色光辉',
+    description: '高贵典雅的金色主题',
+    colors: {
+      primary: '#F59E0B',
+      secondary: '#FBBF24',
+      accent: '#FCD34D'
+    }
+  },
+  {
+    id: 'custom',
+    name: '自定义',
+    description: '创建您的专属配色',
+    colors: {
+      primary: '#6366F1',
+      secondary: '#818CF8',
+      accent: '#A5B4FC'
+    },
+    isCustom: true
   }
 ];
 
@@ -311,7 +508,16 @@ const selectedThemeOption = computed(() => {
 // 方法
 const selectTheme = (theme: any) => {
   selectedTheme.value = theme.id;
+  if (theme.isCustom) {
+    showColorPicker.value = true;
+  }
   updateData();
+};
+
+const updateCustomTheme = () => {
+  if (selectedTheme.value === 'custom') {
+    updateData();
+  }
 };
 
 const toggleComponent = (component: any) => {
@@ -333,9 +539,14 @@ const getComponentName = (componentId: string) => {
 };
 
 const updateData = () => {
+  const isCustom = selectedTheme.value === 'custom';
+  const themeColors = isCustom ? customColors.value : (selectedThemeOption.value?.colors || {});
+  const themeName = isCustom ? '自定义' : (selectedThemeOption.value?.name || '');
+  
   const updateData = {
     theme: selectedTheme.value,
-    themeColors: selectedThemeOption.value?.colors || {},
+    themeText: themeName,
+    themeColors: themeColors,
     componentIds: selectedComponents.value,
     components: selectedComponents.value.map(id => getComponentName(id))
   };
@@ -405,6 +616,13 @@ const updateData = () => {
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
+  position: relative;
+}
+
+.custom-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 .theme-card:hover {
@@ -443,6 +661,74 @@ const updateData = () => {
 .theme-description {
   font-size: 12px;
   color: #606266;
+}
+
+.custom-color-panel {
+  margin-top: 20px;
+}
+
+.panel-title {
+  font-weight: 600;
+  color: #303133;
+}
+
+.color-pickers {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.color-picker-item {
+  flex: 1;
+}
+
+.color-picker-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #606266;
+}
+
+.color-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-input-group .el-input {
+  flex: 1;
+  max-width: 120px;
+}
+
+.color-preview {
+  border-top: 1px solid #ebeef5;
+  padding-top: 16px;
+}
+
+.preview-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #606266;
+  margin-bottom: 12px;
+}
+
+.preview-content {
+  display: flex;
+  gap: 8px;
+  height: 60px;
+}
+
+.preview-bar {
+  flex: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .component-grid {
@@ -522,6 +808,11 @@ const updateData = () => {
 @media (max-width: 990px) {
   .theme-card {
     flex: 0 0 calc(33.333% - 11px);
+  }
+  
+  .color-pickers {
+    flex-direction: column;
+    gap: 16px;
   }
 
   .component-card {

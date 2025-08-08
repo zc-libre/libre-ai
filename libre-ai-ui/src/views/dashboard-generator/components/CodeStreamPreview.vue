@@ -124,50 +124,52 @@ const codeContainer = ref<HTMLElement>();
 const monacoEditorRef = ref<InstanceType<typeof MonacoEditor>>();
 
 // Monaco Editor 配置
-const editorOptions = computed<editor.IStandaloneEditorConstructionOptions>(() => ({
-  minimap: {
-    enabled: true,
-    maxColumn: 80
-  },
-  scrollBeyondLastLine: false,
-  wordWrap: 'on',
-  lineNumbers: 'on',
-  renderWhitespace: 'none',
-  fontSize: 13,
-  fontFamily: "'Consolas', 'Monaco', 'Courier New', monospace",
-  tabSize: 2,
-  insertSpaces: true,
-  formatOnPaste: false,
-  formatOnType: false,
-  scrollbar: {
-    vertical: 'visible',
-    horizontal: 'visible',
-    useShadows: false,
-    verticalHasArrows: false,
-    horizontalHasArrows: false,
-    verticalScrollbarSize: 10,
-    horizontalScrollbarSize: 10
-  },
-  folding: true,
-  foldingStrategy: 'indentation',
-  showFoldingControls: 'always',
-  renderLineHighlight: 'none',
-  cursorStyle: 'line',
-  smoothScrolling: true,
-  contextmenu: true,
-  automaticLayout: true,
-  quickSuggestions: false,
-  suggestOnTriggerCharacters: false,
-  acceptSuggestionOnEnter: 'off',
-  wordBasedSuggestions: 'off',
-  parameterHints: {
-    enabled: false
-  },
-  hover: {
-    enabled: true,
-    delay: 300
-  }
-}));
+const editorOptions = computed<editor.IStandaloneEditorConstructionOptions>(
+  () => ({
+    minimap: {
+      enabled: true,
+      maxColumn: 80
+    },
+    scrollBeyondLastLine: false,
+    wordWrap: 'on',
+    lineNumbers: 'on',
+    renderWhitespace: 'none',
+    fontSize: 13,
+    fontFamily: "'Consolas', 'Monaco', 'Courier New', monospace",
+    tabSize: 2,
+    insertSpaces: true,
+    formatOnPaste: false,
+    formatOnType: false,
+    scrollbar: {
+      vertical: 'visible',
+      horizontal: 'visible',
+      useShadows: false,
+      verticalHasArrows: false,
+      horizontalHasArrows: false,
+      verticalScrollbarSize: 10,
+      horizontalScrollbarSize: 10
+    },
+    folding: true,
+    foldingStrategy: 'indentation',
+    showFoldingControls: 'always',
+    renderLineHighlight: 'none',
+    cursorStyle: 'line',
+    smoothScrolling: true,
+    contextmenu: true,
+    automaticLayout: true,
+    quickSuggestions: false,
+    suggestOnTriggerCharacters: false,
+    acceptSuggestionOnEnter: 'off',
+    wordBasedSuggestions: 'off',
+    parameterHints: {
+      enabled: false
+    },
+    hover: {
+      enabled: true,
+      delay: 300
+    }
+  })
+);
 
 // 初始化
 onMounted(() => {
@@ -213,26 +215,36 @@ const scrollToBottom = () => {
         // 滚动到最后一行
         editor.revealLine(lineCount, 1); // 1 表示滚动到顶部边缘
         // 设置光标位置到文档末尾（可选）
-        editor.setPosition({ lineNumber: lineCount, column: model.getLineMaxColumn(lineCount) });
+        editor.setPosition({
+          lineNumber: lineCount,
+          column: model.getLineMaxColumn(lineCount)
+        });
       }
     }
   });
 };
 
 // 监听代码变化，在流式输出时自动滚动
-watch(() => props.code, () => {
-  if (props.isStreaming) {
-    scrollToBottom();
-  }
-}, { flush: 'post' }); // 确保在 DOM 更新后执行
+watch(
+  () => props.code,
+  () => {
+    if (props.isStreaming) {
+      scrollToBottom();
+    }
+  },
+  { flush: 'post' }
+); // 确保在 DOM 更新后执行
 
 // 监听流式状态变化
-watch(() => props.isStreaming, (newValue, oldValue) => {
-  // 当开始流式输出时，也滚动到底部
-  if (newValue && !oldValue) {
-    scrollToBottom();
+watch(
+  () => props.isStreaming,
+  (newValue, oldValue) => {
+    // 当开始流式输出时，也滚动到底部
+    if (newValue && !oldValue) {
+      scrollToBottom();
+    }
   }
-});
+);
 </script>
 
 <style scoped>
@@ -338,7 +350,6 @@ watch(() => props.isStreaming, (newValue, oldValue) => {
   color: #969696;
   white-space: nowrap;
 }
-
 
 /* 滚动条样式 */
 .code-container::-webkit-scrollbar {
