@@ -1,5 +1,5 @@
 <template>
-  <div class="step4-dashboard-generator">
+  <div class="step5-dashboard-generator">
     <div class="step-header">
       <h2 class="step-title">
         <el-icon class="step-icon" :size="24" color="#6366F1">
@@ -364,7 +364,7 @@ defineExpose({
 </script>
 
 <style scoped>
-.step4-dashboard-generator {
+.step5-dashboard-generator {
   margin: 0 auto;
 }
 

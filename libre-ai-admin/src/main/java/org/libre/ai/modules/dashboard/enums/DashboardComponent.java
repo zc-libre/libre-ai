@@ -19,11 +19,7 @@ public enum DashboardComponent {
 
 	// 数据组件
 	DATA_TABLE("data-table", "数据表格", "展示详细数据"), DATA_LIST("data-list", "数据列表", "展示列表信息"),
-	KPI_CARD("kpi-card", "KPI卡片", "展示关键指标"),
-
-	// 交互组件
-	CALENDAR("calendar", "日历组件", "时间选择器"), TIMER("timer", "时间显示", "实时时间"), USER_INFO("user-info", "用户信息", "用户状态"),
-	SETTINGS("settings", "设置面板", "配置选项");
+	KPI_CARD("kpi-card", "KPI卡片", "展示关键指标");
 
 	private final String code;
 

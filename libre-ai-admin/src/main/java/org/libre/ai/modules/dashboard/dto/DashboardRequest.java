@@ -65,11 +65,17 @@ public class DashboardRequest {
 	private ThemeConfig theme;
 
 	/**
-	 * 组件列表
+	 * 组件列表（兼容旧版本）
 	 */
 	@NotEmpty(message = "组件列表不能为空")
 	@Size(min = 1, max = 10, message = "组件数量必须在1-10个之间")
 	private List<@NotBlank String> components;
+
+	/**
+	 * 组件配置列表（包含数据结构配置）
+	 */
+	@Valid
+	private List<ComponentConfig> componentConfigs;
 
 	/**
 	 * 生成选项
@@ -78,38 +84,11 @@ public class DashboardRequest {
 	private GenerationOptions options;
 
 	/**
-	 * 获取用途显示文本 体现OCP原则：使用枚举替代硬编码
-	 */
-	public String getPurposeText() {
-		DashboardPurpose purposeEnum = DashboardPurpose.fromCode(purpose);
-		return purposeEnum != null ? purposeEnum.getName() : purpose;
-	}
-
-	/**
 	 * 获取布局显示文本
 	 */
 	public String getLayoutText() {
 		DashboardLayout layoutEnum = DashboardLayout.fromCode(layout);
 		return layoutEnum != null ? layoutEnum.getName() : layout;
-	}
-
-	/**
-	 * 获取主题显示文本
-	 */
-	public String getThemeText() {
-		return theme != null ? theme.getName() : "";
-	}
-
-	/**
-	 * 获取主题颜色配置描述
-	 */
-	public String getThemeColors() {
-		if (theme != null && theme.getColors() != null) {
-			ThemeConfig.ThemeColors colors = theme.getColors();
-			return String.format("主色:%s, 辅助色:%s, 强调色:%s", colors.getPrimary(), colors.getSecondary(),
-					colors.getAccent());
-		}
-		return "";
 	}
 
 }

@@ -7,11 +7,63 @@ export interface DashboardConfig {
   components: string[];
 }
 
+export interface ComponentDataConfig {
+  componentId: string;
+  componentType: string;
+  dataSource?: string;
+  refreshInterval?: number;
+  
+  // 图表类配置
+  xField?: string;
+  yField?: string;
+  nameField?: string;
+  valueField?: string;
+  seriesField?: string;
+  sampleData?: string;
+  
+  // KPI卡片配置
+  title?: string;
+  unit?: string;
+  comparison?: 'chain' | 'year' | 'none';
+  trend?: 'up' | 'down' | 'stable';
+  
+  // 表格配置
+  columns?: Array<{
+    field: string;
+    title: string;
+    width?: number;
+    sortable?: boolean;
+  }>;
+  pagination?: boolean;
+  pageSize?: number;
+  
+  // 自定义数据结构
+  customSchema?: any;
+}
+
+// 主题配置（与后端 ThemeConfig 对应）
+export interface ThemeConfig {
+  name: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background?: string;
+    surface?: string;
+    text?: string;
+  };
+}
+
+// 仪表板请求（与后端 DashboardRequest 对应）
 export interface DashboardRequest {
   purpose: string;
+  purposeDetail?: string;
+  focusMetrics?: string;
+  customRequirements?: string;
   layout: string;
-  theme: string;
+  theme: ThemeConfig;  // 发送给后端的是 ThemeConfig 对象
   components: string[];
+  componentConfigs?: ComponentDataConfig[];
   options?: Record<string, any>;
 }
 

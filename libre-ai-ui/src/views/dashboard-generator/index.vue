@@ -7,8 +7,9 @@
       <div class="flex justify-between items-center gap-4">
         <el-steps :active="store.currentStep - 1" align-center class="flex-1">
           <el-step title="看板用途" description="选择看板的使用场景" />
+          <el-step title="组件选择" description="选择需要的数据组件" />
+          <el-step title="主题配色" description="选择看板的配色方案" />
           <el-step title="布局样式" description="选择看板的布局风格" />
-          <el-step title="主题组件" description="配置主题色彩和组件" />
           <el-step title="生成看板" description="AI 智能生成看板代码" />
         </el-steps>
 
@@ -60,10 +61,10 @@
         />
       </div>
 
-      <!-- 右侧预览面板 - 只在第4步且有生成内容时显示 -->
+      <!-- 右侧预览面板 - 只在第5步且有生成内容时显示 -->
       <div
         v-if="
-          store.currentStep === 4 &&
+          store.currentStep === 5 &&
           (store.showPreview ||
             generatedDashboard ||
             store.isStreaming ||
