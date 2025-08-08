@@ -42,8 +42,10 @@ public class GenerationOptions {
 	private Boolean includeData = true;
 
 	/**
-	 * 额外需求描述
+	 * 额外需求描述 - 已废弃，请使用 DashboardRequest 中的 customRequirements
+	 * @deprecated 使用 DashboardRequest.customRequirements 替代
 	 */
+	@Deprecated
 	@Size(max = 500, message = "额外需求描述不能超过500字符")
 	@Default
 	private String additionalRequirements = "";

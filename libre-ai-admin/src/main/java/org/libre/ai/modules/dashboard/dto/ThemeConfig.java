@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * 主题配置
- * 
- * 统一的主题结构，无论预设还是自定义都使用相同格式
- * 遵循KISS原则：简单统一的数据结构
- * 
+ *
+ * 统一的主题结构，无论预设还是自定义都使用相同格式 遵循KISS原则：简单统一的数据结构
+ *
  * @author AI Assistant
  * @since 2025-01-15
  */

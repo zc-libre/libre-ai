@@ -14,6 +14,9 @@ export type ThemeConfig = {
 
 export type DashboardRequest = {
   purpose: string;
+  purposeDetail?: string;  // 场景细节描述
+  focusMetrics?: string;   // 重点监控指标
+  customRequirements?: string; // 用户补充需求
   layout: string;
   theme: ThemeConfig;
   components: string[];
@@ -21,7 +24,7 @@ export type DashboardRequest = {
     codeStyle?: string;
     responsive?: boolean;
     includeData?: boolean;
-    additionalRequirements?: string;
+    additionalRequirements?: string; // 保留向后兼容
   };
 };
 

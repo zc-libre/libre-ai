@@ -84,13 +84,16 @@ export const useDashboardGenerator = () => {
         const { wizardData, generationOptions } = store;
         const request: DashboardRequest = {
           purpose: wizardData.purpose,
+          purposeDetail: wizardData.purposeDetail || '',
+          focusMetrics: wizardData.focusMetrics || '',
+          customRequirements: wizardData.customRequirements || '',
           layout: wizardData.layout,
           theme: {
             name: wizardData.themeText || wizardData.theme,
-            colors: wizardData.themeColors || {
-              primary: '#409EFF',
-              secondary: '#79BBFF',
-              accent: '#A0CFFF'
+            colors: {
+              primary: wizardData.themeColors?.primary || '#409EFF',
+              secondary: wizardData.themeColors?.secondary || '#79BBFF',
+              accent: wizardData.themeColors?.accent || '#A0CFFF'
             }
           },
           components: wizardData.componentIds,
@@ -227,25 +230,24 @@ export const useDashboardGenerator = () => {
       const { wizardData, generationOptions } = store;
       const request: DashboardRequest = {
         purpose: wizardData.purpose,
+        purposeDetail: wizardData.purposeDetail || '',
+        focusMetrics: wizardData.focusMetrics || '',
+        customRequirements: wizardData.customRequirements || '',
         layout: wizardData.layout,
-        theme: wizardData.theme,
+        theme: {
+          name: wizardData.themeText || wizardData.theme,
+          colors: {
+            primary: wizardData.themeColors?.primary || '#409EFF',
+            secondary: wizardData.themeColors?.secondary || '#79BBFF',
+            accent: wizardData.themeColors?.accent || '#A0CFFF'
+          }
+        },
         components: wizardData.componentIds,
         options: {
           codeStyle: generationOptions.codeStyle || 'modern',
           responsive: generationOptions.responsive !== false,
           includeData: generationOptions.includeData !== false,
-          additionalRequirements: generationOptions.additionalRequirements || '',
-          ...(wizardData.theme === 'custom'
-            ? {
-                customTheme: {
-                  primary: wizardData.themeColors?.primary,
-                  secondary: wizardData.themeColors?.secondary,
-                  accent: wizardData.themeColors?.accent,
-                  background: wizardData.themeColors?.background,
-                  text: wizardData.themeColors?.text
-                }
-              }
-            : {})
+          additionalRequirements: generationOptions.additionalRequirements || ''
         }
       };
 

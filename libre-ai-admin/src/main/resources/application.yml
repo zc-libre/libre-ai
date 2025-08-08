@@ -1,8 +1,6 @@
 server:
   port: 9191
 
-
-
 spring:
   datasource:
     #    driver-class-name: org.postgresql.Driver
@@ -25,12 +23,11 @@ dashboard:
   # OpenAI配置
   openai:
     # API密钥，建议通过环境变量OPENAI_API_KEY设置
-    api-key: ${OPENAI_API_KEY:sk-dhyxvZsb9SY9UnTvZq3cE4Nq1f0cRMBEdx98EyZKQLOnVYtY}
+    api-key: ${OPENAI_API_KEY}
     # API基础URL，支持代理或自定义端点
-    base-url: ${OPENAI_BASE_URL:https://api.zclibre.org/v1}
+    base-url: ${OPENAI_BASE_URL}
     # 使用的模型名称
-    model-name: ${OPENAI_MODEL_NAME:v0-1.5-md}
-
+    model-name: ${OPENAI_MODEL_NAME:claude-sonnet-4-20250514}
     # 温度参数，控制输出随机性（0-1）
     temperature: ${OPENAI_TEMPERATURE:1}
     # 最大输出token数
