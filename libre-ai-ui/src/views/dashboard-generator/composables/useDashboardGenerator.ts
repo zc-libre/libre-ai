@@ -82,6 +82,33 @@ export const useDashboardGenerator = () => {
 
         // 准备API请求参数
         const { wizardData, generationOptions } = store;
+        
+        // 构建组件配置数组
+        const componentConfigs = wizardData.componentIds.map((id: string) => {
+          const config = wizardData.componentDataConfigs?.[id] || {};
+          return {
+            componentId: id,
+            componentType: id,
+            dataSource: config.dataSource,
+            refreshInterval: config.refreshInterval,
+            dataStructure: {
+              xField: config.xField,
+              yField: config.yField,
+              seriesField: config.seriesField,
+              nameField: config.nameField,
+              valueField: config.valueField,
+              title: config.title,
+              unit: config.unit,
+              comparison: config.comparison,
+              trend: config.trend,
+              columns: config.columns,
+              pagination: config.pagination,
+              pageSize: config.pageSize,
+              sampleData: config.sampleData
+            }
+          };
+        });
+        
         const request: DashboardRequest = {
           purpose: wizardData.purpose,
           purposeDetail: wizardData.purposeDetail || '',
@@ -97,6 +124,7 @@ export const useDashboardGenerator = () => {
             }
           },
           components: wizardData.componentIds,
+          componentConfigs: componentConfigs,
           options: {
             codeStyle: generationOptions.codeStyle || 'modern',
             responsive: generationOptions.responsive !== false,

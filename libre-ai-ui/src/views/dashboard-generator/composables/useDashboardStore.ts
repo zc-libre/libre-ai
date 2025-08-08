@@ -71,10 +71,15 @@ export const useDashboardStore = defineStore('dashboard-generator', () => {
       case 2:
         return !!wizardData.purpose;
       case 3:
-        return !!wizardData.purpose && !!wizardData.layout;
+        return !!wizardData.purpose && wizardData.componentIds && wizardData.componentIds.length > 0;
       case 4:
+        return !!wizardData.purpose && wizardData.componentIds && wizardData.componentIds.length > 0 && !!wizardData.theme;
+      case 5:
         return (
-          !!wizardData.purpose && !!wizardData.layout && !!wizardData.theme
+          !!wizardData.purpose && 
+          wizardData.componentIds && wizardData.componentIds.length > 0 && 
+          !!wizardData.theme && 
+          !!wizardData.layout
         );
       default:
         return true;
@@ -82,7 +87,10 @@ export const useDashboardStore = defineStore('dashboard-generator', () => {
   });
 
   const isConfigComplete = computed(() => {
-    return wizardData.purpose && wizardData.layout && wizardData.theme;
+    return wizardData.purpose && 
+           wizardData.componentIds && wizardData.componentIds.length > 0 &&
+           wizardData.theme && 
+           wizardData.layout;
   });
 
   const selectedComponentsCount = computed(() => {
@@ -91,7 +99,7 @@ export const useDashboardStore = defineStore('dashboard-generator', () => {
 
   // Actions
   const setCurrentStep = (step: number) => {
-    if (step >= 1 && step <= 4) {
+    if (step >= 1 && step <= 5) {
       currentStep.value = step;
     }
   };

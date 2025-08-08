@@ -32,7 +32,7 @@
         <div class="nav-spacer flex-1 hidden sm:block" />
 
         <el-button
-          v-if="currentStep < 4"
+          v-if="currentStep < 5"
           type="primary"
           :icon="ArrowRight"
           :disabled="!canProceed"
@@ -44,7 +44,7 @@
 
         <!-- 生成看板按钮 - 只在未生成时显示 -->
         <el-button
-          v-if="currentStep === 4 && !props.hasGenerated"
+          v-if="currentStep === 5 && !props.hasGenerated"
           type="success"
           :icon="Check"
           :loading="props.isGenerating"
@@ -56,7 +56,7 @@
 
         <!-- 重新生成按钮 - 只在已生成时显示 -->
         <el-button
-          v-if="currentStep === 4 && props.hasGenerated && !props.isGenerating"
+          v-if="currentStep === 5 && props.hasGenerated && !props.isGenerating"
           type="warning"
           :icon="Refresh"
           class="order-1 sm:order-2"
@@ -74,9 +74,10 @@ import { computed, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { ArrowLeft, ArrowRight, Check, Refresh } from '@element-plus/icons-vue';
 import Step1PurposeSelector from './steps/Step1PurposeSelector.vue';
-import Step2ThemeComponentSelector from './steps/Step2ThemeComponentSelector.vue';
-import Step3LayoutSelector from './steps/Step3LayoutSelector.vue';
-import Step4DashboardGenerator from './steps/Step4DashboardGenerator.vue';
+import Step2ComponentSelector from './steps/Step2ComponentSelector.vue';
+import Step3ThemeSelector from './steps/Step3ThemeSelector.vue';
+import Step4LayoutSelector from './steps/Step4LayoutSelector.vue';
+import Step5DashboardGenerator from './steps/Step5DashboardGenerator.vue';
 
 // Props
 interface Props {
@@ -102,9 +103,10 @@ const currentStepRef = ref<any>(null);
 const currentStepComponent = computed(() => {
   const components = {
     1: Step1PurposeSelector,
-    2: Step2ThemeComponentSelector,
-    3: Step3LayoutSelector,
-    4: Step4DashboardGenerator
+    2: Step2ComponentSelector,
+    3: Step3ThemeSelector,
+    4: Step4LayoutSelector,
+    5: Step5DashboardGenerator
   };
   return components[props.currentStep] || Step1PurposeSelector;
 });
@@ -114,8 +116,10 @@ const canProceed = computed(() => {
     case 1:
       return !!props.wizardData.purpose;
     case 2:
-      return !!props.wizardData.theme;
+      return props.wizardData.componentIds && props.wizardData.componentIds.length > 0;
     case 3:
+      return !!props.wizardData.theme;
+    case 4:
       return !!props.wizardData.layout;
     default:
       return true;
@@ -128,7 +132,7 @@ const handleDataUpdate = (data: any) => {
 };
 
 const handleNext = () => {
-  if (canProceed.value && props.currentStep < 4) {
+  if (canProceed.value && props.currentStep < 5) {
     emit('step-change', props.currentStep + 1);
   }
 };
@@ -142,15 +146,17 @@ const handlePrev = () => {
 const handleGenerate = () => {
   if (
     !props.wizardData.purpose ||
-    !props.wizardData.layout ||
-    !props.wizardData.theme
+    !props.wizardData.componentIds || 
+    props.wizardData.componentIds.length === 0 ||
+    !props.wizardData.theme ||
+    !props.wizardData.layout
   ) {
     ElMessage.warning('请完成所有配置步骤');
     return;
   }
 
-  // 如果当前是第4步，直接调用组件的生成方法
-  if (props.currentStep === 4 && currentStepRef.value?.generateDashboard) {
+  // 如果当前是第5步，直接调用组件的生成方法
+  if (props.currentStep === 5 && currentStepRef.value?.generateDashboard) {
     currentStepRef.value.generateDashboard();
   }
 };
@@ -162,7 +168,7 @@ const handleTriggerGenerate = () => {
 
 // 处理重新生成
 const handleRegenerate = () => {
-  if (props.currentStep === 4 && currentStepRef.value?.regenerateDashboard) {
+  if (props.currentStep === 5 && currentStepRef.value?.regenerateDashboard) {
     currentStepRef.value.regenerateDashboard();
   }
 };

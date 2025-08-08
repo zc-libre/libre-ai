@@ -1,5 +1,5 @@
 <template>
-  <div class="step3-layout-selector">
+  <div class="step4-layout-selector">
     <div class="step-header">
       <h2 class="step-title">
         <el-icon class="step-icon" :size="24" color="#6366F1">
@@ -248,7 +248,7 @@ const selectLayout = (layout: any) => {
 </script>
 
 <style scoped>
-.step3-layout-selector {
+.step4-layout-selector {
   margin: 0 auto;
 }
 

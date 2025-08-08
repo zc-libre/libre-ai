@@ -1,70 +1,22 @@
 <template>
-  <div class="step2-theme-component-selector">
+  <div class="step3-theme-selector">
     <div class="step-header">
       <h2 class="step-title">
         <el-icon class="step-icon" :size="24" color="#6366F1">
-          <Setting />
+          <Brush />
         </el-icon>
-        组件选择与主题配色
+        选择主题配色
       </h2>
       <p class="step-description">
-        选择您需要的数据组件和喜欢的主题配色，我们将基于您的选择推荐合适的布局。
+        为您的看板选择合适的配色方案，打造专业美观的视觉效果。
       </p>
-    </div>
-
-    <!-- 组件选择 -->
-    <div class="section">
-      <h3 class="section-title">选择看板组件</h3>
-      <p class="section-subtitle">根据您的看板用途，我们推荐以下组件：</p>
-
-      <div class="component-categories">
-        <el-tabs v-model="activeComponentTab" type="border-card">
-          <el-tab-pane
-            v-for="category in componentCategories"
-            :key="category.id"
-            :label="category.name"
-            :name="category.id"
-          >
-            <div class="component-grid">
-              <div
-                v-for="component in category.components"
-                :key="component.id"
-                class="component-card"
-                :class="{ selected: selectedComponents.includes(component.id) }"
-                @click="toggleComponent(component)"
-              >
-                <div class="component-icon">
-                  <el-icon
-                    :size="24"
-                    :color="
-                      selectedComponents.includes(component.id)
-                        ? '#fff'
-                        : component.color
-                    "
-                  >
-                    <component :is="component.icon" />
-                  </el-icon>
-                </div>
-                <h4 class="component-name">{{ component.name }}</h4>
-                <p class="component-description">{{ component.description }}</p>
-                <div
-                  v-if="selectedComponents.includes(component.id)"
-                  class="selected-indicator"
-                >
-                  <el-icon :size="16" color="#fff">
-                    <Check />
-                  </el-icon>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
     </div>
 
     <!-- 主题选择 -->
     <div class="section">
-      <h3 class="section-title">选择主题配色</h3>
+      <h3 class="section-title">选择配色方案</h3>
+      <p class="section-subtitle">选择预设主题或创建自定义配色</p>
+      
       <div class="theme-grid">
         <div
           v-for="theme in themeOptions"
@@ -94,6 +46,11 @@
           <div v-if="theme.isCustom" class="custom-indicator">
             <el-icon :size="18" color="#6366F1">
               <Edit />
+            </el-icon>
+          </div>
+          <div v-if="selectedTheme === theme.id" class="selected-indicator">
+            <el-icon :size="20" color="#409EFF">
+              <Check />
             </el-icon>
           </div>
         </div>
@@ -187,7 +144,7 @@
               </div>
             </div>
             <div class="color-preview">
-              <div class="preview-title">预览</div>
+              <div class="preview-title">预览效果</div>
               <div class="preview-content">
                 <div
                   class="preview-bar"
@@ -214,29 +171,64 @@
       </el-collapse-transition>
     </div>
 
+    <!-- 配色预览 -->
+    <div v-if="selectedTheme" class="section">
+      <h3 class="section-title">配色应用预览</h3>
+      <div class="preview-demo">
+        <el-card>
+          <div class="demo-header" :style="{ borderBottomColor: getCurrentColors().primary }">
+            <span class="demo-title" :style="{ color: getCurrentColors().primary }">看板标题示例</span>
+          </div>
+          <div class="demo-content">
+            <div class="demo-stats">
+              <div class="stat-card" :style="{ borderLeftColor: getCurrentColors().primary }">
+                <div class="stat-value" :style="{ color: getCurrentColors().primary }">12,345</div>
+                <div class="stat-label">主要指标</div>
+              </div>
+              <div class="stat-card" :style="{ borderLeftColor: getCurrentColors().secondary }">
+                <div class="stat-value" :style="{ color: getCurrentColors().secondary }">67.8%</div>
+                <div class="stat-label">次要指标</div>
+              </div>
+              <div class="stat-card" :style="{ borderLeftColor: getCurrentColors().accent }">
+                <div class="stat-value" :style="{ color: getCurrentColors().accent }">+23.5</div>
+                <div class="stat-label">辅助指标</div>
+              </div>
+            </div>
+            <div class="demo-chart">
+              <div class="chart-bars">
+                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().primary, height: '80%' }"></div>
+                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().secondary, height: '60%' }"></div>
+                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().accent, height: '45%' }"></div>
+                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().primary, height: '70%' }"></div>
+                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().secondary, height: '55%' }"></div>
+              </div>
+            </div>
+          </div>
+        </el-card>
+      </div>
+    </div>
+
     <!-- 选择总结 -->
-    <div
-      v-if="selectedTheme || selectedComponents.length > 0"
-      class="selection-summary"
-    >
+    <div v-if="selectedTheme" class="selection-summary">
       <el-card>
         <template #header>
           <span class="summary-title">当前选择</span>
         </template>
         <div class="summary-content">
-          <div v-if="selectedTheme" class="summary-item">
-            <strong>主题：</strong>{{ selectedThemeOption?.name }}
+          <div class="summary-item">
+            <strong>主题方案：</strong>{{ selectedThemeOption?.name }}
           </div>
-          <div v-if="selectedComponents.length > 0" class="summary-item">
-            <strong>组件：</strong>
-            <div class="selected-components">
-              <el-tag
-                v-for="componentId in selectedComponents"
-                :key="componentId"
-                type="primary"
-                size="small"
-              >
-                {{ getComponentName(componentId) }}
+          <div class="summary-item">
+            <strong>配色详情：</strong>
+            <div class="color-tags">
+              <el-tag :style="{ backgroundColor: getCurrentColors().primary, color: '#fff' }">
+                主色: {{ getCurrentColors().primary }}
+              </el-tag>
+              <el-tag :style="{ backgroundColor: getCurrentColors().secondary, color: '#fff' }">
+                辅助: {{ getCurrentColors().secondary }}
+              </el-tag>
+              <el-tag :style="{ backgroundColor: getCurrentColors().accent, color: '#fff' }">
+                强调: {{ getCurrentColors().accent }}
               </el-tag>
             </div>
           </div>
@@ -248,20 +240,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import {
-  Check,
-  DataAnalysis,
-  TrendCharts,
-  PieChart,
-  DataLine,
-  Grid,
-  List,
-  Calendar,
-  Clock,
-  User,
-  Setting,
-  Edit
-} from '@element-plus/icons-vue';
+import { Check, Edit, Brush } from '@element-plus/icons-vue';
 
 // Props
 interface Props {
@@ -277,9 +256,6 @@ const emit = defineEmits<{
 
 // 状态
 const selectedTheme = ref(props.wizardData.theme || '');
-const selectedComponents = ref(props.wizardData.componentIds || []);
-const activeComponentTab = ref('charts');
-const showColorPicker = ref(false);
 const customColors = ref({
   primary: props.wizardData.customColors?.primary || '#6366F1',
   secondary: props.wizardData.customColors?.secondary || '#818CF8',
@@ -389,6 +365,16 @@ const themeOptions = [
     }
   },
   {
+    id: 'slate-professional',
+    name: '专业灰',
+    description: '低调专业的灰色主题',
+    colors: {
+      primary: '#64748B',
+      secondary: '#94A3B8',
+      accent: '#CBD5E1'
+    }
+  },
+  {
     id: 'custom',
     name: '自定义',
     description: '创建您的专属配色',
@@ -401,116 +387,22 @@ const themeOptions = [
   }
 ];
 
-// 组件分类
-const componentCategories = [
-  {
-    id: 'charts',
-    name: '图表组件',
-    components: [
-      {
-        id: 'bar-chart',
-        name: '柱状图',
-        description: '展示数据对比',
-        icon: DataAnalysis,
-        color: '#409EFF'
-      },
-      {
-        id: 'line-chart',
-        name: '折线图',
-        description: '展示趋势变化',
-        icon: TrendCharts,
-        color: '#67C23A'
-      },
-      {
-        id: 'pie-chart',
-        name: '饼图',
-        description: '展示数据占比',
-        icon: PieChart,
-        color: '#E6A23C'
-      },
-      {
-        id: 'area-chart',
-        name: '面积图',
-        description: '展示数据分布',
-        icon: DataLine,
-        color: '#F56C6C'
-      }
-    ]
-  },
-  {
-    id: 'data',
-    name: '数据组件',
-    components: [
-      {
-        id: 'data-table',
-        name: '数据表格',
-        description: '展示详细数据',
-        icon: Grid,
-        color: '#909399'
-      },
-      {
-        id: 'data-list',
-        name: '数据列表',
-        description: '展示列表信息',
-        icon: List,
-        color: '#606266'
-      },
-      {
-        id: 'kpi-card',
-        name: 'KPI卡片',
-        description: '展示关键指标',
-        icon: DataAnalysis,
-        color: '#409EFF'
-      }
-    ]
-  },
-  {
-    id: 'interactive',
-    name: '交互组件',
-    components: [
-      {
-        id: 'calendar',
-        name: '日历组件',
-        description: '时间选择器',
-        icon: Calendar,
-        color: '#67C23A'
-      },
-      {
-        id: 'timer',
-        name: '时间显示',
-        description: '实时时间',
-        icon: Clock,
-        color: '#E6A23C'
-      },
-      {
-        id: 'user-info',
-        name: '用户信息',
-        description: '用户状态',
-        icon: User,
-        color: '#8B5CF6'
-      },
-      {
-        id: 'settings',
-        name: '设置面板',
-        description: '配置选项',
-        icon: Setting,
-        color: '#F56C6C'
-      }
-    ]
-  }
-];
-
 // 计算属性
 const selectedThemeOption = computed(() => {
   return themeOptions.find(theme => theme.id === selectedTheme.value);
 });
 
+// 获取当前颜色
+const getCurrentColors = () => {
+  if (selectedTheme.value === 'custom') {
+    return customColors.value;
+  }
+  return selectedThemeOption.value?.colors || customColors.value;
+};
+
 // 方法
 const selectTheme = (theme: any) => {
   selectedTheme.value = theme.id;
-  if (theme.isCustom) {
-    showColorPicker.value = true;
-  }
   updateData();
 };
 
@@ -518,24 +410,6 @@ const updateCustomTheme = () => {
   if (selectedTheme.value === 'custom') {
     updateData();
   }
-};
-
-const toggleComponent = (component: any) => {
-  const index = selectedComponents.value.indexOf(component.id);
-  if (index > -1) {
-    selectedComponents.value.splice(index, 1);
-  } else {
-    selectedComponents.value.push(component.id);
-  }
-  updateData();
-};
-
-const getComponentName = (componentId: string) => {
-  for (const category of componentCategories) {
-    const component = category.components.find(c => c.id === componentId);
-    if (component) return component.name;
-  }
-  return componentId;
 };
 
 const updateData = () => {
@@ -547,8 +421,7 @@ const updateData = () => {
     theme: selectedTheme.value,
     themeText: themeName,
     themeColors: themeColors,
-    componentIds: selectedComponents.value,
-    components: selectedComponents.value.map(id => getComponentName(id))
+    customColors: isCustom ? customColors.value : undefined
   };
 
   emit('update', updateData);
@@ -556,7 +429,7 @@ const updateData = () => {
 </script>
 
 <style scoped>
-.step2-theme-component-selector {
+.step3-theme-selector {
   margin: 0 auto;
 }
 
@@ -601,15 +474,12 @@ const updateData = () => {
 }
 
 .theme-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
-  justify-content: flex-start;
 }
 
 .theme-card {
-  flex: 0 0 calc(25% - 12px);
-  min-width: 180px;
   border: 2px solid #ebeef5;
   border-radius: 8px;
   padding: 16px;
@@ -619,20 +489,22 @@ const updateData = () => {
   position: relative;
 }
 
-.custom-indicator {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-}
-
 .theme-card:hover {
   border-color: #409eff;
   box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 .theme-card.selected {
   border-color: #409eff;
   box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+}
+
+.custom-indicator,
+.selected-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 .theme-preview {
@@ -731,58 +603,68 @@ const updateData = () => {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.component-grid {
+/* 配色预览部分 */
+.preview-demo {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.demo-header {
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid;
+}
+
+.demo-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.demo-stats {
   display: flex;
-  flex-wrap: wrap;
   gap: 16px;
-  justify-content: flex-start;
+  margin-bottom: 20px;
 }
 
-.component-card {
-  flex: 0 0 calc(20% - 13px);
-  min-width: 140px;
-  border: 2px solid #ebeef5;
-  border-radius: 8px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: white;
-  text-align: center;
-  position: relative;
+.stat-card {
+  flex: 1;
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 4px;
+  border-left: 3px solid;
 }
 
-.component-card:hover {
-  border-color: #409eff;
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
-}
-
-.component-card.selected {
-  border-color: #409eff;
-  background: linear-gradient(135deg, #409eff, #6366f1);
-  color: white;
-}
-
-.component-icon {
-  margin-bottom: 8px;
-}
-
-.component-name {
-  font-size: 14px;
+.stat-value {
+  font-size: 24px;
   font-weight: 600;
   margin-bottom: 4px;
 }
 
-.component-description {
+.stat-label {
   font-size: 12px;
-  opacity: 0.8;
+  color: #606266;
 }
 
-.selected-indicator {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+.demo-chart {
+  padding: 20px;
+  background: #f5f7fa;
+  border-radius: 4px;
 }
 
+.chart-bars {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  height: 100px;
+}
+
+.chart-bar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+
+/* 选择总结 */
 .selection-summary {
   margin-top: 30px;
 }
@@ -797,48 +679,32 @@ const updateData = () => {
   line-height: 1.6;
 }
 
-.selected-components {
+.color-tags {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
 }
 
-/* 响应式设计 - 与项目整体断点保持一致 */
+/* 响应式设计 */
 @media (max-width: 990px) {
-  .theme-card {
-    flex: 0 0 calc(33.333% - 11px);
-  }
-  
   .color-pickers {
     flex-direction: column;
     gap: 16px;
   }
 
-  .component-card {
-    flex: 0 0 calc(25% - 12px);
+  .theme-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
 
 @media (max-width: 760px) {
   .theme-grid {
-    flex-direction: column;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
-  .theme-card {
-    flex: 1 1 auto;
-    min-width: unset;
-    flex: 0 0 calc(50% - 8px);
-  }
-
-  .component-grid {
-    justify-content: center;
-  }
-
-  .component-card {
-    flex: 0 0 calc(50% - 8px);
-    min-width: 120px;
+  .demo-stats {
+    flex-direction: column;
   }
 
   .step-title {
