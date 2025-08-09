@@ -15,7 +15,9 @@
     <!-- 组件选择 -->
     <div class="section">
       <h3 class="section-title">选择您需要的组件</h3>
-      <p class="section-subtitle">可以选择多个组件，我们将基于您的选择推荐合适的布局</p>
+      <p class="section-subtitle">
+        可以选择多个组件，我们将基于您的选择推荐合适的布局
+      </p>
 
       <div class="component-categories">
         <el-tabs v-model="activeComponentTab" type="border-card">
@@ -66,150 +68,398 @@
     <div v-if="selectedComponents.length > 0" class="section">
       <h3 class="section-title">配置组件数据结构</h3>
       <p class="section-subtitle">为每个组件设置数据字段和显示配置</p>
-      
-      <el-collapse accordion>
-        <el-collapse-item v-for="componentId in selectedComponents" :key="componentId">
-          <template #title>
-            <span class="config-title">
-              <el-icon :size="16" style="margin-right: 8px">
+
+      <div class="component-configs">
+        <div
+          v-for="componentId in selectedComponents"
+          :key="componentId"
+          class="component-config-card"
+        >
+          <div class="config-header">
+            <div class="config-title">
+              <el-icon :size="18" style="margin-right: 8px">
                 <Setting />
               </el-icon>
-              {{ getComponentName(componentId) }}
-            </span>
-          </template>
-          
-          <div class="config-content">
-            <!-- 通用配置 -->
-            <el-form label-width="100px" size="small">
-              <el-form-item label="数据源">
-                <el-input 
-                  v-model="componentDataConfigs[componentId].dataSource" 
-                  placeholder="API端点或数据源描述" 
-                />
-              </el-form-item>
-              <el-form-item label="刷新频率">
-                <el-input-number 
-                  v-model="componentDataConfigs[componentId].refreshInterval" 
-                  :min="0" 
-                  :max="60000" 
-                  :step="1000" 
-                  placeholder="毫秒"
-                />
-                <span style="margin-left: 8px; color: #909399">毫秒（0表示不刷新）</span>
-              </el-form-item>
-              
-              <!-- 图表类配置 -->
-              <template v-if="componentId.includes('chart') && componentId !== 'pie-chart'">
-                <el-form-item label="X轴字段">
-                  <el-input 
-                    v-model="componentDataConfigs[componentId].xField" 
-                    placeholder="如：日期、月份、类别名称" 
-                  />
-                </el-form-item>
-                <el-form-item label="Y轴字段">
-                  <el-input 
-                    v-model="componentDataConfigs[componentId].yField" 
-                    placeholder="如：销量、金额、数量" 
-                  />
-                </el-form-item>
-                <el-form-item v-if="componentId === 'line-chart' || componentId === 'area-chart'" label="系列字段">
-                  <el-input 
-                    v-model="componentDataConfigs[componentId].seriesField" 
-                    placeholder="如：产品类别（可选，用于多系列）" 
-                  />
-                </el-form-item>
-              </template>
-              
-              <!-- 饼图配置 -->
-              <template v-if="componentId === 'pie-chart'">
-                <el-form-item label="名称字段">
-                  <el-input 
-                    v-model="componentDataConfigs[componentId].nameField" 
-                    placeholder="如：产品类别、地区" 
-                  />
-                </el-form-item>
-                <el-form-item label="数值字段">
-                  <el-input 
-                    v-model="componentDataConfigs[componentId].valueField" 
-                    placeholder="如：销售额、占比" 
-                  />
-                </el-form-item>
-              </template>
-              
-              <!-- KPI卡片配置 -->
-              <template v-if="componentId === 'kpi-card'">
-                <el-form-item label="指标名称">
-                  <el-input 
-                    v-model="componentDataConfigs[componentId].title" 
-                    placeholder="如：今日订单、库存总量" 
-                  />
-                </el-form-item>
-                <el-form-item label="单位">
-                  <el-input 
-                    v-model="componentDataConfigs[componentId].unit" 
-                    placeholder="如：单、元、%、件" 
-                  />
-                </el-form-item>
-                <el-form-item label="对比类型">
-                  <el-select v-model="componentDataConfigs[componentId].comparison">
-                    <el-option label="无对比" value="none" />
-                    <el-option label="环比" value="chain" />
-                    <el-option label="同比" value="year" />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="趋势">
-                  <el-radio-group v-model="componentDataConfigs[componentId].trend">
-                    <el-radio-button label="up">上升</el-radio-button>
-                    <el-radio-button label="down">下降</el-radio-button>
-                    <el-radio-button label="stable">平稳</el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-              </template>
-              
-              <!-- 数据表格配置 -->
-              <template v-if="componentId === 'data-table'">
-                <el-form-item label="表格列">
-                  <div style="width: 100%">
-                    <div v-for="(column, index) in componentDataConfigs[componentId].columns" :key="index" 
-                         style="display: flex; gap: 8px; margin-bottom: 8px">
-                      <el-input v-model="column.field" placeholder="字段名" style="flex: 1" />
-                      <el-input v-model="column.title" placeholder="列标题" style="flex: 1" />
-                      <el-input-number v-model="column.width" :min="50" :max="500" placeholder="宽度" style="width: 100px" />
-                      <el-checkbox v-model="column.sortable">排序</el-checkbox>
-                      <el-button type="danger" size="small" :icon="Delete" circle 
-                                 @click="removeTableColumn(componentId, index)" />
-                    </div>
-                    <el-button type="primary" size="small" @click="addTableColumn(componentId)">
-                      添加列
-                    </el-button>
-                  </div>
-                </el-form-item>
-                <el-form-item label="分页">
-                  <el-switch v-model="componentDataConfigs[componentId].pagination" />
-                  <el-input-number 
-                    v-if="componentDataConfigs[componentId].pagination"
-                    v-model="componentDataConfigs[componentId].pageSize" 
-                    :min="5" 
-                    :max="100" 
-                    style="margin-left: 12px"
-                    placeholder="每页条数"
-                  />
-                </el-form-item>
-              </template>
-              
-              <!-- 示例数据 -->
-              <el-form-item label="示例数据">
-                <el-input 
-                  v-model="componentDataConfigs[componentId].sampleData" 
-                  type="textarea" 
-                  :rows="3" 
-                  placeholder="输入JSON格式的示例数据，如：[{&quot;date&quot;: &quot;2024-01&quot;, &quot;value&quot;: 100}]" 
-                />
-              </el-form-item>
-            </el-form>
+              <span>{{ getComponentName(componentId) }}</span>
+            </div>
+            <el-tag type="info" size="small">{{ componentId }}</el-tag>
           </div>
-        </el-collapse-item>
-      </el-collapse>
+
+          <el-tabs
+            v-model="activeConfigTab[componentId]"
+            type="border-card"
+            class="config-tabs"
+          >
+            <!-- 基础配置 -->
+            <el-tab-pane label="基础配置" name="basic">
+              <el-form label-width="100px" size="small" class="config-form">
+                <el-form-item label="数据源">
+                  <el-input
+                    v-model="componentDataConfigs[componentId].dataSource"
+                    placeholder="API端点或数据源描述"
+                  >
+                    <template #append>
+                      <el-button
+                        :icon="QuestionFilled"
+                        @click="showDataSourceHelp"
+                      />
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="刷新频率">
+                  <el-input-number
+                    v-model="componentDataConfigs[componentId].refreshInterval"
+                    :min="0"
+                    :max="300000"
+                    :step="5000"
+                    placeholder="毫秒"
+                    class="refresh-input"
+                  />
+                  <span class="form-hint">毫秒（0表示不自动刷新）</span>
+                </el-form-item>
+                <el-form-item label="状态">
+                  <el-switch
+                    v-model="componentDataConfigs[componentId].enabled"
+                    active-text="启用"
+                    inactive-text="禁用"
+                  />
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
+
+            <!-- 数据配置 -->
+            <el-tab-pane label="数据配置" name="data">
+              <el-form label-width="100px" size="small" class="config-form">
+                <!-- 图表类配置 -->
+                <template v-if="isChartComponent(componentId)">
+                  <div class="config-section">
+                    <h4 class="section-header">图表数据映射</h4>
+                    <template v-if="componentId !== 'pie-chart'">
+                      <el-form-item label="X轴字段">
+                        <el-input
+                          v-model="componentDataConfigs[componentId].xField"
+                          placeholder="如：date, month, category"
+                        />
+                      </el-form-item>
+                      <el-form-item label="Y轴字段">
+                        <el-input
+                          v-model="componentDataConfigs[componentId].yField"
+                          placeholder="如：value, amount, count"
+                        />
+                      </el-form-item>
+                      <el-form-item
+                        v-if="supportsMultiSeries(componentId)"
+                        label="系列字段"
+                      >
+                        <el-input
+                          v-model="
+                            componentDataConfigs[componentId].seriesField
+                          "
+                          placeholder="如：type, category（可选，多系列）"
+                        />
+                      </el-form-item>
+                    </template>
+                    <template v-else>
+                      <!-- 饼图配置 -->
+                      <el-form-item label="名称字段">
+                        <el-input
+                          v-model="componentDataConfigs[componentId].nameField"
+                          placeholder="如：category, region"
+                        />
+                      </el-form-item>
+                      <el-form-item label="数值字段">
+                        <el-input
+                          v-model="componentDataConfigs[componentId].valueField"
+                          placeholder="如：value, percentage"
+                        />
+                      </el-form-item>
+                    </template>
+                  </div>
+                </template>
+
+                <!-- KPI卡片配置 -->
+                <template v-if="componentId === 'kpi-card'">
+                  <div class="config-section">
+                    <h4 class="section-header">KPI指标配置</h4>
+                    <el-form-item label="指标名称">
+                      <el-input
+                        v-model="componentDataConfigs[componentId].title"
+                        placeholder="如：今日订单数、库存总量"
+                      />
+                    </el-form-item>
+                    <el-form-item label="数值字段">
+                      <el-input
+                        v-model="componentDataConfigs[componentId].valueField"
+                        placeholder="如：total_orders, inventory_count"
+                      />
+                    </el-form-item>
+                    <el-form-item label="单位">
+                      <el-input
+                        v-model="componentDataConfigs[componentId].unit"
+                        placeholder="如：单、元、%、件"
+                      />
+                    </el-form-item>
+                    <el-form-item label="对比配置">
+                      <el-select
+                        v-model="
+                          componentDataConfigs[componentId].comparisonType
+                        "
+                        placeholder="选择对比类型"
+                      >
+                        <el-option label="无对比" value="none" />
+                        <el-option label="环比" value="chain" />
+                        <el-option label="同比" value="year" />
+                      </el-select>
+                      <el-input
+                        v-if="
+                          componentDataConfigs[componentId].comparisonType !==
+                          'none'
+                        "
+                        v-model="
+                          componentDataConfigs[componentId].comparisonField
+                        "
+                        placeholder="对比字段"
+                        style="margin-top: 8px"
+                      />
+                    </el-form-item>
+                    <el-form-item label="趋势显示">
+                      <el-switch
+                        v-model="componentDataConfigs[componentId].showTrend"
+                        active-text="显示"
+                        inactive-text="隐藏"
+                      />
+                      <el-input
+                        v-if="componentDataConfigs[componentId].showTrend"
+                        v-model="componentDataConfigs[componentId].trendField"
+                        placeholder="趋势字段"
+                        style="margin-top: 8px"
+                      />
+                    </el-form-item>
+                  </div>
+                </template>
+
+                <!-- 表格配置 -->
+                <template v-if="componentId === 'data-table'">
+                  <div class="config-section">
+                    <h4 class="section-header">表格列配置</h4>
+                    <div class="table-columns">
+                      <div
+                        v-for="(column, index) in componentDataConfigs[
+                          componentId
+                        ].columns"
+                        :key="index"
+                        class="column-config"
+                      >
+                        <el-input v-model="column.field" placeholder="字段名" />
+                        <el-input v-model="column.title" placeholder="列标题" />
+                        <el-input-number
+                          v-model="column.width"
+                          :min="50"
+                          :max="500"
+                          placeholder="宽度"
+                          controls-position="right"
+                        />
+                        <el-select v-model="column.align" placeholder="对齐">
+                          <el-option label="左对齐" value="left" />
+                          <el-option label="居中" value="center" />
+                          <el-option label="右对齐" value="right" />
+                        </el-select>
+                        <div class="column-options">
+                          <el-checkbox v-model="column.sortable" size="small"
+                            >排序</el-checkbox
+                          >
+                          <el-button
+                            type="danger"
+                            size="small"
+                            :icon="Delete"
+                            circle
+                            @click="removeTableColumn(componentId, index)"
+                          />
+                        </div>
+                      </div>
+                      <el-button
+                        type="primary"
+                        size="small"
+                        :icon="Plus"
+                        class="add-column-btn"
+                        @click="addTableColumn(componentId)"
+                      >
+                        添加列
+                      </el-button>
+                    </div>
+
+                    <el-divider />
+
+                    <h4 class="section-header">表格功能</h4>
+                    <el-form-item label="分页">
+                      <el-switch
+                        v-model="componentDataConfigs[componentId].pagination"
+                        active-text="启用"
+                        inactive-text="禁用"
+                      />
+                      <el-input-number
+                        v-if="componentDataConfigs[componentId].pagination"
+                        v-model="componentDataConfigs[componentId].pageSize"
+                        :min="5"
+                        :max="100"
+                        placeholder="每页条数"
+                        style="margin-left: 12px"
+                        controls-position="right"
+                      />
+                    </el-form-item>
+                    <el-form-item label="表格功能">
+                      <el-checkbox-group
+                        v-model="
+                          componentDataConfigs[componentId].tableFeatures
+                        "
+                      >
+                        <el-checkbox label="export">导出功能</el-checkbox>
+                        <el-checkbox label="filter">筛选功能</el-checkbox>
+                        <el-checkbox label="search">搜索功能</el-checkbox>
+                        <el-checkbox label="stripe">斑马纹</el-checkbox>
+                        <el-checkbox label="border">边框</el-checkbox>
+                      </el-checkbox-group>
+                    </el-form-item>
+                  </div>
+                </template>
+
+                <!-- 示例数据 -->
+                <div class="config-section">
+                  <h4 class="section-header">示例数据</h4>
+                  <el-form-item>
+                    <div class="sample-data-section">
+                      <div class="sample-data-actions">
+                        <el-button
+                          size="small"
+                          type="primary"
+                          @click="generateSampleData(componentId)"
+                        >
+                          自动生成
+                        </el-button>
+                      </div>
+                      <el-input
+                        v-model="componentDataConfigs[componentId].sampleData"
+                        type="textarea"
+                        :rows="4"
+                        placeholder='输入JSON格式的示例数据，如：[{"date": "2024-01", "value": 100}]'
+                        class="sample-data-input"
+                      />
+                      <div
+                        v-if="getSampleDataError(componentId)"
+                        class="error-hint"
+                      >
+                        {{ getSampleDataError(componentId) }}
+                      </div>
+                    </div>
+                  </el-form-item>
+                </div>
+              </el-form>
+            </el-tab-pane>
+
+            <!-- 高级配置 -->
+            <el-tab-pane label="高级配置" name="advanced">
+              <el-form label-width="120px" size="small" class="config-form">
+                <!-- 图表高级配置 -->
+                <template v-if="isChartComponent(componentId)">
+                  <div class="config-section">
+                    <h4 class="section-header">图表显示</h4>
+                    <el-form-item label="显示图例">
+                      <el-switch
+                        v-model="componentDataConfigs[componentId].showLegend"
+                      />
+                      <el-select
+                        v-if="componentDataConfigs[componentId].showLegend"
+                        v-model="
+                          componentDataConfigs[componentId].legendPosition
+                        "
+                        placeholder="图例位置"
+                        style="margin-left: 12px"
+                      >
+                        <el-option label="顶部" value="top" />
+                        <el-option label="底部" value="bottom" />
+                        <el-option label="左侧" value="left" />
+                        <el-option label="右侧" value="right" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="显示工具提示">
+                      <el-switch
+                        v-model="componentDataConfigs[componentId].showTooltip"
+                      />
+                    </el-form-item>
+                    <el-form-item label="显示数据标签">
+                      <el-switch
+                        v-model="
+                          componentDataConfigs[componentId].showDataLabels
+                        "
+                      />
+                    </el-form-item>
+                  </div>
+                </template>
+
+                <!-- KPI高级配置 -->
+                <template v-if="componentId === 'kpi-card'">
+                  <div class="config-section">
+                    <h4 class="section-header">阈值配置</h4>
+                    <el-form-item label="警告阈值">
+                      <div class="threshold-group">
+                        <el-input-number
+                          v-model="
+                            componentDataConfigs[componentId].warningThreshold
+                          "
+                          placeholder="警告值"
+                        />
+                        <el-color-picker
+                          v-model="
+                            componentDataConfigs[componentId].warningColor
+                          "
+                        />
+                      </div>
+                    </el-form-item>
+                    <el-form-item label="危险阈值">
+                      <div class="threshold-group">
+                        <el-input-number
+                          v-model="
+                            componentDataConfigs[componentId].dangerThreshold
+                          "
+                          placeholder="危险值"
+                        />
+                        <el-color-picker
+                          v-model="
+                            componentDataConfigs[componentId].dangerColor
+                          "
+                        />
+                      </div>
+                    </el-form-item>
+                  </div>
+
+                  <div class="config-section">
+                    <h4 class="section-header">图标配置</h4>
+                    <el-form-item label="图标名称">
+                      <el-input
+                        v-model="componentDataConfigs[componentId].iconName"
+                        placeholder="如：TrendCharts、DataAnalysis"
+                      />
+                    </el-form-item>
+                    <el-form-item label="图标颜色">
+                      <el-color-picker
+                        v-model="componentDataConfigs[componentId].iconColor"
+                      />
+                    </el-form-item>
+                    <el-form-item label="图标大小">
+                      <el-input-number
+                        v-model="componentDataConfigs[componentId].iconSize"
+                        :min="16"
+                        :max="48"
+                        placeholder="像素"
+                      />
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-form>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </div>
     </div>
 
     <!-- 选择总结 -->
@@ -242,6 +492,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import {
   Check,
   DataAnalysis,
@@ -251,14 +502,16 @@ import {
   Grid,
   List,
   Setting,
-  Delete
+  Delete,
+  Plus,
+  QuestionFilled
 } from '@element-plus/icons-vue';
 
-import type { ComponentDataConfig } from '../../types';
-
 // Props
+import type { DashboardConfig as StoreDashboardConfig } from '../../composables/useDashboardStore';
+
 interface Props {
-  wizardData: any;
+  wizardData: StoreDashboardConfig;
 }
 
 const props = defineProps<Props>();
@@ -271,9 +524,10 @@ const emit = defineEmits<{
 // 状态
 const selectedComponents = ref(props.wizardData.componentIds || []);
 const activeComponentTab = ref('charts');
+const activeConfigTab = ref<Record<string, string>>({});
 
 // 组件数据配置
-const componentDataConfigs = reactive<Record<string, ComponentDataConfig>>(
+const componentDataConfigs = reactive<Record<string, any>>(
   props.wizardData.componentDataConfigs || {}
 );
 
@@ -283,26 +537,52 @@ const initComponentConfig = (componentId: string) => {
     componentDataConfigs[componentId] = {
       componentId,
       componentType: componentId,
+      dataSource: '',
       refreshInterval: 5000,
+      enabled: true,
       sampleData: ''
     };
-    
+
     // 根据组件类型设置默认配置
     if (componentId.includes('chart')) {
       componentDataConfigs[componentId].xField = '';
       componentDataConfigs[componentId].yField = '';
+      componentDataConfigs[componentId].showLegend = true;
+      componentDataConfigs[componentId].legendPosition = 'bottom';
+      componentDataConfigs[componentId].showTooltip = true;
+      componentDataConfigs[componentId].showDataLabels = false;
+      if (componentId !== 'pie-chart') {
+        componentDataConfigs[componentId].seriesField = '';
+      }
     } else if (componentId === 'pie-chart') {
       componentDataConfigs[componentId].nameField = '';
       componentDataConfigs[componentId].valueField = '';
+      componentDataConfigs[componentId].showLegend = true;
+      componentDataConfigs[componentId].legendPosition = 'right';
     } else if (componentId === 'kpi-card') {
       componentDataConfigs[componentId].title = '';
+      componentDataConfigs[componentId].valueField = '';
       componentDataConfigs[componentId].unit = '';
-      componentDataConfigs[componentId].comparison = 'none';
+      componentDataConfigs[componentId].comparisonType = 'none';
+      componentDataConfigs[componentId].comparisonField = '';
+      componentDataConfigs[componentId].showTrend = true;
+      componentDataConfigs[componentId].trendField = '';
+      componentDataConfigs[componentId].warningThreshold = 0;
+      componentDataConfigs[componentId].dangerThreshold = 0;
+      componentDataConfigs[componentId].warningColor = '#F56C6C';
+      componentDataConfigs[componentId].dangerColor = '#F56C6C';
+      componentDataConfigs[componentId].iconName = 'DataAnalysis';
+      componentDataConfigs[componentId].iconColor = '#409EFF';
+      componentDataConfigs[componentId].iconSize = 24;
     } else if (componentId === 'data-table') {
       componentDataConfigs[componentId].columns = [];
       componentDataConfigs[componentId].pagination = true;
       componentDataConfigs[componentId].pageSize = 10;
+      componentDataConfigs[componentId].tableFeatures = ['stripe', 'border'];
     }
+
+    // 设置默认激活的配置标签
+    activeConfigTab.value[componentId] = 'basic';
   }
 };
 
@@ -412,13 +692,55 @@ const addTableColumn = (componentId: string) => {
     field: '',
     title: '',
     width: 120,
-    sortable: false
+    sortable: false,
+    align: 'left',
+    format: ''
   });
 };
 
 // 删除表格列
 const removeTableColumn = (componentId: string, index: number) => {
   componentDataConfigs[componentId].columns?.splice(index, 1);
+};
+
+// 工具方法
+const isChartComponent = (componentId: string) => {
+  return componentId.includes('chart');
+};
+
+const supportsMultiSeries = (componentId: string) => {
+  return ['line-chart', 'area-chart', 'bar-chart'].includes(componentId);
+};
+
+const showDataSourceHelp = () => {
+  ElMessageBox.alert(
+    '数据源可以是：\n1. API端点URL\n2. 数据库查询描述\n3. 文件路径或名称\n4. 其他数据来源说明',
+    '数据源说明',
+    { confirmButtonText: '确定' }
+  );
+};
+
+const generateSampleData = async (componentId: string) => {
+  const { sampleDataTemplates } = await import('../../constants/options');
+  const template = sampleDataTemplates[componentId] || [];
+  componentDataConfigs[componentId].sampleData = JSON.stringify(
+    template,
+    null,
+    2
+  );
+};
+
+
+const getSampleDataError = (componentId: string) => {
+  try {
+    const data = componentDataConfigs[componentId].sampleData;
+    if (data) {
+      JSON.parse(data);
+    }
+    return null;
+  } catch (e) {
+    return 'JSON格式错误';
+  }
 };
 
 const updateData = () => {
@@ -561,6 +883,139 @@ const updateData = () => {
 
 .config-content .el-form-item {
   margin-bottom: 16px;
+}
+
+/* 新增样式 - 组件配置卡片 */
+.component-configs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.component-config-card {
+  border: 1px solid #e4e7ed;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.config-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #303133;
+}
+
+.config-tabs {
+  border: none;
+  background: transparent;
+}
+
+.config-tabs :deep(.el-tabs__header) {
+  margin: 0;
+  background: #fff;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.config-tabs :deep(.el-tabs__content) {
+  padding: 20px;
+}
+
+.config-form .el-form-item {
+  margin-bottom: 20px;
+}
+
+.form-hint {
+  margin-left: 8px;
+  color: #909399;
+  font-size: 12px;
+}
+
+.refresh-input {
+  width: 150px;
+}
+
+/* 配置分组样式 */
+.config-section {
+  margin-bottom: 24px;
+}
+
+.section-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: #606266;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* 表格列配置 */
+.table-columns {
+  margin-bottom: 16px;
+}
+
+.column-config {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px 100px auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.column-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-column-btn {
+  align-self: flex-start;
+}
+
+/* 示例数据区域 */
+.sample-data-section {
+  width: 100%;
+}
+
+.sample-data-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sample-data-input {
+  width: 100%;
+}
+
+.error-hint {
+  color: #f56c6c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 阈值配置组 */
+.threshold-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.threshold-group .el-input-number {
+  flex: 1;
 }
 
 /* 响应式设计 */

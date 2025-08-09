@@ -104,7 +104,9 @@
           <li>
             <strong>选择组件与主题：</strong>选择需要的数据组件和喜欢的主题配色
           </li>
-          <li><strong>选择布局样式：</strong>基于您的组件选择最合适的布局方式</li>
+          <li>
+            <strong>选择布局样式：</strong>基于您的组件选择最合适的布局方式
+          </li>
           <li>
             <strong>生成看板：</strong>AI 将根据您的配置自动生成专业的看板代码
           </li>
@@ -125,11 +127,9 @@ import WizardContainer from './components/WizardContainer.vue';
 import PreviewPanel from './components/PreviewPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
 import { useDashboardStore } from './composables/useDashboardStore';
-import { useWizardNavigation } from './composables/useWizardNavigation';
 
 // 使用状态管理
 const store = useDashboardStore();
-const { nextStep, prevStep } = useWizardNavigation();
 
 // 本地状态
 const showHelp = ref(false);

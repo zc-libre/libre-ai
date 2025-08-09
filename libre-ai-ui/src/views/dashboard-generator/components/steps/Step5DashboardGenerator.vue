@@ -65,17 +65,6 @@
         <h3 class="control-title">生成选项</h3>
         <div class="control-grid">
           <div class="control-item">
-            <label class="control-label">代码风格</label>
-            <el-select
-              v-model="generationOptions.codeStyle"
-              placeholder="选择代码风格"
-            >
-              <el-option label="现代化 (推荐)" value="modern" />
-              <el-option label="简洁风格" value="minimal" />
-              <el-option label="企业级" value="enterprise" />
-            </el-select>
-          </div>
-          <div class="control-item">
             <label class="control-label">响应式设计</label>
             <el-switch
               v-model="generationOptions.responsive"
@@ -120,7 +109,7 @@
           />
           <div class="progress-steps">
             <div
-              v-for="(step, index) in progressSteps"
+              v-for="(step, index) in generationSteps"
               :key="index"
               class="progress-step"
               :class="{
@@ -181,16 +170,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, watch } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Check, Loading, Clock, View, Download } from '@element-plus/icons-vue';
 import { useDashboardGenerator } from '../../composables/useDashboardGenerator';
 import { useDashboardStore } from '../../composables/useDashboardStore';
-import CodeStreamPreview from '../CodeStreamPreview.vue';
 
 // Props
+import type { DashboardConfig as StoreDashboardConfig } from '../../composables/useDashboardStore';
+
 interface Props {
-  wizardData: any;
+  wizardData: StoreDashboardConfig;
 }
 
 const props = defineProps<Props>();
@@ -211,7 +201,8 @@ const {
   previewCode,
   streamingCode,
   isStreaming,
-  abortGeneration
+  abortGeneration,
+  generationSteps
 } = useDashboardGenerator();
 
 // 状态
@@ -222,26 +213,15 @@ const generatedResult = computed(() => generatedResultData.value);
 
 // 生成选项
 const generationOptions = reactive({
-  codeStyle: 'modern' as 'modern' | 'minimal' | 'enterprise',
   responsive: true,
   includeData: true,
   additionalRequirements: ''
 });
 
-// 进度步骤
-const progressSteps = [
-  '分析配置信息',
-  '生成布局结构',
-  '应用主题样式',
-  '集成组件代码',
-  '优化代码质量',
-  '生成完成'
-];
-
 const currentProgressText = computed(() => {
   return (
     generationProgress.value.message ||
-    progressSteps[currentProgressStep.value] ||
+    generationSteps[currentProgressStep.value] ||
     '生成完成'
   );
 });

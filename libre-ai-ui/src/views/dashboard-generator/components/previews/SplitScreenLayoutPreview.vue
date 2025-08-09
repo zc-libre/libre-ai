@@ -1,16 +1,16 @@
 <template>
   <div class="split-screen-preview">
     <div class="left-panel">
-      <div class="panel-header"></div>
+      <div class="panel-header" />
       <div class="panel-content">
-        <div class="chart-item" v-for="i in 3" :key="i"></div>
+        <div v-for="i in 3" :key="i" class="chart-item" />
       </div>
     </div>
-    <div class="divider"></div>
+    <div class="divider" />
     <div class="right-panel">
-      <div class="panel-header"></div>
+      <div class="panel-header" />
       <div class="panel-content">
-        <div class="chart-item" v-for="i in 3" :key="i"></div>
+        <div v-for="i in 3" :key="i" class="chart-item" />
       </div>
     </div>
   </div>

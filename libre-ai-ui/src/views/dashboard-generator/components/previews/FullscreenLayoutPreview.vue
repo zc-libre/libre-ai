@@ -3,8 +3,8 @@
     <div class="fullscreen-container">
       <!-- 顶部标题栏 -->
       <div class="header-bar">
-        <div class="title-placeholder"></div>
-        <div class="time-placeholder"></div>
+        <div class="title-placeholder" />
+        <div class="time-placeholder" />
       </div>
 
       <!-- 主体内容区 -->
@@ -12,23 +12,23 @@
         <!-- 左侧大图表 -->
         <div class="left-section">
           <div class="large-chart">
-            <div class="chart-title"></div>
-            <div class="chart-body"></div>
+            <div class="chart-title" />
+            <div class="chart-body" />
           </div>
         </div>
 
         <!-- 右侧指标区 -->
         <div class="right-section">
-          <div class="metric-card" v-for="i in 3" :key="i">
-            <div class="metric-value"></div>
-            <div class="metric-label"></div>
+          <div v-for="i in 3" :key="i" class="metric-card">
+            <div class="metric-value" />
+            <div class="metric-label" />
           </div>
         </div>
       </div>
 
       <!-- 底部滚动区 -->
       <div class="footer-bar">
-        <div class="scroll-item" v-for="i in 5" :key="i"></div>
+        <div v-for="i in 5" :key="i" class="scroll-item" />
       </div>
     </div>
   </div>

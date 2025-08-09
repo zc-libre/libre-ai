@@ -158,8 +158,10 @@ const createSampleHistory = () => {
       layout: 'grid',
       layoutText: '网格布局',
       theme: 'modern-blue',
+      themeColors: {},
       components: ['柱状图', '折线图', 'KPI卡片'],
       componentIds: ['bar-chart', 'line-chart', 'kpi-card'],
+      additionalDetails: '',
       timestamp: Date.now() - 2 * 60 * 60 * 1000 // 2小时前
     },
     {
@@ -168,8 +170,10 @@ const createSampleHistory = () => {
       layout: 'sidebar',
       layoutText: '侧边栏布局',
       theme: 'green-nature',
+      themeColors: {},
       components: ['数据表格', '进度条'],
       componentIds: ['data-table', 'progress-bar'],
+      additionalDetails: '',
       timestamp: Date.now() - 24 * 60 * 60 * 1000 // 1天前
     }
   ];

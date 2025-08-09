@@ -2,16 +2,16 @@
   <div class="header-main-preview">
     <!-- 顶部 KPI 区域 -->
     <div class="header-section">
-      <div class="kpi-card" v-for="i in 4" :key="i">
-        <div class="kpi-value"></div>
-        <div class="kpi-label"></div>
+      <div v-for="i in 4" :key="i" class="kpi-card">
+        <div class="kpi-value" />
+        <div class="kpi-label" />
       </div>
     </div>
     <!-- 主体图表区域 -->
     <div class="main-section">
-      <div class="chart-card large"></div>
-      <div class="chart-card medium"></div>
-      <div class="chart-card medium"></div>
+      <div class="chart-card large" />
+      <div class="chart-card medium" />
+      <div class="chart-card medium" />
     </div>
   </div>
 </template>

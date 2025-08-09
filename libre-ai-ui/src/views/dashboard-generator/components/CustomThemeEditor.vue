@@ -290,15 +290,10 @@ const saveTheme = () => {
 
     if (editingTheme.value) {
       // 更新现有主题
-      updateCustomTheme(editingTheme.value.id, themeName.value, customColors);
-      savedTheme = {
-        ...editingTheme.value,
-        name: themeName.value,
-        colors: { ...customColors }
-      };
+      savedTheme = updateCustomTheme(editingTheme.value, customColors);
     } else {
       // 创建新主题
-      savedTheme = createCustomTheme(themeName.value, customColors);
+      savedTheme = createCustomTheme(customColors);
     }
 
     emit('theme-saved', savedTheme);

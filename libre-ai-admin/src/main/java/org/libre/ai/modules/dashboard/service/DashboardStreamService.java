@@ -6,13 +6,13 @@ import org.libre.ai.modules.dashboard.assistant.StreamDashboardAiAssistant;
 import org.libre.ai.modules.dashboard.dto.ComponentConfig;
 import org.libre.ai.modules.dashboard.dto.DashboardRequest;
 import org.libre.ai.modules.dashboard.dto.ThemeConfig;
-import org.libre.ai.modules.dashboard.enums.CodeStyle;
 import org.libre.ai.modules.dashboard.enums.DashboardComponent;
 import org.libre.ai.modules.dashboard.enums.DashboardPurpose;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -111,9 +111,7 @@ public class DashboardStreamService implements IDashboardStreamService {
 						- 绝对禁止使用markdown语法包裹代码块
 						""",
 				purposeDescription, request.getLayoutText(), buildThemeDescription(request),
-				buildComponentsDescription(request.getComponents()),
-				buildCodeStyleDescription(
-						request.getOptions() != null ? request.getOptions().getCodeStyle() : "modern"),
+				buildComponentsDescription(request.getComponents()), "现代风格 (简洁清爽的现代设计)",
 				buildBooleanDescription(request.getOptions() != null ? request.getOptions().getResponsive() : true,
 						"支持响应式设计", "不支持响应式设计"),
 				buildBooleanDescription(request.getOptions() != null ? request.getOptions().getIncludeData() : true,
@@ -309,19 +307,6 @@ public class DashboardStreamService implements IDashboardStreamService {
 	}
 
 	/**
-	 * 构建代码风格的语义化描述
-	 * @param codeStyleCode 代码风格代码
-	 * @return 语义化的风格描述
-	 */
-	private String buildCodeStyleDescription(String codeStyleCode) {
-		CodeStyle style = CodeStyle.fromCode(codeStyleCode);
-		if (style != null) {
-			return String.format("%s (%s)", style.getName(), style.getDescription());
-		}
-		return codeStyleCode;
-	}
-
-	/**
 	 * 构建组件数据结构描述
 	 *
 	 * 根据组件配置生成详细的数据结构说明
@@ -337,85 +322,136 @@ public class DashboardStreamService implements IDashboardStreamService {
 		sb.append("## 组件详细配置\n");
 
 		for (ComponentConfig config : request.getComponentConfigs()) {
-			DashboardComponent component = DashboardComponent.fromCode(config.getComponentId());
-			String componentName = component != null ? component.getName() : config.getComponentId();
+			// 从基础配置获取组件ID
+			String componentId = config.getBase() != null ? config.getBase().getComponentId() : "";
+			DashboardComponent component = DashboardComponent.fromCode(componentId);
+			String componentName = component != null ? component.getName() : componentId;
 
-			sb.append(String.format("### %s (%s)\n", componentName, config.getComponentId()));
+			sb.append(String.format("### %s (%s)\n", componentName, componentId));
 
-			if (config.getDataSource() != null && !config.getDataSource().isEmpty()) {
-				sb.append("- 数据源: ").append(config.getDataSource()).append("\n");
+			// 基础配置信息
+			if (config.getBase() != null) {
+				ComponentConfig.BaseConfig base = config.getBase();
+				if (base.getDataSource() != null && !base.getDataSource().isEmpty()) {
+					sb.append("- 数据源: ").append(base.getDataSource()).append("\n");
+				}
+				if (base.getRefreshInterval() != null && base.getRefreshInterval() > 0) {
+					sb.append("- 刷新频率: 每").append(base.getRefreshInterval() / 1000).append("秒\n");
+				}
 			}
 
-			if (config.getRefreshInterval() != null && config.getRefreshInterval() > 0) {
-				sb.append("- 刷新频率: 每").append(config.getRefreshInterval() / 1000).append("秒\n");
-			}
-
-			if (config.getDataStructure() != null) {
-				ComponentConfig.DataStructure ds = config.getDataStructure();
+			// 从specific字段获取组件特定配置
+			if (config.getSpecific() != null) {
+				Map<String, Object> specific = config.getSpecific();
 
 				// 图表类配置
-				if (ds.getXField() != null && !ds.getXField().isEmpty()) {
-					sb.append("- X轴字段: ").append(ds.getXField()).append("\n");
-				}
-				if (ds.getYField() != null && !ds.getYField().isEmpty()) {
-					sb.append("- Y轴字段: ").append(ds.getYField()).append("\n");
-				}
-				if (ds.getSeriesField() != null && !ds.getSeriesField().isEmpty()) {
-					sb.append("- 系列字段: ").append(ds.getSeriesField()).append("（多系列数据）\n");
-				}
-
-				// 饼图配置
-				if (ds.getNameField() != null && !ds.getNameField().isEmpty()) {
-					sb.append("- 名称字段: ").append(ds.getNameField()).append("\n");
-				}
-				if (ds.getValueField() != null && !ds.getValueField().isEmpty()) {
-					sb.append("- 数值字段: ").append(ds.getValueField()).append("\n");
-				}
-
-				// KPI卡片配置
-				if (ds.getTitle() != null && !ds.getTitle().isEmpty()) {
-					sb.append("- 指标名称: ").append(ds.getTitle()).append("\n");
-				}
-				if (ds.getUnit() != null && !ds.getUnit().isEmpty()) {
-					sb.append("- 单位: ").append(ds.getUnit()).append("\n");
-				}
-				if (ds.getComparison() != null && !ds.getComparison().isEmpty() && !"none".equals(ds.getComparison())) {
-					String comparisonText = "chain".equals(ds.getComparison()) ? "环比" : "同比";
-					sb.append("- 对比方式: ").append(comparisonText).append("\n");
-				}
-				if (ds.getTrend() != null && !ds.getTrend().isEmpty()) {
-					String trendText = "up".equals(ds.getTrend()) ? "上升" : "down".equals(ds.getTrend()) ? "下降" : "平稳";
-					sb.append("- 趋势: ").append(trendText).append("\n");
-				}
-
-				// 表格配置
-				if (ds.getColumns() != null && !ds.getColumns().isEmpty()) {
-					sb.append("- 表格列配置:\n");
-					for (ComponentConfig.ColumnConfig column : ds.getColumns()) {
-						if (column.getField() != null && !column.getField().isEmpty()) {
-							sb.append("  - ")
-								.append(column.getTitle())
-								.append("（字段: ")
-								.append(column.getField())
-								.append("，宽度: ")
-								.append(column.getWidth())
-								.append(Boolean.TRUE.equals(column.getSortable()) ? "，可排序" : "")
-								.append("）\n");
+				if (specific.containsKey("xAxis")) {
+					Object xAxisObj = specific.get("xAxis");
+					if (xAxisObj instanceof Map) {
+						Map<String, Object> xAxis = (Map<String, Object>) xAxisObj;
+						if (xAxis.get("field") != null) {
+							sb.append("- X轴字段: ").append(xAxis.get("field")).append("\n");
 						}
 					}
 				}
-				if (Boolean.TRUE.equals(ds.getPagination())) {
-					sb.append("- 分页: 启用");
-					if (ds.getPageSize() != null) {
-						sb.append("，每页").append(ds.getPageSize()).append("条");
+				if (specific.containsKey("yAxis")) {
+					Object yAxisObj = specific.get("yAxis");
+					if (yAxisObj instanceof Map) {
+						Map<String, Object> yAxis = (Map<String, Object>) yAxisObj;
+						if (yAxis.get("field") != null) {
+							sb.append("- Y轴字段: ").append(yAxis.get("field")).append("\n");
+						}
 					}
-					sb.append("\n");
+				}
+				if (specific.containsKey("series")) {
+					Object seriesObj = specific.get("series");
+					if (seriesObj instanceof List) {
+						List<Map<String, Object>> series = (List<Map<String, Object>>) seriesObj;
+						if (!series.isEmpty() && series.get(0).get("field") != null) {
+							sb.append("- 系列字段: ").append(series.get(0).get("field")).append("（多系列数据）\n");
+						}
+					}
 				}
 
-				// 示例数据
-				if (ds.getSampleData() != null && !ds.getSampleData().isEmpty()) {
-					sb.append("- 示例数据: ").append(ds.getSampleData()).append("\n");
+				// 饼图配置
+				if (specific.containsKey("nameField")) {
+					sb.append("- 名称字段: ").append(specific.get("nameField")).append("\n");
 				}
+				if (specific.containsKey("valueField")) {
+					sb.append("- 数值字段: ").append(specific.get("valueField")).append("\n");
+				}
+
+				// KPI卡片配置
+				if (specific.containsKey("title")) {
+					sb.append("- 指标名称: ").append(specific.get("title")).append("\n");
+				}
+				if (specific.containsKey("unit")) {
+					sb.append("- 单位: ").append(specific.get("unit")).append("\n");
+				}
+				if (specific.containsKey("comparison")) {
+					Object comparisonObj = specific.get("comparison");
+					if (comparisonObj instanceof Map) {
+						Map<String, Object> comparison = (Map<String, Object>) comparisonObj;
+						if (comparison.get("type") != null) {
+							String comparisonType = comparison.get("type").toString();
+							String comparisonText = "chain".equals(comparisonType) ? "环比" : "同比";
+							sb.append("- 对比方式: ").append(comparisonText).append("\n");
+						}
+					}
+				}
+				if (specific.containsKey("trend")) {
+					Object trendObj = specific.get("trend");
+					if (trendObj instanceof Map) {
+						Map<String, Object> trend = (Map<String, Object>) trendObj;
+						if (Boolean.TRUE.equals(trend.get("show"))) {
+							sb.append("- 趋势: 显示趋势\n");
+						}
+					}
+				}
+
+				// 表格配置
+				if (specific.containsKey("columns")) {
+					Object columnsObj = specific.get("columns");
+					if (columnsObj instanceof List) {
+						List<Map<String, Object>> columns = (List<Map<String, Object>>) columnsObj;
+						if (!columns.isEmpty()) {
+							sb.append("- 表格列配置:\n");
+							for (Map<String, Object> column : columns) {
+								if (column.get("field") != null && !column.get("field").toString().isEmpty()) {
+									sb.append("  - ")
+										.append(column.get("title"))
+										.append("（字段: ")
+										.append(column.get("field"))
+										.append("，宽度: ")
+										.append(column.get("width"))
+										.append(Boolean.TRUE.equals(column.get("sortable")) ? "，可排序" : "")
+										.append("）\n");
+								}
+							}
+						}
+					}
+				}
+				if (specific.containsKey("pagination")) {
+					Object paginationObj = specific.get("pagination");
+					if (paginationObj instanceof Map) {
+						Map<String, Object> pagination = (Map<String, Object>) paginationObj;
+						if (Boolean.TRUE.equals(pagination.get("enabled"))) {
+							sb.append("- 分页: 启用");
+							if (pagination.get("pageSize") != null) {
+								sb.append("，每页").append(pagination.get("pageSize")).append("条");
+							}
+							sb.append("\n");
+						}
+					}
+					else if (Boolean.TRUE.equals(paginationObj)) {
+						sb.append("- 分页: 启用\n");
+					}
+				}
+			}
+
+			// 从数据映射配置获取示例数据
+			if (config.getDataMapping() != null && config.getDataMapping().getSampleData() != null) {
+				sb.append("- 示例数据: ").append(config.getDataMapping().getSampleData()).append("\n");
 			}
 
 			sb.append("\n");

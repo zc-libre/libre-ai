@@ -20,9 +20,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 libre-ai/
 ├── libre-ai-admin/     # 后端服务模块
-│   └── src/main/java/com/libre/ai/
-│       ├── dashboard/  # AI仪表板生成模块
-│       └── rag/       # RAG知识库模块
+│   └── src/main/java/org/libre/ai/
+│       ├── modules/
+│       │   ├── dashboard/  # AI仪表板生成模块
+│       │   └── rag/       # RAG知识库模块
+│       └── config/        # 全局配置类
 └── libre-ai-ui/       # 前端Vue项目
 ```
 
@@ -30,15 +32,18 @@ libre-ai/
 
 ### 后端开发
 ```bash
-# 代码格式验证（必须通过）
+# 代码格式验证（提交前必须运行）
 mvn validate
 
-# 构建项目（跳过测试）
-mvn clean package
+# 构建项目
+mvn clean package -DskipTests
 
-# 运行后端服务
+# 运行后端服务（端口9191）
 cd libre-ai-admin
 mvn spring-boot:run
+
+# 运行测试
+mvn test
 
 # 单独编译某个模块
 mvn -pl libre-ai-admin clean compile
@@ -48,17 +53,20 @@ mvn -pl libre-ai-admin clean compile
 ```bash
 cd libre-ai-ui
 
-# 安装依赖（使用pnpm）
+# 安装依赖（必须使用pnpm）
 pnpm install
 
-# 启动开发服务器（端口3888）
+# 启动开发服务器（默认端口3888）
 pnpm dev
 
 # 构建生产版本
 pnpm build
 
-# 代码格式化
-pnpm format
+# 代码检查和格式化
+pnpm lint              # 运行所有lint检查
+pnpm lint:eslint      # ESLint检查
+pnpm lint:prettier    # Prettier格式化
+pnpm typecheck        # TypeScript类型检查
 ```
 
 ## 架构设计原则
@@ -99,13 +107,18 @@ service.saveOrUpdate(entity);
 
 ## AI集成指南
 
-### LangChain4j配置
+### LangChain4j配置（application.yml）
 ```yaml
 dashboard:
   openai:
     api-key: ${OPENAI_API_KEY}
-    base-url: ${OPENAI_BASE_URL:https://api.openai.com}
-    model-name: gpt-4o-mini
+    base-url: ${OPENAI_BASE_URL}
+    model-name: ${OPENAI_MODEL_NAME:claude-sonnet-4-20250514}
+    temperature: ${OPENAI_TEMPERATURE:1}
+    max-tokens: ${OPENAI_MAX_TOKENS:12800}
+  generation:
+    timeout: ${DASHBOARD_TIMEOUT:120000}
+    max-retries: ${DASHBOARD_MAX_RETRIES:3}
 ```
 
 ### 支持的AI功能
@@ -136,16 +149,23 @@ public Flux<String> streamResponse() {
 
 必需的环境变量：
 - `OPENAI_API_KEY` - OpenAI API密钥
-- `OPENAI_BASE_URL` - API基础URL（可选）
-- `DB_PASSWORD` - 数据库密码
+- `OPENAI_BASE_URL` - API基础URL
+- `DB_PASSWORD` - 数据库密码（默认配置使用123456）
+
+可选的环境变量：
+- `OPENAI_MODEL_NAME` - 模型名称（默认：claude-sonnet-4-20250514）
+- `OPENAI_TEMPERATURE` - 温度参数（默认：1）
+- `OPENAI_MAX_TOKENS` - 最大token数（默认：12800）
 
 ## 开发注意事项
 
 1. **代码提交前**必须运行`mvn validate`确保格式正确
 2. 新增API接口使用`@Tag`注解添加Swagger文档
 3. 复杂JSON配置使用PostgreSQL的JSONB类型存储
-4. AI生成内容使用流式响应提升用户体验
+4. AI生成内容使用流式响应（Flux<String>）提升用户体验
 5. 敏感配置通过环境变量注入，不要硬编码
+6. 前端使用pnpm作为包管理器，不要使用npm或yarn
+7. 数据库连接默认配置：PostgreSQL 端口5432，数据库名libre_ai
 
 ## 部署相关
 

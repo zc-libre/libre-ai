@@ -35,7 +35,7 @@
             v-for="feature in option.features"
             :key="feature"
             size="small"
-            :type="selectedPurpose === option.id ? 'info' : ''"
+            :type="selectedPurpose === option.id ? 'info' : undefined"
           >
             {{ feature }}
           </el-tag>
@@ -51,14 +51,17 @@
           场景细化配置
         </span>
       </el-divider>
-      
+
       <div class="config-grid">
         <!-- 场景细节 -->
         <div class="config-item">
           <label class="config-label">
             <el-icon><InfoFilled /></el-icon>
             场景细节
-            <el-tooltip content="描述具体的监控场景，如：冷链货架、危险品仓位、高值物料等" placement="top">
+            <el-tooltip
+              content="描述具体的监控场景，如：冷链货架、危险品仓位、高值物料等"
+              placement="top"
+            >
               <el-icon class="help-icon"><QuestionFilled /></el-icon>
             </el-tooltip>
           </label>
@@ -77,7 +80,10 @@
           <label class="config-label">
             <el-icon><DataLine /></el-icon>
             重点指标
-            <el-tooltip content="需要重点监控的业务指标，如：温度湿度、库存周转率、拣选效率等" placement="top">
+            <el-tooltip
+              content="需要重点监控的业务指标，如：温度湿度、库存周转率、拣选效率等"
+              placement="top"
+            >
               <el-icon class="help-icon"><QuestionFilled /></el-icon>
             </el-tooltip>
           </label>
@@ -129,14 +135,25 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { 
-  Box, Location, Van, Grid, More, Setting, 
-  InfoFilled, DataLine, Document, QuestionFilled, Promotion 
+import {
+  Box,
+  Location,
+  Van,
+  Grid,
+  More,
+  Setting,
+  InfoFilled,
+  DataLine,
+  Document,
+  QuestionFilled,
+  Promotion
 } from '@element-plus/icons-vue';
 
 // Props
+import type { DashboardConfig as StoreDashboardConfig } from '../../composables/useDashboardStore';
+
 interface Props {
-  wizardData: any;
+  wizardData: StoreDashboardConfig;
 }
 
 const props = defineProps<Props>();
@@ -270,9 +287,12 @@ const getCustomRequirementsPlaceholder = () => {
 
 const getExampleTips = () => {
   const tips: Record<string, string> = {
-    shelf: '💡 提示：可以针对不同货架类型定制监控方案，如冷链需要温度监控，危险品需要安全预警',
-    location: '💡 提示：不同仓库类型有不同的管理重点，立体仓注重设备状态，平库注重空间利用',
-    transport: '💡 提示：可根据搬运设备类型优化监控重点，AGV关注路径规划，叉车关注作业效率',
+    shelf:
+      '💡 提示：可以针对不同货架类型定制监控方案，如冷链需要温度监控，危险品需要安全预警',
+    location:
+      '💡 提示：不同仓库类型有不同的管理重点，立体仓注重设备状态，平库注重空间利用',
+    transport:
+      '💡 提示：可根据搬运设备类型优化监控重点，AGV关注路径规划，叉车关注作业效率',
     mixed: '💡 提示：综合看板可以整合多个子系统数据，建议明确主要监控维度'
   };
   return tips[selectedPurpose.value] || '';

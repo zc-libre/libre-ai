@@ -16,7 +16,7 @@
     <div class="section">
       <h3 class="section-title">选择配色方案</h3>
       <p class="section-subtitle">选择预设主题或创建自定义配色</p>
-      
+
       <div class="theme-grid">
         <div
           v-for="theme in themeOptions"
@@ -28,15 +28,30 @@
           <div class="theme-preview">
             <div
               class="color-bar primary"
-              :style="{ backgroundColor: theme.isCustom && theme.id === selectedTheme ? customColors.primary : theme.colors.primary }"
+              :style="{
+                backgroundColor:
+                  theme.isCustom && theme.id === selectedTheme
+                    ? customColors.primary
+                    : theme.colors.primary
+              }"
             />
             <div
               class="color-bar secondary"
-              :style="{ backgroundColor: theme.isCustom && theme.id === selectedTheme ? customColors.secondary : theme.colors.secondary }"
+              :style="{
+                backgroundColor:
+                  theme.isCustom && theme.id === selectedTheme
+                    ? customColors.secondary
+                    : theme.colors.secondary
+              }"
             />
             <div
               class="color-bar accent"
-              :style="{ backgroundColor: theme.isCustom && theme.id === selectedTheme ? customColors.accent : theme.colors.accent }"
+              :style="{
+                backgroundColor:
+                  theme.isCustom && theme.id === selectedTheme
+                    ? customColors.accent
+                    : theme.colors.accent
+              }"
             />
           </div>
           <div class="theme-info">
@@ -55,7 +70,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 自定义颜色面板 -->
       <el-collapse-transition>
         <div v-if="selectedTheme === 'custom'" class="custom-color-panel">
@@ -176,31 +191,92 @@
       <h3 class="section-title">配色应用预览</h3>
       <div class="preview-demo">
         <el-card>
-          <div class="demo-header" :style="{ borderBottomColor: getCurrentColors().primary }">
-            <span class="demo-title" :style="{ color: getCurrentColors().primary }">看板标题示例</span>
+          <div
+            class="demo-header"
+            :style="{ borderBottomColor: getCurrentColors().primary }"
+          >
+            <span
+              class="demo-title"
+              :style="{ color: getCurrentColors().primary }"
+              >看板标题示例</span
+            >
           </div>
           <div class="demo-content">
             <div class="demo-stats">
-              <div class="stat-card" :style="{ borderLeftColor: getCurrentColors().primary }">
-                <div class="stat-value" :style="{ color: getCurrentColors().primary }">12,345</div>
+              <div
+                class="stat-card"
+                :style="{ borderLeftColor: getCurrentColors().primary }"
+              >
+                <div
+                  class="stat-value"
+                  :style="{ color: getCurrentColors().primary }"
+                >
+                  12,345
+                </div>
                 <div class="stat-label">主要指标</div>
               </div>
-              <div class="stat-card" :style="{ borderLeftColor: getCurrentColors().secondary }">
-                <div class="stat-value" :style="{ color: getCurrentColors().secondary }">67.8%</div>
+              <div
+                class="stat-card"
+                :style="{ borderLeftColor: getCurrentColors().secondary }"
+              >
+                <div
+                  class="stat-value"
+                  :style="{ color: getCurrentColors().secondary }"
+                >
+                  67.8%
+                </div>
                 <div class="stat-label">次要指标</div>
               </div>
-              <div class="stat-card" :style="{ borderLeftColor: getCurrentColors().accent }">
-                <div class="stat-value" :style="{ color: getCurrentColors().accent }">+23.5</div>
+              <div
+                class="stat-card"
+                :style="{ borderLeftColor: getCurrentColors().accent }"
+              >
+                <div
+                  class="stat-value"
+                  :style="{ color: getCurrentColors().accent }"
+                >
+                  +23.5
+                </div>
                 <div class="stat-label">辅助指标</div>
               </div>
             </div>
             <div class="demo-chart">
               <div class="chart-bars">
-                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().primary, height: '80%' }"></div>
-                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().secondary, height: '60%' }"></div>
-                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().accent, height: '45%' }"></div>
-                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().primary, height: '70%' }"></div>
-                <div class="chart-bar" :style="{ backgroundColor: getCurrentColors().secondary, height: '55%' }"></div>
+                <div
+                  class="chart-bar"
+                  :style="{
+                    backgroundColor: getCurrentColors().primary,
+                    height: '80%'
+                  }"
+                />
+                <div
+                  class="chart-bar"
+                  :style="{
+                    backgroundColor: getCurrentColors().secondary,
+                    height: '60%'
+                  }"
+                />
+                <div
+                  class="chart-bar"
+                  :style="{
+                    backgroundColor: getCurrentColors().accent,
+                    height: '45%'
+                  }"
+                />
+                <div
+                  class="chart-bar"
+                  :style="{
+                    backgroundColor: getCurrentColors().primary,
+                    height: '70%'
+                  }"
+                />
+                <div
+                  class="chart-bar"
+                  :style="{
+                    backgroundColor: getCurrentColors().secondary,
+                    height: '55%'
+                  }"
+                />
               </div>
             </div>
           </div>
@@ -221,13 +297,28 @@
           <div class="summary-item">
             <strong>配色详情：</strong>
             <div class="color-tags">
-              <el-tag :style="{ backgroundColor: getCurrentColors().primary, color: '#fff' }">
+              <el-tag
+                :style="{
+                  backgroundColor: getCurrentColors().primary,
+                  color: '#fff'
+                }"
+              >
                 主色: {{ getCurrentColors().primary }}
               </el-tag>
-              <el-tag :style="{ backgroundColor: getCurrentColors().secondary, color: '#fff' }">
+              <el-tag
+                :style="{
+                  backgroundColor: getCurrentColors().secondary,
+                  color: '#fff'
+                }"
+              >
                 辅助: {{ getCurrentColors().secondary }}
               </el-tag>
-              <el-tag :style="{ backgroundColor: getCurrentColors().accent, color: '#fff' }">
+              <el-tag
+                :style="{
+                  backgroundColor: getCurrentColors().accent,
+                  color: '#fff'
+                }"
+              >
                 强调: {{ getCurrentColors().accent }}
               </el-tag>
             </div>
@@ -243,8 +334,10 @@ import { ref, computed } from 'vue';
 import { Check, Edit, Brush } from '@element-plus/icons-vue';
 
 // Props
+import type { DashboardConfig as StoreDashboardConfig } from '../../composables/useDashboardStore';
+
 interface Props {
-  wizardData: any;
+  wizardData: StoreDashboardConfig;
 }
 
 const props = defineProps<Props>();
@@ -262,130 +355,11 @@ const customColors = ref({
   accent: props.wizardData.customColors?.accent || '#A5B4FC'
 });
 
+import { themeOptions as THEME_OPTIONS } from '../../constants/options';
+
 // 主题选项
-const themeOptions = [
-  {
-    id: 'modern-blue',
-    name: '现代蓝',
-    description: '专业稳重的蓝色主题',
-    colors: {
-      primary: '#409EFF',
-      secondary: '#79BBFF',
-      accent: '#A0CFFF'
-    }
-  },
-  {
-    id: 'dark-purple',
-    name: '深紫夜',
-    description: '神秘优雅的紫色主题',
-    colors: {
-      primary: '#8B5CF6',
-      secondary: '#A78BFA',
-      accent: '#C4B5FD'
-    }
-  },
-  {
-    id: 'green-nature',
-    name: '自然绿',
-    description: '清新自然的绿色主题',
-    colors: {
-      primary: '#67C23A',
-      secondary: '#85CE61',
-      accent: '#B3E19D'
-    }
-  },
-  {
-    id: 'orange-warm',
-    name: '暖橙色',
-    description: '温暖活力的橙色主题',
-    colors: {
-      primary: '#E6A23C',
-      secondary: '#EEBE77',
-      accent: '#F3D19E'
-    }
-  },
-  {
-    id: 'red-energy',
-    name: '活力红',
-    description: '充满活力的红色主题',
-    colors: {
-      primary: '#F56C6C',
-      secondary: '#F78989',
-      accent: '#FAB6B6'
-    }
-  },
-  {
-    id: 'cyan-fresh',
-    name: '清新青',
-    description: '清新淡雅的青色主题',
-    colors: {
-      primary: '#17A2B8',
-      secondary: '#46B5D1',
-      accent: '#7CC7D8'
-    }
-  },
-  {
-    id: 'indigo-deep',
-    name: '深邃靛',
-    description: '深邃沉稳的靛色主题',
-    colors: {
-      primary: '#6366F1',
-      secondary: '#818CF8',
-      accent: '#A5B4FC'
-    }
-  },
-  {
-    id: 'pink-soft',
-    name: '柔和粉',
-    description: '温柔浪漫的粉色主题',
-    colors: {
-      primary: '#EC4899',
-      secondary: '#F472B6',
-      accent: '#FBCFE8'
-    }
-  },
-  {
-    id: 'teal-calm',
-    name: '静谧蓝绿',
-    description: '平静舒适的蓝绿主题',
-    colors: {
-      primary: '#14B8A6',
-      secondary: '#5EEAD4',
-      accent: '#99F6E4'
-    }
-  },
-  {
-    id: 'amber-golden',
-    name: '金色光辉',
-    description: '高贵典雅的金色主题',
-    colors: {
-      primary: '#F59E0B',
-      secondary: '#FBBF24',
-      accent: '#FCD34D'
-    }
-  },
-  {
-    id: 'slate-professional',
-    name: '专业灰',
-    description: '低调专业的灰色主题',
-    colors: {
-      primary: '#64748B',
-      secondary: '#94A3B8',
-      accent: '#CBD5E1'
-    }
-  },
-  {
-    id: 'custom',
-    name: '自定义',
-    description: '创建您的专属配色',
-    colors: {
-      primary: '#6366F1',
-      secondary: '#818CF8',
-      accent: '#A5B4FC'
-    },
-    isCustom: true
-  }
-];
+// 从 constants/options 引入，避免重复定义
+const themeOptions = THEME_OPTIONS;
 
 // 计算属性
 const selectedThemeOption = computed(() => {
@@ -414,9 +388,11 @@ const updateCustomTheme = () => {
 
 const updateData = () => {
   const isCustom = selectedTheme.value === 'custom';
-  const themeColors = isCustom ? customColors.value : (selectedThemeOption.value?.colors || {});
-  const themeName = isCustom ? '自定义' : (selectedThemeOption.value?.name || '');
-  
+  const themeColors = isCustom
+    ? customColors.value
+    : selectedThemeOption.value?.colors || {};
+  const themeName = isCustom ? '自定义' : selectedThemeOption.value?.name || '';
+
   const updateData = {
     theme: selectedTheme.value,
     themeText: themeName,

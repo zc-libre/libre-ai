@@ -7,38 +7,26 @@ export interface DashboardConfig {
   components: string[];
 }
 
-export interface ComponentDataConfig {
+// ============= 组件配置分层结构 =============
+
+// 基础配置（所有组件通用）
+export interface BaseComponentConfig {
   componentId: string;
   componentType: string;
   dataSource?: string;
   refreshInterval?: number;
-  
-  // 图表类配置
-  xField?: string;
-  yField?: string;
-  nameField?: string;
-  valueField?: string;
-  seriesField?: string;
-  sampleData?: string;
-  
-  // KPI卡片配置
-  title?: string;
-  unit?: string;
-  comparison?: 'chain' | 'year' | 'none';
-  trend?: 'up' | 'down' | 'stable';
-  
-  // 表格配置
-  columns?: Array<{
-    field: string;
-    title: string;
-    width?: number;
-    sortable?: boolean;
-  }>;
-  pagination?: boolean;
-  pageSize?: number;
-  
-  // 自定义数据结构
-  customSchema?: any;
+}
+
+// 数据映射配置
+export interface DataMappingConfig {
+  sampleData?: any;
+}
+
+// 组件配置结构（分层设计）
+export interface ComponentConfig {
+  base: BaseComponentConfig;
+  dataMapping: DataMappingConfig;
+  specific: Record<string, any>; // 根据组件类型动态确定
 }
 
 // 主题配置（与后端 ThemeConfig 对应）
@@ -48,9 +36,6 @@ export interface ThemeConfig {
     primary: string;
     secondary: string;
     accent: string;
-    background?: string;
-    surface?: string;
-    text?: string;
   };
 }
 
@@ -61,10 +46,14 @@ export interface DashboardRequest {
   focusMetrics?: string;
   customRequirements?: string;
   layout: string;
-  theme: ThemeConfig;  // 发送给后端的是 ThemeConfig 对象
+  theme: ThemeConfig;
   components: string[];
-  componentConfigs?: ComponentDataConfig[];
-  options?: Record<string, any>;
+  componentConfigs?: ComponentConfig[];
+  options?: {
+    responsive?: boolean;
+    includeData?: boolean;
+    additionalRequirements?: string;
+  };
 }
 
 export interface DashboardResponse {

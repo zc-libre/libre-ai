@@ -80,9 +80,11 @@ import Step4LayoutSelector from './steps/Step4LayoutSelector.vue';
 import Step5DashboardGenerator from './steps/Step5DashboardGenerator.vue';
 
 // Props
+import type { DashboardConfig as StoreDashboardConfig } from '../composables/useDashboardStore';
+
 interface Props {
   currentStep: number;
-  wizardData: any;
+  wizardData: StoreDashboardConfig;
   isGenerating?: boolean;
   hasGenerated?: boolean;
 }
@@ -116,7 +118,10 @@ const canProceed = computed(() => {
     case 1:
       return !!props.wizardData.purpose;
     case 2:
-      return props.wizardData.componentIds && props.wizardData.componentIds.length > 0;
+      return (
+        props.wizardData.componentIds &&
+        props.wizardData.componentIds.length > 0
+      );
     case 3:
       return !!props.wizardData.theme;
     case 4:
@@ -146,7 +151,7 @@ const handlePrev = () => {
 const handleGenerate = () => {
   if (
     !props.wizardData.purpose ||
-    !props.wizardData.componentIds || 
+    !props.wizardData.componentIds ||
     props.wizardData.componentIds.length === 0 ||
     !props.wizardData.theme ||
     !props.wizardData.layout
