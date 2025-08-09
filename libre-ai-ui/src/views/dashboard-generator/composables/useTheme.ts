@@ -1,15 +1,17 @@
+export interface CustomThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background?: string;
+  surface?: string;
+  text?: string;
+}
+
 export interface ThemeOption {
   id: string;
   name: string;
   description: string;
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background?: string;
-    surface?: string;
-    text?: string;
-  };
+  colors: CustomThemeColors;
   isCustom?: boolean;
 }
 
@@ -243,14 +245,7 @@ export const useTheme = () => {
   };
 
   // 创建自定义主题
-  const createCustomTheme = (colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background?: string;
-    surface?: string;
-    text?: string;
-  }): ThemeOption => {
+  const createCustomTheme = (colors: CustomThemeColors): ThemeOption => {
     return {
       id: 'custom',
       name: '自定义',
@@ -267,6 +262,36 @@ export const useTheme = () => {
     };
   };
 
+  // 更新自定义主题（保留现有主题结构）
+  const updateCustomTheme = (
+    theme: ThemeOption,
+    colors: CustomThemeColors
+  ): ThemeOption => {
+    return {
+      ...theme,
+      colors: {
+        primary: colors.primary,
+        secondary: colors.secondary,
+        accent: colors.accent,
+        background: colors.background || theme.colors.background || '#f5f5f5',
+        surface: colors.surface || theme.colors.surface || '#ffffff',
+        text: colors.text || theme.colors.text || '#303133'
+      }
+    };
+  };
+
+  // 获取默认自定义颜色
+  const getDefaultCustomColors = (): CustomThemeColors => {
+    return {
+      primary: '#6366F1',
+      secondary: '#818CF8',
+      accent: '#A5B4FC',
+      background: '#f5f5f5',
+      surface: '#ffffff',
+      text: '#303133'
+    };
+  };
+
   return {
     themeOptions,
     getThemeOptions,
@@ -277,6 +302,8 @@ export const useTheme = () => {
     generateThemeCSS,
     getContrastColor,
     isDarkTheme,
-    createCustomTheme
+    createCustomTheme,
+    updateCustomTheme,
+    getDefaultCustomColors
   };
 };

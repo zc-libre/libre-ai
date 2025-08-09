@@ -23,13 +23,6 @@ import lombok.Builder.Default;
 public class GenerationOptions {
 
 	/**
-	 * 代码风格
-	 */
-	@Pattern(regexp = "^(modern|minimal|enterprise)$", message = "代码风格必须为: modern, minimal, enterprise 之一")
-	@Default
-	private String codeStyle = "modern";
-
-	/**
 	 * 是否响应式设计
 	 */
 	@Default

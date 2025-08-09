@@ -3,22 +3,22 @@
     <div class="gauge-container">
       <div class="gauge gauge-large">
         <div class="gauge-circle">
-          <div class="gauge-pointer"></div>
+          <div class="gauge-pointer" />
         </div>
       </div>
       <div class="gauge gauge-small">
         <div class="gauge-circle">
-          <div class="gauge-pointer"></div>
+          <div class="gauge-pointer" />
         </div>
       </div>
       <div class="gauge gauge-small">
         <div class="gauge-circle">
-          <div class="gauge-pointer"></div>
+          <div class="gauge-pointer" />
         </div>
       </div>
     </div>
     <div class="status-bar">
-      <div class="status-item" v-for="i in 4" :key="i"></div>
+      <div v-for="i in 4" :key="i" class="status-item" />
     </div>
   </div>
 </template>

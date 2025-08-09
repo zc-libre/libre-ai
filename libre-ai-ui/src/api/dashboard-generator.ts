@@ -14,12 +14,13 @@ export type ThemeConfig = {
 
 export type DashboardRequest = {
   purpose: string;
-  purposeDetail?: string;  // 场景细节描述
-  focusMetrics?: string;   // 重点监控指标
+  purposeDetail?: string; // 场景细节描述
+  focusMetrics?: string; // 重点监控指标
   customRequirements?: string; // 用户补充需求
   layout: string;
   theme: ThemeConfig;
   components: string[];
+  componentConfigs?: any[]; // 组件配置列表
   options?: {
     codeStyle?: string;
     responsive?: boolean;
@@ -143,7 +144,17 @@ export async function generateDashboardStream(
 
     // 2. 检查响应是否成功
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      let errorMessage = `请求失败: ${response.status}`;
+      try {
+        const errorText = await response.text();
+        if (errorText) {
+          const errorJson = JSON.parse(errorText);
+          errorMessage = errorJson.message || errorJson.error || errorMessage;
+        }
+      } catch {
+        // 忽略解析错误
+      }
+      throw new Error(errorMessage);
     }
 
     // 3. 获取响应体的可读流 (ReadableStream)
@@ -203,10 +214,11 @@ export async function generateDashboardStream(
 
     console.log('Full dashboard content length:', fullContent.length);
     return abortController;
-  } catch (error) {
+  } catch (error: any) {
     if (error.name !== 'AbortError') {
       console.error('Error fetching streaming dashboard:', error);
-      onError?.(error as Error);
+      const errorMessage = error.message || '生成失败，请稍后重试';
+      onError?.(new Error(errorMessage));
     }
   }
 

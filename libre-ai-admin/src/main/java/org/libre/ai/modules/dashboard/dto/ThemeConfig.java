@@ -62,21 +62,6 @@ public class ThemeConfig {
 		@NotBlank(message = "强调色不能为空")
 		private String accent;
 
-		/**
-		 * 背景色（可选）
-		 */
-		private String background;
-
-		/**
-		 * 表面色（可选）
-		 */
-		private String surface;
-
-		/**
-		 * 文本色（可选）
-		 */
-		private String text;
-
 	}
 
 }

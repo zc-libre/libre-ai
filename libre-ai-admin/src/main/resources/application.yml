@@ -27,7 +27,7 @@ dashboard:
     # API基础URL，支持代理或自定义端点
     base-url: ${OPENAI_BASE_URL}
     # 使用的模型名称
-    model-name: ${OPENAI_MODEL_NAME:claude-sonnet-4-20250514}
+    model-name: ${OPENAI_MODEL_NAME:gemini-2.5-pro}
     # 温度参数，控制输出随机性（0-1）
     temperature: ${OPENAI_TEMPERATURE:1}
     # 最大输出token数

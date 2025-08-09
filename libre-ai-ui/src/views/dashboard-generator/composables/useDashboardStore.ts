@@ -16,13 +16,15 @@ export interface DashboardConfig {
   themeColors: Record<string, string>;
   components: string[];
   componentIds: string[];
+  componentDataConfigs?: Record<string, any>; // 添加组件数据配置
   additionalDetails: string;
   generatedResult?: any;
   generationOptions?: any;
+  timestamp?: number; // 添加时间戳字段
+  customColors?: Record<string, string>; // 添加自定义颜色字段
 }
 
 export interface GenerationOptions {
-  codeStyle: 'modern' | 'minimal' | 'enterprise';
   responsive: boolean;
   includeData: boolean;
   additionalRequirements: string;
@@ -56,7 +58,6 @@ export const useDashboardStore = defineStore('dashboard-generator', () => {
 
   // 生成选项
   const generationOptions = reactive<GenerationOptions>({
-    codeStyle: 'modern',
     responsive: true,
     includeData: true,
     additionalRequirements: ''
@@ -71,14 +72,24 @@ export const useDashboardStore = defineStore('dashboard-generator', () => {
       case 2:
         return !!wizardData.purpose;
       case 3:
-        return !!wizardData.purpose && wizardData.componentIds && wizardData.componentIds.length > 0;
+        return (
+          !!wizardData.purpose &&
+          wizardData.componentIds &&
+          wizardData.componentIds.length > 0
+        );
       case 4:
-        return !!wizardData.purpose && wizardData.componentIds && wizardData.componentIds.length > 0 && !!wizardData.theme;
+        return (
+          !!wizardData.purpose &&
+          wizardData.componentIds &&
+          wizardData.componentIds.length > 0 &&
+          !!wizardData.theme
+        );
       case 5:
         return (
-          !!wizardData.purpose && 
-          wizardData.componentIds && wizardData.componentIds.length > 0 && 
-          !!wizardData.theme && 
+          !!wizardData.purpose &&
+          wizardData.componentIds &&
+          wizardData.componentIds.length > 0 &&
+          !!wizardData.theme &&
           !!wizardData.layout
         );
       default:
@@ -87,10 +98,13 @@ export const useDashboardStore = defineStore('dashboard-generator', () => {
   });
 
   const isConfigComplete = computed(() => {
-    return wizardData.purpose && 
-           wizardData.componentIds && wizardData.componentIds.length > 0 &&
-           wizardData.theme && 
-           wizardData.layout;
+    return (
+      wizardData.purpose &&
+      wizardData.componentIds &&
+      wizardData.componentIds.length > 0 &&
+      wizardData.theme &&
+      wizardData.layout
+    );
   });
 
   const selectedComponentsCount = computed(() => {
@@ -157,7 +171,6 @@ export const useDashboardStore = defineStore('dashboard-generator', () => {
 
     // 重置生成选项
     Object.assign(generationOptions, {
-      codeStyle: 'modern',
       responsive: true,
       includeData: true,
       additionalRequirements: ''

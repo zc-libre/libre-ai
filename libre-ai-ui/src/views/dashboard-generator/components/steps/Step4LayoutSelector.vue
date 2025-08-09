@@ -92,8 +92,10 @@ import TimelineLayoutPreview from '../previews/TimelineLayoutPreview.vue';
 import DashboardLayoutPreview from '../previews/DashboardLayoutPreview.vue';
 
 // Props
+import type { DashboardConfig as StoreDashboardConfig } from '../../composables/useDashboardStore';
+
 interface Props {
-  wizardData: any;
+  wizardData: StoreDashboardConfig;
 }
 
 const props = defineProps<Props>();

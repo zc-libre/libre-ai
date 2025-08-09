@@ -3,36 +3,36 @@
     <div class="masonry-container">
       <div class="masonry-column">
         <div class="masonry-item item-tall">
-          <div class="item-header"></div>
-          <div class="item-content tall"></div>
+          <div class="item-header" />
+          <div class="item-content tall" />
         </div>
         <div class="masonry-item item-short">
-          <div class="item-header"></div>
-          <div class="item-content short"></div>
+          <div class="item-header" />
+          <div class="item-content short" />
         </div>
       </div>
       <div class="masonry-column">
         <div class="masonry-item item-short">
-          <div class="item-header"></div>
-          <div class="item-content short"></div>
+          <div class="item-header" />
+          <div class="item-content short" />
         </div>
         <div class="masonry-item item-medium">
-          <div class="item-header"></div>
-          <div class="item-content medium"></div>
+          <div class="item-header" />
+          <div class="item-content medium" />
         </div>
         <div class="masonry-item item-tiny">
-          <div class="item-header"></div>
-          <div class="item-content tiny"></div>
+          <div class="item-header" />
+          <div class="item-content tiny" />
         </div>
       </div>
       <div class="masonry-column">
         <div class="masonry-item item-medium">
-          <div class="item-header"></div>
-          <div class="item-content medium"></div>
+          <div class="item-header" />
+          <div class="item-content medium" />
         </div>
         <div class="masonry-item item-medium">
-          <div class="item-header"></div>
-          <div class="item-content medium"></div>
+          <div class="item-header" />
+          <div class="item-content medium" />
         </div>
       </div>
     </div>

@@ -18,15 +18,6 @@ import reactor.core.publisher.Flux;
 public interface StreamDashboardAiAssistant {
 
 	/**
-	 * 生成仪表板代码 - 使用请求对象 使用@SystemMessage定义AI角色和要求 使用@UserMessage定义用户输入 自动处理JSON结构化输出
-	 */
-	@SystemMessage(fromResource = "prompt/dashboardPrompt.txt")
-	@UserMessage("""
-			{{prompt}}
-			""")
-	TokenStream generateDashboard(@V("prompt") String prompt);
-
-	/**
 	 * 流式生成仪表板代码 - 使用请求对象 使用@SystemMessage定义AI角色和要求 使用@UserMessage定义用户输入 自动处理JSON结构化输出
 	 */
 	@SystemMessage(fromResource = "prompt/dashboardPrompt.txt")

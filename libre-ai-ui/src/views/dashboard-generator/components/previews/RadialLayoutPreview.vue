@@ -1,16 +1,16 @@
 <template>
   <div class="radial-preview">
     <div class="center-circle">
-      <div class="center-content"></div>
+      <div class="center-content" />
     </div>
-    <div class="satellite satellite-top"></div>
-    <div class="satellite satellite-right"></div>
-    <div class="satellite satellite-bottom"></div>
-    <div class="satellite satellite-left"></div>
-    <div class="satellite satellite-top-right"></div>
-    <div class="satellite satellite-bottom-right"></div>
-    <div class="satellite satellite-bottom-left"></div>
-    <div class="satellite satellite-top-left"></div>
+    <div class="satellite satellite-top" />
+    <div class="satellite satellite-right" />
+    <div class="satellite satellite-bottom" />
+    <div class="satellite satellite-left" />
+    <div class="satellite satellite-top-right" />
+    <div class="satellite satellite-bottom-right" />
+    <div class="satellite satellite-bottom-left" />
+    <div class="satellite satellite-top-left" />
   </div>
 </template>
 

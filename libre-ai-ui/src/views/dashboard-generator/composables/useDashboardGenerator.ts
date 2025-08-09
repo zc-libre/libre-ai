@@ -2,6 +2,8 @@ import { computed, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useDashboardStore } from './useDashboardStore';
 import type { DashboardRequest } from '@/api/dashboard-generator';
+import type { ComponentConfig } from '../types';
+import { buildComponentConfig } from '../utils/configBuilder';
 import {
   generateDashboard as apiGenerateDashboard,
   generateDashboardStream,
@@ -41,199 +43,209 @@ export const useDashboardGenerator = () => {
   const streamingCode = ref<string>(''); // 流式接收的代码
   const isStreaming = ref(false); // 是否正在流式接收
   const abortController = ref<AbortController | null>(null); // 用于中止流式请求
+  const retryCount = ref(0); // 重试次数
+  const maxRetries = 3; // 最大重试次数
 
-  // 生成步骤
+  // 生成步骤（导出供组件复用，避免重复定义）
   const generationSteps = [
-    '分析配置信息',
-    '生成布局结构',
-    '应用主题样式',
-    '集成组件代码',
-    '优化代码质量',
-    '生成完成'
+    '正在分析您的配置',
+    '正在设计看板布局',
+    '看板生成完成'
   ];
 
   // 计算属性
   const isGenerating = computed(() => store.isGenerating);
   const canGenerate = computed(() => store.isConfigComplete);
 
-  // 生成看板代码（流式版本）
-  const generateDashboardWithStream =
-    async (): Promise<GenerationResult | null> => {
-      if (!canGenerate.value) {
-        ElMessage.warning('请完成所有必要的配置');
-        return null;
-      }
+  // 生成看板代码（流式版本，带重试机制）
+  const generateDashboardWithStream = async (
+    retry = false
+  ): Promise<GenerationResult | null> => {
+    if (!canGenerate.value) {
+      ElMessage.warning('请完成所有必要的配置');
+      return null;
+    }
 
-      store.setGenerating(true);
-      store.setIsStreaming(true);
-      store.setStreamingCode('');
-      generationResult.value = null;
-      streamingCode.value = '';
-      isStreaming.value = true;
+    if (!retry) {
+      retryCount.value = 0;
+    }
 
-      try {
-        // 更新进度 - 开始生成
-        generationProgress.value = {
-          step: 0,
-          total: generationSteps.length,
-          message: '准备生成看板...',
-          percentage: 10
-        };
+    store.setGenerating(true);
+    store.setIsStreaming(true);
+    store.setStreamingCode('');
+    generationResult.value = null;
+    streamingCode.value = '';
+    isStreaming.value = true;
 
-        // 准备API请求参数
-        const { wizardData, generationOptions } = store;
-        
-        // 构建组件配置数组
-        const componentConfigs = wizardData.componentIds.map((id: string) => {
-          const config = wizardData.componentDataConfigs?.[id] || {};
-          return {
-            componentId: id,
-            componentType: id,
-            dataSource: config.dataSource,
-            refreshInterval: config.refreshInterval,
-            dataStructure: {
-              xField: config.xField,
-              yField: config.yField,
-              seriesField: config.seriesField,
-              nameField: config.nameField,
-              valueField: config.valueField,
-              title: config.title,
-              unit: config.unit,
-              comparison: config.comparison,
-              trend: config.trend,
-              columns: config.columns,
-              pagination: config.pagination,
-              pageSize: config.pageSize,
-              sampleData: config.sampleData
-            }
+    try {
+      // 更新进度 - 开始生成
+      generationProgress.value = {
+        step: 0,
+        total: generationSteps.length,
+        message: '准备生成看板...',
+        percentage: 10
+      };
+
+      // 准备API请求参数
+      const { wizardData, generationOptions } = store;
+
+      // 构建组件配置数组 - 使用新的配置构建工具
+      const componentConfigs: ComponentConfig[] = wizardData.componentIds.map(
+        (id: string) => {
+          const rawConfig = wizardData.componentDataConfigs?.[id] || {};
+          return buildComponentConfig(id, rawConfig);
+        }
+      );
+
+      const request: DashboardRequest = {
+        purpose: wizardData.purpose,
+        purposeDetail: wizardData.purposeDetail || '',
+        focusMetrics: wizardData.focusMetrics || '',
+        customRequirements: wizardData.customRequirements || '',
+        layout: wizardData.layout,
+        theme: {
+          name: wizardData.themeText || wizardData.theme,
+          colors: {
+            primary: wizardData.themeColors?.primary || '#409EFF',
+            secondary: wizardData.themeColors?.secondary || '#79BBFF',
+            accent: wizardData.themeColors?.accent || '#A0CFFF'
+          }
+        },
+        components: wizardData.componentIds,
+        componentConfigs: componentConfigs,
+        options: {
+          responsive: generationOptions.responsive !== false,
+          includeData: generationOptions.includeData !== false,
+          additionalRequirements: generationOptions.additionalRequirements || ''
+        }
+      };
+
+      // 调用流式API
+      generationProgress.value = {
+        step: 2,
+        total: generationSteps.length,
+        message: 'AI正在生成代码...',
+        percentage: 30
+      };
+
+      // 使用流式接口
+      abortController.value = await generateDashboardStream(
+        request,
+        // onChunk - 接收每个代码片段
+        (chunk: string) => {
+          streamingCode.value += chunk;
+          console.log('chunk', chunk);
+          console.log(
+            'containsNewLine',
+            chunk.includes('\n') || chunk.includes('\r')
+          );
+          store.setStreamingCode(streamingCode.value); // 更新store中的流式代码
+
+          // 动态更新进度
+          const currentLength = streamingCode.value.length;
+          const estimatedTotal = 5000; // 估计的总长度
+          generationProgress.value.percentage = Math.min(
+            90,
+            (currentLength / estimatedTotal) * 60 + 30
+          );
+        },
+        // onComplete - 完成时的处理
+        (fullContent: string) => {
+          // 转换为结果格式
+          const result: GenerationResult = {
+            html: fullContent,
+            css: '', // 已内嵌在HTML中
+            javascript: '', // 已内嵌在HTML中
+            linesOfCode: fullContent.split('\n').length,
+            components: wizardData.componentIds.length,
+            fileSize: `${Math.round(fullContent.length / 1024)}KB`,
+            description: `基于${wizardData.themeText || '默认'}主题的${wizardData.layoutText}看板已生成完成，包含${wizardData.componentIds.length}个组件。`,
+            timestamp: Date.now()
           };
-        });
-        
-        const request: DashboardRequest = {
-          purpose: wizardData.purpose,
-          purposeDetail: wizardData.purposeDetail || '',
-          focusMetrics: wizardData.focusMetrics || '',
-          customRequirements: wizardData.customRequirements || '',
-          layout: wizardData.layout,
-          theme: {
-            name: wizardData.themeText || wizardData.theme,
-            colors: {
-              primary: wizardData.themeColors?.primary || '#409EFF',
-              secondary: wizardData.themeColors?.secondary || '#79BBFF',
-              accent: wizardData.themeColors?.accent || '#A0CFFF'
-            }
-          },
-          components: wizardData.componentIds,
-          componentConfigs: componentConfigs,
-          options: {
-            codeStyle: generationOptions.codeStyle || 'modern',
-            responsive: generationOptions.responsive !== false,
-            includeData: generationOptions.includeData !== false,
-            additionalRequirements:
-              generationOptions.additionalRequirements || ''
-          }
-        };
 
-        // 调用流式API
-        generationProgress.value = {
-          step: 2,
-          total: generationSteps.length,
-          message: 'AI正在生成代码...',
-          percentage: 30
-        };
+          generationResult.value = result;
+          isStreaming.value = false;
+          store.setIsStreaming(false);
 
-        // 使用流式接口
-        abortController.value = await generateDashboardStream(
-          request,
-          // onChunk - 接收每个代码片段
-          (chunk: string) => {
-            streamingCode.value += chunk;
-            console.log('chunk', chunk);
-            console.log(
-              'containsNewLine',
-              chunk.includes('\n') || chunk.includes('\r')
+          // 更新进度 - 保存历史
+          generationProgress.value = {
+            step: 4,
+            total: generationSteps.length,
+            message: '保存生成历史...',
+            percentage: 95
+          };
+
+          // 保存到后端历史记录
+          saveHistory({
+            config: request,
+            generatedHtml: result.html,
+            generatedCss: result.css,
+            generatedJs: result.javascript
+          }).catch(error => {
+            console.error('保存历史记录失败:', error);
+          });
+
+          // 保存到本地存储
+          store.updateWizardData({ generatedResult: result });
+          store.saveToHistory();
+
+          // 完成
+          generationProgress.value = {
+            step: generationSteps.length - 1,
+            total: generationSteps.length,
+            message: '生成完成！',
+            percentage: 100
+          };
+
+          store.setGenerating(false);
+          ElMessage.success('看板生成成功！');
+        },
+        // onError - 错误处理与重试
+        async (error: Error) => {
+          console.error('Generation error:', error);
+          isStreaming.value = false;
+          store.setIsStreaming(false);
+          store.setGenerating(false);
+
+          // 判断是否可以重试
+          if (retryCount.value < maxRetries) {
+            retryCount.value++;
+            ElMessage.warning(
+              `生成失败，正在重试 (${retryCount.value}/${maxRetries})...`
             );
-            store.setStreamingCode(streamingCode.value); // 更新store中的流式代码
-
-            // 动态更新进度
-            const currentLength = streamingCode.value.length;
-            const estimatedTotal = 5000; // 估计的总长度
-            generationProgress.value.percentage = Math.min(
-              90,
-              (currentLength / estimatedTotal) * 60 + 30
+            // 延迟 2 秒后重试
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return generateDashboardWithStream(true);
+          } else {
+            ElMessage.error(
+              error.message || '生成失败，请检查网络连接并稍后重试'
             );
-          },
-          // onComplete - 完成时的处理
-          (fullContent: string) => {
-            // 转换为结果格式
-            const result: GenerationResult = {
-              html: fullContent,
-              css: '', // 已内嵌在HTML中
-              javascript: '', // 已内嵌在HTML中
-              linesOfCode: fullContent.split('\n').length,
-              components: wizardData.componentIds.length,
-              fileSize: `${Math.round(fullContent.length / 1024)}KB`,
-              description: `基于${wizardData.themeText || '默认'}主题的${wizardData.layoutText}看板已生成完成，包含${wizardData.componentIds.length}个组件。`,
-              timestamp: Date.now()
-            };
-
-            generationResult.value = result;
-            isStreaming.value = false;
-            store.setIsStreaming(false);
-
-            // 更新进度 - 保存历史
-            generationProgress.value = {
-              step: 4,
-              total: generationSteps.length,
-              message: '保存生成历史...',
-              percentage: 95
-            };
-
-            // 保存到后端历史记录
-            saveHistory({
-              config: request,
-              generatedHtml: result.html,
-              generatedCss: result.css,
-              generatedJs: result.javascript
-            }).catch(error => {
-              console.error('保存历史记录失败:', error);
-            });
-
-            // 保存到本地存储
-            store.updateWizardData({ generatedResult: result });
-            store.saveToHistory();
-
-            // 完成
-            generationProgress.value = {
-              step: generationSteps.length - 1,
-              total: generationSteps.length,
-              message: '生成完成！',
-              percentage: 100
-            };
-
-            store.setGenerating(false);
-            ElMessage.success('看板生成成功！');
-          },
-          // onError - 错误处理
-          (error: Error) => {
-            ElMessage.error(error.message || '生成失败，请重试');
-            console.error('Generation error:', error);
-            isStreaming.value = false;
-            store.setIsStreaming(false);
-            store.setGenerating(false);
           }
+        }
+      );
+
+      return generationResult.value;
+    } catch (error: any) {
+      console.error('Generation error:', error);
+      isStreaming.value = false;
+      store.setIsStreaming(false);
+      store.setGenerating(false);
+
+      // 判断是否可以重试
+      if (retryCount.value < maxRetries) {
+        retryCount.value++;
+        ElMessage.warning(
+          `生成失败，正在重试 (${retryCount.value}/${maxRetries})...`
         );
-
-        return generationResult.value;
-      } catch (error: any) {
-        ElMessage.error(error.message || '生成失败，请重试');
-        console.error('Generation error:', error);
-        isStreaming.value = false;
-        store.setIsStreaming(false);
-        store.setGenerating(false);
+        // 延迟 2 秒后重试
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return generateDashboardWithStream(true);
+      } else {
+        ElMessage.error(error.message || '生成失败，请检查网络连接并稍后重试');
         return null;
       }
-    };
+    }
+  };
 
   // 生成看板代码（原有非流式版本，保留作为备用）
   const generateDashboard = async (): Promise<GenerationResult | null> => {
@@ -272,7 +284,6 @@ export const useDashboardGenerator = () => {
         },
         components: wizardData.componentIds,
         options: {
-          codeStyle: generationOptions.codeStyle || 'modern',
           responsive: generationOptions.responsive !== false,
           includeData: generationOptions.includeData !== false,
           additionalRequirements: generationOptions.additionalRequirements || ''
@@ -410,6 +421,9 @@ export const useDashboardGenerator = () => {
     generateDashboardNonStream: generateDashboard, // 非流式版本作为备用
     downloadCode,
     previewCode,
-    abortGeneration
+    abortGeneration,
+
+    // 常量
+    generationSteps
   };
 };

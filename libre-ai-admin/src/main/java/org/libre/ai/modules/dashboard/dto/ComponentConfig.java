@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 
 /**
- * 组件配置对象 包含组件的数据结构和显示配置
+ * 组件配置对象 - 采用分层架构设计
  *
- * 遵循 SRP 原则：专注于组件配置的数据承载 遵循 KISS 原则：简单清晰的数据结构定义
+ * 遵循 SRP 原则：每层配置专注于特定职责 遵循 OCP 原则：通过Map扩展specific配置，无需修改核心结构 遵循 KISS 原则：清晰的分层结构，易于理解和扩展
  *
  * @author AI Assistant
  * @since 2025-01-16
@@ -22,143 +22,64 @@ import java.util.List;
 public class ComponentConfig {
 
 	/**
-	 * 组件ID
+	 * 基础配置
 	 */
-	private String componentId;
+	private BaseConfig base;
 
 	/**
-	 * 组件类型
+	 * 数据映射配置
 	 */
-	private String componentType;
+	private DataMappingConfig dataMapping;
 
 	/**
-	 * 数据源描述
+	 * 组件特定配置（使用Map支持灵活扩展）
 	 */
-	private String dataSource;
+	private Map<String, Object> specific;
 
 	/**
-	 * 刷新频率（毫秒）
-	 */
-	private Integer refreshInterval;
-
-	/**
-	 * 数据结构配置
-	 */
-	private DataStructure dataStructure;
-
-	/**
-	 * 数据结构定义
+	 * 基础配置 - 所有组件通用
 	 */
 	@Data
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class DataStructure {
-
-		// 图表类配置
-		/**
-		 * X轴字段名
-		 */
-		private String xField;
+	public static class BaseConfig {
 
 		/**
-		 * Y轴字段名
+		 * 组件ID
 		 */
-		private String yField;
+		private String componentId;
 
 		/**
-		 * 系列字段（用于多系列图表）
+		 * 组件类型
 		 */
-		private String seriesField;
-
-		// 饼图配置
-		/**
-		 * 名称字段
-		 */
-		private String nameField;
+		private String componentType;
 
 		/**
-		 * 数值字段
+		 * 数据源描述
 		 */
-		private String valueField;
-
-		// KPI卡片配置
-		/**
-		 * 指标标题
-		 */
-		private String title;
+		private String dataSource;
 
 		/**
-		 * 单位
+		 * 刷新频率（毫秒）
 		 */
-		private String unit;
-
-		/**
-		 * 对比类型：chain-环比，year-同比，none-无对比
-		 */
-		private String comparison;
-
-		/**
-		 * 趋势：up-上升，down-下降，stable-平稳
-		 */
-		private String trend;
-
-		// 表格配置
-		/**
-		 * 表格列配置
-		 */
-		private List<ColumnConfig> columns;
-
-		/**
-		 * 是否分页
-		 */
-		private Boolean pagination;
-
-		/**
-		 * 每页条数
-		 */
-		private Integer pageSize;
-
-		/**
-		 * 示例数据（JSON字符串）
-		 */
-		private String sampleData;
-
-		/**
-		 * 自定义结构（扩展用）
-		 */
-		private Object customSchema;
+		private Integer refreshInterval;
 
 	}
 
 	/**
-	 * 表格列配置
+	 * 数据映射配置
 	 */
 	@Data
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class ColumnConfig {
+	public static class DataMappingConfig {
 
 		/**
-		 * 字段名
+		 * 示例数据
 		 */
-		private String field;
-
-		/**
-		 * 列标题
-		 */
-		private String title;
-
-		/**
-		 * 列宽度
-		 */
-		private Integer width;
-
-		/**
-		 * 是否可排序
-		 */
-		private Boolean sortable;
+		private Object sampleData;
 
 	}
 

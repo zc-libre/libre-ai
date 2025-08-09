@@ -1,10 +1,10 @@
 <template>
   <div class="grid-layout-preview">
     <div class="grid-container">
-      <div class="grid-item" v-for="i in 6" :key="i">
-        <div class="item-header"></div>
+      <div v-for="i in 6" :key="i" class="grid-item">
+        <div class="item-header" />
         <div class="item-content">
-          <div class="chart-placeholder"></div>
+          <div class="chart-placeholder" />
         </div>
       </div>
     </div>
