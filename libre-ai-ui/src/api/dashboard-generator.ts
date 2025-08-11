@@ -29,6 +29,14 @@ export type DashboardRequest = {
   };
 };
 
+// 优化请求接口
+export type OptimizeRequest = {
+  conversationId: string;
+  currentHtml: string;
+  userRequest: string;
+  originalConfig?: DashboardRequest;
+};
+
 export type GenerationResult = {
   html: string;
   css: string;
@@ -287,6 +295,101 @@ export function saveHistory(data: {
  */
 export function getHistory(params?: HistoryParams) {
   return http.request('get', '/dashboard/history', { params });
+}
+
+/**
+ * 流式优化Dashboard
+ * @param request 优化请求
+ * @param onChunk 接收数据片段的回调
+ * @param onComplete 完成回调
+ * @param onError 错误回调
+ * @returns AbortController 用于中止请求
+ */
+export async function optimizeDashboardStream(
+  request: OptimizeRequest,
+  onChunk: (chunk: string) => void,
+  onComplete: (fullContent: string) => void,
+  onError: (error: Error) => void
+): Promise<AbortController> {
+  const abortController = new AbortController();
+
+  try {
+    const response = await fetch('/api/dashboard/optimize-stream', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      signal: abortController.signal,
+      body: JSON.stringify(request)
+    });
+
+    if (!response.ok) {
+      throw new Error(`优化请求失败: ${response.statusText}`);
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('无法获取响应流');
+    }
+
+    const decoder = new TextDecoder();
+    let fullContent = '';
+    let buffer = '';
+
+    // 异步处理流数据
+    (async () => {
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            // 处理最后可能剩余的数据
+            if (buffer.trim()) {
+              if (buffer.startsWith('data:')) {
+                let content = buffer.slice(5);
+                content = content.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
+                fullContent += content;
+                onChunk(content);
+              }
+            }
+            break;
+          }
+
+          const chunk = decoder.decode(value, { stream: true });
+          
+          // 将新数据添加到缓冲区
+          buffer += chunk;
+          
+          // 处理完整的行
+          const lines = buffer.split('\n\n');
+          // 保留最后一个可能不完整的行
+          buffer = lines.pop() || '';
+
+          // 处理每个完整的行
+          for (const line of lines) {
+            if (line.startsWith('data:')) {
+              // 提取 data: 后面的实际内容
+              let content = line.slice(5);
+              // 将转义的换行符和回车符还原
+              content = content.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
+              fullContent += content;
+              onChunk(content);
+            }
+          }
+        }
+
+        onComplete(fullContent);
+      } catch (error: any) {
+        if (error.name !== 'AbortError') {
+          onError(error);
+        }
+      }
+    })();
+
+    return abortController;
+  } catch (error: any) {
+    onError(error);
+    return abortController;
+  }
 }
 
 /**

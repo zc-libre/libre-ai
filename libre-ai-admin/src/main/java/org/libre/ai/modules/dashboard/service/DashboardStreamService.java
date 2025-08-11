@@ -7,6 +7,7 @@ import org.libre.ai.modules.dashboard.dto.ComponentConfig;
 import org.libre.ai.modules.dashboard.dto.DashboardRequest;
 import org.libre.ai.modules.dashboard.dto.ThemeConfig;
 import org.libre.ai.modules.dashboard.enums.DashboardComponent;
+import org.libre.ai.modules.dashboard.enums.DashboardLayout;
 import org.libre.ai.modules.dashboard.enums.DashboardPurpose;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -43,7 +44,7 @@ public class DashboardStreamService implements IDashboardStreamService {
 
 		// 构建AI提示词
 		String prompt = buildDashboardPrompt(request);
-		log.debug("完整提示词： {}", prompt);
+		log.debug("提示词长度: {}", prompt.length());
 		return streamDashboardAiAssistant.generateDashboardFlux(prompt);
 	}
 
@@ -84,11 +85,12 @@ public class DashboardStreamService implements IDashboardStreamService {
 
 						# 技术要求
 						1. 使用语义化HTML5标签
-						2. CSS使用现代布局技术(Flexbox/Grid),tailwindcss
+						2. CSS 使用现代布局技术（Flexbox/Grid），并可使用 Tailwind CSS 实现快速样式开发
 						3. JavaScript使用ES6+语法
 						4. 确保代码结构清晰、注释完整
 						5. 遵循Web标准和最佳实践
 						6. 确保跨浏览器兼容性
+						%s
 						%s
 						%s
 
@@ -99,18 +101,21 @@ public class DashboardStreamService implements IDashboardStreamService {
 						# 重要要求：
 						- 生成一个完整的、独立的HTML文件，可以直接在浏览器中打开运行
 						- 所有CSS必须放在<head>中的<style>标签内
+						- 如需使用 Tailwind，请在<head> 中通过 <script src="https://cdn.tailwindcss.com"></script> 引入；Tailwind 样式可由该脚本注入，无需写入 <style>，但自定义样式仍需置于 <style> 中
 						- 所有JavaScript必须放在</body>前的<script>标签内
 						- 不要分开返回css和javascript字段，全部内嵌在html字段中
 						- 确保代码有良好的缩进和可读性
 						- 包含合理的示例数据和交互效果
 						- **严格按照用户选择的组件生成，不允许添加或删除任何组件**
+						- 严格按照提供的主题色生成,禁止背景色使用其他颜色
+						- 生成的图表一定要包含合理的示例数据, 确保图表组件能够正常显示
 
 						# 格式要求：
 						- 输出为标准的html，禁止添加任何解释性文字,禁止使用markdown语法，返回和输出格式示例必须完全一致
 						- 输出的代码合适需要符合html的最佳实现，包含必要的缩进符和换行符等
 						- 绝对禁止使用markdown语法包裹代码块
 						""",
-				purposeDescription, request.getLayoutText(), buildThemeDescription(request),
+				purposeDescription, buildLayoutDescription(request), buildThemeDescription(request),
 				buildComponentsDescription(request.getComponents()), "现代风格 (简洁清爽的现代设计)",
 				buildBooleanDescription(request.getOptions() != null ? request.getOptions().getResponsive() : true,
 						"支持响应式设计", "不支持响应式设计"),
@@ -163,6 +168,26 @@ public class DashboardStreamService implements IDashboardStreamService {
 	}
 
 	/**
+	 * 构建布局的详细描述信息
+	 * <p>
+	 * 获取布局枚举对应的名称和描述
+	 * @param request 请求对象
+	 * @return 布局描述信息
+	 */
+	private String buildLayoutDescription(DashboardRequest request) {
+		if (request.getLayoutText() != null) {
+			// 尝试从枚举获取布局描述
+			DashboardLayout layout = DashboardLayout.fromCode(request.getLayoutText());
+			if (layout != null) {
+				return String.format("%s - %s", layout.getName(), layout.getDescription());
+			}
+			// 如果不是预设布局，返回原始文本
+			return request.getLayoutText();
+		}
+		return "默认网格布局";
+	}
+
+	/**
 	 * 构建主题的详细描述信息
 	 * <p>
 	 * 遵循KISS原则：简单直观的主题信息构建 支持预设主题和自定义主题
@@ -174,15 +199,19 @@ public class DashboardStreamService implements IDashboardStreamService {
 		if (request.getTheme() != null) {
 			ThemeConfig theme = request.getTheme();
 			ThemeConfig.ThemeColors colors = theme.getColors();
-			return String.format("%s (主色调: %s, 辅助色: %s, 强调色: %s)", theme.getName(), colors.getPrimary(),
-					colors.getSecondary(), colors.getAccent());
+			if (colors != null) {
+				return String.format("%s (主色调: %s, 辅助色: %s, 强调色: %s)",
+						theme.getName() != null ? theme.getName() : "默认主题", colors.getPrimary(), colors.getSecondary(),
+						colors.getAccent());
+			}
+			return theme.getName() != null ? theme.getName() : "默认主题";
 		}
 		return "默认主题";
 	}
 
 	/**
 	 * 构建组件列表的语义化描述
-	 *
+	 * <p>
 	 * 遵循DRY原则：统一的组件描述构建逻辑
 	 * @param components 组件代码列表
 	 * @return 语义化的组件描述

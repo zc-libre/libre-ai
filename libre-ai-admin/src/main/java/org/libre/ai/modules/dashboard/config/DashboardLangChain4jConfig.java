@@ -1,5 +1,6 @@
 package org.libre.ai.modules.dashboard.config;
 
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -17,7 +18,7 @@ import java.time.Duration;
 
 /**
  * Dashboard模块 LangChain4j配置
- *
+ * <p>
  * 遵循KISS原则：简单的AI模型配置，专门用于Dashboard生成 遵循SRP原则：专注于Dashboard模块的AI配置 遵循DIP原则：依赖配置属性抽象而非直接注入值
  * 体现Spring Boot最佳实践：使用@ConfigurationProperties进行配置管理
  *
@@ -48,7 +49,6 @@ public class DashboardLangChain4jConfig {
 
 		DashboardProperties.OpenAi openaiConfig = dashboardProperties.getOpenai();
 		DashboardProperties.Generation generationConfig = dashboardProperties.getGeneration();
-
 		log.info("配置Dashboard OpenAI ChatModel: model={}, baseUrl={}", openaiConfig.getModelName(),
 				openaiConfig.getBaseUrl());
 
@@ -73,6 +73,7 @@ public class DashboardLangChain4jConfig {
 			.apiKey(openaiConfig.getApiKey())
 			.modelName(openaiConfig.getModelName())
 			.timeout(Duration.ofMinutes(5))
+			// .returnThinking(true)
 			.parallelToolCalls(true)
 			.logRequests(false)
 			.logResponses(false)
@@ -100,8 +101,7 @@ public class DashboardLangChain4jConfig {
 	public StreamDashboardAiAssistant streamDashboardAiAssistant(StreamingChatModel chatModel) {
 		return AiServices.builder(StreamDashboardAiAssistant.class)
 			.streamingChatModel(chatModel)
-			// .chatMemoryProvider(memoryId ->
-			// MessageWindowChatMemory.withMaxMessages(10))
+			.chatMemoryProvider(memoryId -> MessageWindowChatMemory.withMaxMessages(20))
 			.build();
 	}
 

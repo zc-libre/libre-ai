@@ -48,7 +48,7 @@
 .fullscreen-container {
   width: 100%;
   height: 100%;
-  background: #2c3e50;
+  background: #f0f2f5;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -58,7 +58,7 @@
 
 .header-bar {
   height: 12%;
-  background: rgba(255, 255, 255, 0.05);
+  background: white;
   border-radius: 2px;
   display: flex;
   justify-content: space-between;
@@ -76,7 +76,7 @@
 .time-placeholder {
   width: 15%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #c0c4cc;
   border-radius: 2px;
 }
 
@@ -88,7 +88,7 @@
 
 .left-section {
   flex: 2;
-  background: rgba(255, 255, 255, 0.05);
+  background: white;
   border-radius: 2px;
   padding: 4px;
 }
@@ -104,7 +104,7 @@
 .chart-title {
   height: 8px;
   width: 40%;
-  background: rgba(255, 255, 255, 0.2);
+  background: #c0c4cc;
   border-radius: 2px;
 }
 
@@ -124,7 +124,7 @@
 
 .metric-card {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
+  background: white;
   border-radius: 2px;
   display: flex;
   flex-direction: column;
@@ -136,28 +136,28 @@
 .metric-value {
   width: 50%;
   height: 8px;
-  background: #67c23a;
+  background: #409eff;
   border-radius: 2px;
 }
 
 .metric-card:nth-child(2) .metric-value {
-  background: #e6a23c;
+  background: #67c23a;
 }
 
 .metric-card:nth-child(3) .metric-value {
-  background: #f56c6c;
+  background: #e6a23c;
 }
 
 .metric-label {
   width: 30%;
   height: 3px;
-  background: rgba(255, 255, 255, 0.2);
+  background: #c0c4cc;
   border-radius: 1px;
 }
 
 .footer-bar {
   height: 10%;
-  background: rgba(255, 255, 255, 0.05);
+  background: white;
   border-radius: 2px;
   display: flex;
   align-items: center;

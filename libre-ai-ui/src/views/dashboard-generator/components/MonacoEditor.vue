@@ -69,7 +69,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   language: 'html',
-  theme: 'vs',
+  theme: 'vs-dark',
   readOnly: true,
   height: '100%',
   width: '100%'
@@ -242,7 +242,13 @@ watch(
 watch(
   () => props.theme,
   newTheme => {
-    monaco.editor.setTheme(newTheme);
+    if (newTheme) {
+      monaco.editor.setTheme(newTheme);
+      // 同时更新当前编辑器实例的主题
+      if (monacoEditor) {
+        monacoEditor.updateOptions({ theme: newTheme });
+      }
+    }
   }
 );
 

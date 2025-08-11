@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <changeSet id="001-create-sys-dept-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="sys_dept"/>
+            </not>
+        </preConditions>
+        <comment>创建部门表</comment>
+        <createTable tableName="sys_dept">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="parent_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="order_no" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="des" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="sys_dept" remarks="部门表"/>
+        <setColumnRemarks tableName="sys_dept" columnName="id" remarks="部门ID"/>
+        <setColumnRemarks tableName="sys_dept" columnName="parent_id" remarks="上级部门ID"/>
+        <setColumnRemarks tableName="sys_dept" columnName="name" remarks="部门名称"/>
+        <setColumnRemarks tableName="sys_dept" columnName="order_no" remarks="排序"/>
+        <setColumnRemarks tableName="sys_dept" columnName="des" remarks="描述"/>
+    </changeSet>
+
+    <changeSet id="002-create-sys-role-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="sys_role"/>
+            </not>
+        </preConditions>
+        <comment>创建角色表</comment>
+        <createTable tableName="sys_role">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="des" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="sys_role" remarks="角色表"/>
+        <setColumnRemarks tableName="sys_role" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="sys_role" columnName="name" remarks="角色名称"/>
+        <setColumnRemarks tableName="sys_role" columnName="code" remarks="角色别名"/>
+        <setColumnRemarks tableName="sys_role" columnName="des" remarks="描述"/>
+    </changeSet>
+
+    <changeSet id="003-create-sys-user-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="sys_user"/>
+            </not>
+        </preConditions>
+        <comment>创建用户表</comment>
+        <createTable tableName="sys_user">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="real_name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sex" type="VARCHAR(10)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="phone" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dept_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="avatar" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="SMALLINT" defaultValue="0">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="sys_user" remarks="用户表"/>
+        <setColumnRemarks tableName="sys_user" columnName="id" remarks="用户ID"/>
+        <setColumnRemarks tableName="sys_user" columnName="username" remarks="用户名"/>
+        <setColumnRemarks tableName="sys_user" columnName="password" remarks="密码"/>
+        <setColumnRemarks tableName="sys_user" columnName="real_name" remarks="真实姓名"/>
+        <setColumnRemarks tableName="sys_user" columnName="sex" remarks="性别"/>
+        <setColumnRemarks tableName="sys_user" columnName="phone" remarks="手机"/>
+        <setColumnRemarks tableName="sys_user" columnName="email" remarks="邮箱"/>
+        <setColumnRemarks tableName="sys_user" columnName="dept_id" remarks="部门ID"/>
+        <setColumnRemarks tableName="sys_user" columnName="avatar" remarks="头像"/>
+        <setColumnRemarks tableName="sys_user" columnName="status" remarks="状态 0锁定 1有效"/>
+        <setColumnRemarks tableName="sys_user" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="004-create-sys-menu-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="sys_menu"/>
+            </not>
+        </preConditions>
+        <comment>创建菜单表</comment>
+        <createTable tableName="sys_menu">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="parent_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="path" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="perms" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="type" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="order_no" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="icon" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="component" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_disabled" type="SMALLINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_ext" type="SMALLINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_keepalive" type="SMALLINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_show" type="SMALLINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="sys_menu" remarks="菜单表"/>
+        <setColumnRemarks tableName="sys_menu" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="sys_menu" columnName="name" remarks="菜单名称"/>
+        <setColumnRemarks tableName="sys_menu" columnName="parent_id" remarks="父级ID"/>
+        <setColumnRemarks tableName="sys_menu" columnName="path" remarks="菜单路径"/>
+        <setColumnRemarks tableName="sys_menu" columnName="perms" remarks="权限标识"/>
+        <setColumnRemarks tableName="sys_menu" columnName="type" remarks="菜单类型"/>
+        <setColumnRemarks tableName="sys_menu" columnName="order_no" remarks="排序"/>
+        <setColumnRemarks tableName="sys_menu" columnName="icon" remarks="菜单图标"/>
+        <setColumnRemarks tableName="sys_menu" columnName="component" remarks="组件路径"/>
+        <setColumnRemarks tableName="sys_menu" columnName="is_disabled" remarks="是否禁用"/>
+        <setColumnRemarks tableName="sys_menu" columnName="is_ext" remarks="是否外链"/>
+        <setColumnRemarks tableName="sys_menu" columnName="is_keepalive" remarks="是否缓存"/>
+        <setColumnRemarks tableName="sys_menu" columnName="is_show" remarks="是否显示"/>
+    </changeSet>
+
+    <changeSet id="005a-create-sys-user-role-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="sys_user_role"/>
+            </not>
+        </preConditions>
+        <comment>创建系统关系表-用户角色</comment>
+        <createTable tableName="sys_user_role">
+            <column name="user_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="sys_user_role" remarks="用户角色关联表"/>
+        <setColumnRemarks tableName="sys_user_role" columnName="user_id" remarks="用户ID"/>
+        <setColumnRemarks tableName="sys_user_role" columnName="role_id" remarks="角色ID"/>
+    </changeSet>
+
+    <changeSet id="005b-create-sys-role-menu-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="sys_role_menu"/>
+            </not>
+        </preConditions>
+        <comment>创建系统关系表-角色菜单</comment>
+        <createTable tableName="sys_role_menu">
+            <column name="role_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="menu_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="sys_role_menu" remarks="角色资源关联表"/>
+        <setColumnRemarks tableName="sys_role_menu" columnName="role_id" remarks="角色ID"/>
+        <setColumnRemarks tableName="sys_role_menu" columnName="menu_id" remarks="菜单/按钮ID"/>
+    </changeSet>
+
+    <changeSet id="006-create-sys-log-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="sys_log"/>
+            </not>
+        </preConditions>
+        <comment>创建日志表</comment>
+        <createTable tableName="sys_log">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="username" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="operation" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="url" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="time" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="method" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="params" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ip" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_agent" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="sys_log" remarks="日志表"/>
+        <setColumnRemarks tableName="sys_log" columnName="id" remarks="编号"/>
+        <setColumnRemarks tableName="sys_log" columnName="type" remarks="日志类型，1正常 2异常"/>
+        <setColumnRemarks tableName="sys_log" columnName="username" remarks="操作用户"/>
+        <setColumnRemarks tableName="sys_log" columnName="operation" remarks="操作描述"/>
+        <setColumnRemarks tableName="sys_log" columnName="url" remarks="请求URL"/>
+        <setColumnRemarks tableName="sys_log" columnName="time" remarks="耗时(毫秒)"/>
+        <setColumnRemarks tableName="sys_log" columnName="method" remarks="操作方法"/>
+        <setColumnRemarks tableName="sys_log" columnName="params" remarks="操作参数"/>
+        <setColumnRemarks tableName="sys_log" columnName="ip" remarks="IP地址"/>
+        <setColumnRemarks tableName="sys_log" columnName="user_agent" remarks="用户代理"/>
+        <setColumnRemarks tableName="sys_log" columnName="create_time" remarks="操作时间"/>
+    </changeSet>
+
+</databaseChangeLog>

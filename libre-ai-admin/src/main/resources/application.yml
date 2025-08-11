@@ -17,6 +17,13 @@ spring:
       minimum-idle: 1
       connection-test-query: SELECT 1
 
+  # Liquibase数据库版本管理配置
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: false
+    # 在开发环境下可以设置为true，生产环境建议设置为false
+    drop-first: false
+
 # Dashboard Generator模块配置
 # 遵循配置外部化原则：所有配置通过环境变量或配置文件管理
 dashboard:
@@ -27,7 +34,7 @@ dashboard:
     # API基础URL，支持代理或自定义端点
     base-url: ${OPENAI_BASE_URL}
     # 使用的模型名称
-    model-name: ${OPENAI_MODEL_NAME:gemini-2.5-pro}
+    model-name: ${OPENAI_MODEL_NAME:qwen3}
     # 温度参数，控制输出随机性（0-1）
     temperature: ${OPENAI_TEMPERATURE:1}
     # 最大输出token数

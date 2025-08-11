@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <changeSet id="001-init-dashboard-purposes-template" author="system">
+        <comment>初始化仪表板用途模板数据</comment>
+        <sql dbms="postgresql">
+            INSERT INTO dashboard_templates (type, data_json, version) VALUES
+            ('purposes', '[
+              {
+                "id": "analytics",
+                "title": "数据分析",
+                "description": "用于数据可视化和业务分析的仪表板",
+                "icon": "chart-bar",
+                "components": ["bar-chart", "line-chart", "kpi-card", "data-table"]
+              },
+              {
+                "id": "project",
+                "title": "项目管理",
+                "description": "项目进度跟踪和团队协作管理",
+                "icon": "project",
+                "components": ["progress-bar", "task-list", "team-card", "timeline"]
+              },
+              {
+                "id": "sales",
+                "title": "销售监控",
+                "description": "销售数据监控和业绩分析",
+                "icon": "trending-up",
+                "components": ["pie-chart", "sales-funnel", "kpi-card", "region-map"]
+              },
+              {
+                "id": "monitoring",
+                "title": "系统监控",
+                "description": "服务器和应用程序性能监控",
+                "icon": "monitor",
+                "components": ["gauge-chart", "alert-panel", "log-table", "metrics-card"]
+              }
+            ]'::jsonb, '1.0') 
+            ON CONFLICT (type) DO UPDATE SET data_json = EXCLUDED.data_json;
+        </sql>
+    </changeSet>
+
+    <changeSet id="002-init-dashboard-themes-template" author="system">
+        <comment>初始化仪表板主题模板数据</comment>
+        <sql dbms="postgresql">
+            INSERT INTO dashboard_templates (type, data_json, version) VALUES
+            ('themes', '[
+              {
+                "id": "modern-blue",
+                "name": "现代蓝",
+                "description": "简洁现代的蓝色主题，适合商务场景",
+                "primary": "#409EFF",
+                "secondary": "#67C23A",
+                "accent": "#E6A23C",
+                "background": "#F5F7FA",
+                "text": "#303133"
+              },
+              {
+                "id": "dark-purple",
+                "name": "深紫夜",
+                "description": "深色紫色主题，护眼且富有科技感",
+                "primary": "#722ED1",
+                "secondary": "#52C41A",
+                "accent": "#FA8C16",
+                "background": "#1F1F1F",
+                "text": "#FFFFFF"
+              },
+              {
+                "id": "green-nature",
+                "name": "自然绿",
+                "description": "清新自然的绿色主题，舒适养眼",
+                "primary": "#52C41A",
+                "secondary": "#1890FF",
+                "accent": "#FAAD14",
+                "background": "#F6FFED",
+                "text": "#262626"
+              },
+              {
+                "id": "orange-warm",
+                "name": "暖橙色",
+                "description": "温暖活力的橙色主题，充满活力",
+                "primary": "#FA8C16",
+                "secondary": "#13C2C2",
+                "accent": "#EB2F96",
+                "background": "#FFF7E6",
+                "text": "#434343"
+              }
+            ]'::jsonb, '1.0')
+            ON CONFLICT (type) DO UPDATE SET data_json = EXCLUDED.data_json;
+        </sql>
+    </changeSet>
+
+    <changeSet id="003-init-dashboard-layouts-template" author="system">
+        <comment>初始化仪表板布局模板数据</comment>
+        <sql dbms="postgresql">
+            INSERT INTO dashboard_templates (type, data_json, version) VALUES
+            ('layouts', '[
+              {
+                "id": "grid",
+                "title": "网格布局",
+                "description": "灵活的网格式组件排列，适合多种屏幕尺寸",
+                "preview": "/images/layout-grid.png",
+                "responsive": true
+              },
+              {
+                "id": "header-main",
+                "title": "顶部主体布局",
+                "description": "顶部导航栏配合主内容区域的经典布局",
+                "preview": "/images/layout-header-main.png",
+                "responsive": true
+              },
+              {
+                "id": "split-screen",
+                "title": "分屏布局",
+                "description": "左右分屏显示不同内容模块",
+                "preview": "/images/layout-split-screen.png",
+                "responsive": true
+              },
+              {
+                "id": "timeline",
+                "title": "时间轴布局",
+                "description": "基于时间线的垂直展示布局",
+                "preview": "/images/layout-timeline.png",
+                "responsive": true
+              },
+              {
+                "id": "masonry",
+                "title": "瀑布流布局",
+                "description": "不规则瀑布流式卡片布局",
+                "preview": "/images/layout-masonry.png",
+                "responsive": true
+              },
+              {
+                "id": "radial",
+                "title": "径向布局",
+                "description": "以中心为核心的放射状布局",
+                "preview": "/images/layout-radial.png",
+                "responsive": false
+              },
+              {
+                "id": "fullscreen",
+                "title": "全屏布局",
+                "description": "单页面全屏显示，适合大屏展示",
+                "preview": "/images/layout-fullscreen.png",
+                "responsive": false
+              }
+            ]'::jsonb, '1.0')
+            ON CONFLICT (type) DO UPDATE SET data_json = EXCLUDED.data_json;
+        </sql>
+    </changeSet>
+
+    <changeSet id="004-init-dashboard-components-template" author="system">
+        <comment>初始化仪表板组件模板数据</comment>
+        <sql dbms="postgresql">
+            INSERT INTO dashboard_templates (type, data_json, version) VALUES
+            ('components', '[
+              {
+                "id": "bar-chart",
+                "title": "柱状图",
+                "description": "用于展示分类数据的对比",
+                "icon": "chart-bar",
+                "purposes": ["analytics", "sales"],
+                "previewCode": "&lt;div class=\"chart-container\"&gt;&lt;canvas&gt;&lt;/canvas&gt;&lt;/div&gt;"
+              },
+              {
+                "id": "line-chart",
+                "title": "折线图",
+                "description": "用于展示数据随时间的变化趋势",
+                "icon": "chart-line",
+                "purposes": ["analytics", "monitoring"],
+                "previewCode": "&lt;div class=\"chart-container\"&gt;&lt;canvas&gt;&lt;/canvas&gt;&lt;/div&gt;"
+              },
+              {
+                "id": "pie-chart",
+                "title": "饼图",
+                "description": "用于展示各部分占整体的比例关系",
+                "icon": "chart-pie",
+                "purposes": ["analytics", "sales"],
+                "previewCode": "&lt;div class=\"chart-container\"&gt;&lt;canvas&gt;&lt;/canvas&gt;&lt;/div&gt;"
+              },
+              {
+                "id": "kpi-card",
+                "title": "KPI指标卡",
+                "description": "展示关键业务指标的卡片组件",
+                "icon": "card",
+                "purposes": ["analytics", "sales", "project", "monitoring"],
+                "previewCode": "&lt;div class=\"kpi-card\"&gt;&lt;div class=\"kpi-value\"&gt;1,234&lt;/div&gt;&lt;/div&gt;"
+              },
+              {
+                "id": "data-table",
+                "title": "数据表格",
+                "description": "结构化数据的表格展示组件",
+                "icon": "table",
+                "purposes": ["analytics", "project", "monitoring"],
+                "previewCode": "&lt;table class=\"data-table\"&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;列名&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;/table&gt;"
+              },
+              {
+                "id": "progress-bar",
+                "title": "进度条",
+                "description": "展示任务或项目完成进度",
+                "icon": "progress",
+                "purposes": ["project"],
+                "previewCode": "&lt;div class=\"progress-bar\"&gt;&lt;div class=\"progress-fill\"&gt;&lt;/div&gt;&lt;/div&gt;"
+              },
+              {
+                "id": "gauge-chart",
+                "title": "仪表盘图",
+                "description": "以仪表盘形式展示数值和阈值",
+                "icon": "gauge",
+                "purposes": ["monitoring"],
+                "previewCode": "&lt;div class=\"gauge-container\"&gt;&lt;svg&gt;&lt;/svg&gt;&lt;/div&gt;"
+              },
+              {
+                "id": "alert-panel",
+                "title": "告警面板",
+                "description": "系统告警信息展示面板",
+                "icon": "alert",
+                "purposes": ["monitoring"],
+                "previewCode": "&lt;div class=\"alert-panel\"&gt;&lt;div class=\"alert-item\"&gt;&lt;/div&gt;&lt;/div&gt;"
+              }
+            ]'::jsonb, '1.0')
+            ON CONFLICT (type) DO UPDATE SET data_json = EXCLUDED.data_json;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

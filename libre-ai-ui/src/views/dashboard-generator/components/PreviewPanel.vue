@@ -168,6 +168,15 @@
               刷新预览
             </el-button>
             <el-button
+              v-if="generatedHtml"
+              type="warning"
+              :icon="Edit"
+              size="small"
+              @click="toggleOptimization"
+            >
+              {{ showOptimization ? '关闭优化' : '迭代优化' }}
+            </el-button>
+            <el-button
               type="success"
               :icon="Plus"
               size="small"
@@ -183,6 +192,85 @@
             >
               导出看板
             </el-button>
+          </div>
+        </div>
+
+        <!-- 优化对话区域 -->
+        <div
+          v-if="showOptimization && generatedHtml"
+          class="optimization-panel border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+        >
+          <div class="optimization-container p-4">
+            <div class="optimization-header mb-3 flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <el-icon :size="20" color="#F56C6C">
+                  <ChatDotRound />
+                </el-icon>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  对话式优化
+                </span>
+              </div>
+              <el-tag v-if="conversationId" type="info" size="small">
+                会话ID: {{ conversationId.substring(0, 8) }}...
+              </el-tag>
+            </div>
+
+            <!-- 对话历史 -->
+            <div
+              v-if="chatHistory.length > 0"
+              class="chat-history mb-3 max-h-48 overflow-y-auto border rounded-lg p-3 bg-gray-50 dark:bg-gray-900"
+            >
+              <div
+                v-for="(msg, index) in chatHistory"
+                :key="index"
+                class="chat-message mb-3 last:mb-0"
+              >
+                <div class="user-message mb-2">
+                  <span class="text-xs text-gray-500 dark:text-gray-400">您:</span>
+                  <div class="mt-1 p-2 rounded bg-blue-100 dark:bg-blue-900 text-sm">
+                    {{ msg.user }}
+                  </div>
+                </div>
+                <div class="ai-message">
+                  <span class="text-xs text-gray-500 dark:text-gray-400">AI:</span>
+                  <div class="mt-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-sm">
+                    {{ msg.ai }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="chat-input flex gap-2">
+              <el-input
+                v-model="optimizationRequest"
+                type="textarea"
+                :rows="2"
+                placeholder="描述您想要的修改，例如：调整配色为深色主题、增大字体、调整布局..."
+                :disabled="isOptimizing"
+                @keyup.enter.ctrl="sendOptimization"
+              />
+              <el-button
+                type="primary"
+                :loading="isOptimizing"
+                :disabled="!optimizationRequest.trim()"
+                @click="sendOptimization"
+              >
+                {{ isOptimizing ? '优化中' : '发送' }}
+              </el-button>
+            </div>
+
+            <!-- 快捷建议 -->
+            <div class="suggestions mt-3 flex flex-wrap gap-2">
+              <el-tag
+                v-for="suggestion in optimizationSuggestions"
+                :key="suggestion"
+                class="cursor-pointer"
+                @click="applyquickSuggestion(suggestion)"
+              >
+                {{ suggestion }}
+              </el-tag>
+            </div>
           </div>
         </div>
       </div>
@@ -203,7 +291,9 @@ import {
   Close,
   Refresh,
   Download,
-  Plus
+  Plus,
+  Edit,
+  ChatDotRound
 } from '@element-plus/icons-vue';
 import DashboardPreview from './DashboardPreview.vue';
 import CodeStreamPreview from './CodeStreamPreview.vue';
@@ -223,6 +313,7 @@ const emit = defineEmits<{
   close: [];
   'abort-generation': [];
   'new-dashboard': [];
+  optimize: [data: { conversationId: string; userRequest: string; currentHtml: string }];
 }>();
 
 // 状态
@@ -230,6 +321,22 @@ const viewMode = ref<'code' | 'preview'>('code'); // 默认显示代码视图
 const previewMode = ref('desktop');
 const isFullscreen = ref(false);
 const previewPanelRef = ref<HTMLElement>();
+
+// 优化相关状态
+const showOptimization = ref(false);
+const optimizationRequest = ref('');
+const isOptimizing = ref(false);
+const chatHistory = ref<Array<{ user: string; ai: string }>>([]);
+const conversationId = ref('');
+
+// 优化建议
+const optimizationSuggestions = [
+  '调整为深色主题',
+  '增大字体大小',
+  '优化移动端适配',
+  '添加动画效果',
+  '调整间距和布局'
+];
 
 // 监听流式生成状态变化
 watch(
@@ -274,6 +381,67 @@ const createNewDashboard = () => {
   ElMessage.success('正在为您准备新看板配置界面...');
   emit('new-dashboard');
 };
+
+// 优化相关方法
+const toggleOptimization = () => {
+  showOptimization.value = !showOptimization.value;
+  if (showOptimization.value && !conversationId.value) {
+    // 生成新的会话ID
+    conversationId.value = generateUUID();
+  }
+};
+
+const applyquickSuggestion = (suggestion: string) => {
+  optimizationRequest.value = suggestion;
+};
+
+const sendOptimization = async () => {
+  if (!optimizationRequest.value.trim()) {
+    ElMessage.warning('请输入优化需求');
+    return;
+  }
+
+  // 触发优化事件，由父组件处理
+  emit('optimize', {
+    conversationId: conversationId.value,
+    userRequest: optimizationRequest.value,
+    currentHtml: props.generatedHtml
+  });
+
+  // 添加到对话历史
+  chatHistory.value.push({
+    user: optimizationRequest.value,
+    ai: '正在优化中...'
+  });
+
+  // 清空输入
+  optimizationRequest.value = '';
+  isOptimizing.value = true;
+};
+
+// 生成UUID
+const generateUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
+// 接收优化完成事件（由父组件调用）
+const onOptimizationComplete = (success: boolean, message?: string) => {
+  isOptimizing.value = false;
+  if (chatHistory.value.length > 0) {
+    chatHistory.value[chatHistory.value.length - 1].ai = message || (
+      success ? '优化完成！' : '优化失败，请重试'
+    );
+  }
+};
+
+// 暴露方法供父组件调用
+defineExpose({
+  onOptimizationComplete
+});
 
 // 保存进入全屏前的预览模式
 let previousPreviewMode = 'desktop';

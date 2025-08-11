@@ -1,5 +1,6 @@
 package org.libre.ai.modules.dashboard.assistant;
 
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
@@ -24,32 +25,38 @@ public interface StreamDashboardAiAssistant {
 	Flux<String> generateDashboardFlux(String prompt);
 
 	/**
-	 * 优化已有的仪表板代码 用于代码改进和性能优化
+	 * 对话式优化仪表板代码 支持基于上下文的连续对话优化
+	 * @param conversationId 对话会话ID，用于保持上下文
+	 * @param currentHtml 当前的HTML代码
+	 * @param userRequest 用户的优化需求
+	 * @return 优化后的代码流
 	 */
 	@SystemMessage("""
-			你是一个前端性能优化专家。
-			分析提供的代码，并进行以下优化：
-			1. 性能优化：减少重排重绘，优化JavaScript执行
-			2. 代码质量：改进代码结构，增强可维护性
-			3. 最佳实践：应用现代前端最佳实践
-			4. 无障碍性：改进可访问性
-			返回优化后的代码。
+			你是一个专业的前端优化专家。
+			你正在帮助用户优化他的仪表板代码。
+			基于之前的对话历史和当前代码，根据用户需求进行精确的优化。
+
+			优化原则：
+			1. 保持代码的完整性和功能性
+			2. 只修改与用户需求相关的部分,严禁修改其他部分
+			3. 保留原有的数据和交互逻辑
+			4. 优化后的代码应该是完整可运行的HTML文件
+
+			输出要求：
+			- 返回完整的HTML文档，包含所有内嵌的CSS和JavaScript
+			- 确保代码格式正确，可以直接在浏览器中运行
+			- 不要使用markdown代码块包裹
 			""")
 	@UserMessage("""
-			请优化以下仪表板代码：
+			当前代码：
+			{{currentHtml}}
 
-			HTML:
-			{{html}}
+			用户需求：
+			{{userRequest}}
 
-			CSS:
-			{{css}}
-
-			JavaScript:
-			{{javascript}}
-
-			优化重点：{{focus}}
+			请根据用户需求优化代码，并返回完整的HTML代码。
 			""")
-	DashboardCodeOutput optimizeDashboard(@V("html") String html, @V("css") String css,
-			@V("javascript") String javascript, @V("focus") String optimizationFocus);
+	Flux<String> optimizeDashboardStream(@MemoryId String conversationId, @V("currentHtml") String currentHtml,
+			@V("userRequest") String userRequest);
 
 }

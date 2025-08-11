@@ -73,6 +73,7 @@
         class="preview-container flex-1 min-w-0 lg:min-w-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden min-h-0 flex flex-col"
       >
         <PreviewPanel
+          ref="previewPanelRef"
           :dashboard-config="store.wizardData"
           :generated-html="generatedDashboard"
           :streaming-html="store.streamingCode"
@@ -80,6 +81,7 @@
           @close="store.setShowPreview(false)"
           @abort-generation="handleAbortGeneration"
           @new-dashboard="handleNewDashboard"
+          @optimize="handleOptimize"
         />
       </div>
     </div>
@@ -127,13 +129,16 @@ import WizardContainer from './components/WizardContainer.vue';
 import PreviewPanel from './components/PreviewPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
 import { useDashboardStore } from './composables/useDashboardStore';
+import { useDashboardGenerator } from './composables/useDashboardGenerator';
 
 // 使用状态管理
 const store = useDashboardStore();
+const { optimizeDashboard } = useDashboardGenerator();
 
 // 本地状态
 const showHelp = ref(false);
 const generatedDashboard = ref('');
+const previewPanelRef = ref<InstanceType<typeof PreviewPanel>>();
 
 // 事件处理函数
 const handleStepChange = (step: number) => {
@@ -192,6 +197,39 @@ const handleNewDashboard = () => {
   store.setShowPreview(false); // 隐藏预览面板
 
   ElMessage.success('已重置，可以开始新的看板配置');
+};
+
+// 处理优化请求
+const handleOptimize = async (data: {
+  conversationId: string;
+  userRequest: string;
+  currentHtml: string;
+}) => {
+  // 调用优化功能
+  await optimizeDashboard(
+    data.conversationId,
+    data.currentHtml,
+    data.userRequest,
+    // onChunk - 接收优化的代码片段
+    (chunk: string) => {
+      // 代码片段已经在optimizeDashboard中更新到store了
+    },
+    // onComplete - 优化完成
+    () => {
+      // 通知PreviewPanel优化完成
+      if (previewPanelRef.value) {
+        previewPanelRef.value.onOptimizationComplete(true, '优化完成！');
+      }
+      // 更新本地的generatedDashboard
+      generatedDashboard.value = store.streamingCode;
+    },
+    // onError - 优化失败
+    (error: Error) => {
+      if (previewPanelRef.value) {
+        previewPanelRef.value.onOptimizationComplete(false, `优化失败: ${error.message}`);
+      }
+    }
+  );
 };
 
 // 监听生成结果变化

@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <changeSet id="001-create-aigc-model-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_model"/>
+            </not>
+        </preConditions>
+        <comment>创建LLM模型配置表</comment>
+        <createTable tableName="aigc_model">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="model" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="provider" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="response_limit" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="temperature" type="DOUBLE PRECISION">
+                <constraints nullable="true"/>
+            </column>
+            <column name="top_p" type="DOUBLE PRECISION">
+                <constraints nullable="true"/>
+            </column>
+            <column name="api_key" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="base_url" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="secret_key" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="endpoint" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="azure_deployment_name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="gemini_project" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="gemini_location" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image_size" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image_quality" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image_style" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dimension" type="INT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_model" remarks="LLM模型配置表"/>
+        <setColumnRemarks tableName="aigc_model" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_model" columnName="type" remarks="类型: CHAT、Embedding、Image"/>
+        <setColumnRemarks tableName="aigc_model" columnName="model" remarks="模型名称"/>
+        <setColumnRemarks tableName="aigc_model" columnName="provider" remarks="供应商"/>
+        <setColumnRemarks tableName="aigc_model" columnName="name" remarks="别名"/>
+        <setColumnRemarks tableName="aigc_model" columnName="response_limit" remarks="响应长度"/>
+        <setColumnRemarks tableName="aigc_model" columnName="temperature" remarks="温度"/>
+        <setColumnRemarks tableName="aigc_model" columnName="top_p" remarks="top_p"/>
+        <setColumnRemarks tableName="aigc_model" columnName="api_key" remarks="API密钥"/>
+        <setColumnRemarks tableName="aigc_model" columnName="base_url" remarks="基础URL"/>
+        <setColumnRemarks tableName="aigc_model" columnName="secret_key" remarks="密钥"/>
+        <setColumnRemarks tableName="aigc_model" columnName="endpoint" remarks="端点"/>
+        <setColumnRemarks tableName="aigc_model" columnName="azure_deployment_name" remarks="azure模型参数"/>
+        <setColumnRemarks tableName="aigc_model" columnName="gemini_project" remarks="gemini模型参数"/>
+        <setColumnRemarks tableName="aigc_model" columnName="gemini_location" remarks="gemini模型参数"/>
+        <setColumnRemarks tableName="aigc_model" columnName="image_size" remarks="图片大小"/>
+        <setColumnRemarks tableName="aigc_model" columnName="image_quality" remarks="图片质量"/>
+        <setColumnRemarks tableName="aigc_model" columnName="image_style" remarks="图片风格"/>
+        <setColumnRemarks tableName="aigc_model" columnName="dimension" remarks="向量维数"/>
+    </changeSet>
+
+    <changeSet id="002-create-aigc-embed-store-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_embed_store"/>
+            </not>
+        </preConditions>
+        <comment>创建向量数据库配置表</comment>
+        <createTable tableName="aigc_embed_store">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="provider" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="host" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="port" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="username" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="database_name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="table_name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dimension" type="INT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_embed_store" remarks="Embedding向量数据库配置表"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="name" remarks="别名"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="provider" remarks="供应商"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="host" remarks="地址"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="port" remarks="端口"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="username" remarks="用户名"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="password" remarks="密码"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="database_name" remarks="数据库名称"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="table_name" remarks="表名称"/>
+        <setColumnRemarks tableName="aigc_embed_store" columnName="dimension" remarks="向量维数"/>
+    </changeSet>
+
+    <changeSet id="003-create-aigc-knowledge-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_knowledge"/>
+            </not>
+        </preConditions>
+        <comment>创建知识库表</comment>
+        <createTable tableName="aigc_knowledge">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="embed_store_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="embed_model_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="des" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cover" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_knowledge" remarks="知识库表"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="user_id" remarks="用户ID"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="embed_store_id" remarks="向量数据库ID"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="embed_model_id" remarks="向量模型ID"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="name" remarks="知识库名称"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="des" remarks="描述"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="cover" remarks="封面"/>
+        <setColumnRemarks tableName="aigc_knowledge" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="004-create-aigc-docs-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_docs"/>
+            </not>
+        </preConditions>
+        <comment>创建文档表</comment>
+        <createTable tableName="aigc_docs">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="knowledge_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="url" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="origin" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="content" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="size" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="slice_num" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="slice_status" type="SMALLINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_docs" remarks="文档表"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="knowledge_id" remarks="知识库ID"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="name" remarks="名称"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="type" remarks="类型"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="url" remarks="链接"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="origin" remarks="来源"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="content" remarks="内容或链接"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="size" remarks="文件大小"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="slice_num" remarks="切片数量"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="slice_status" remarks="切片状态"/>
+        <setColumnRemarks tableName="aigc_docs" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="005-create-aigc-docs-slice-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_docs_slice"/>
+            </not>
+        </preConditions>
+        <comment>创建文档切片表</comment>
+        <createTable tableName="aigc_docs_slice">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="vector_id" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="docs_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="knowledge_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="content" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="word_num" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="SMALLINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_docs_slice" remarks="文档切片表"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="vector_id" remarks="向量库的ID"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="docs_id" remarks="文档ID"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="knowledge_id" remarks="知识库ID"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="name" remarks="文档名称"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="content" remarks="切片内容"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="word_num" remarks="字符数"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="status" remarks="状态"/>
+        <setColumnRemarks tableName="aigc_docs_slice" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="006-create-aigc-app-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_app"/>
+            </not>
+        </preConditions>
+        <comment>创建提示词表</comment>
+        <createTable tableName="aigc_app">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="model_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="knowledge_ids" type="VARCHAR(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cover" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="prompt" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="des" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="save_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_app" remarks="提示词表"/>
+        <setColumnRemarks tableName="aigc_app" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_app" columnName="model_id" remarks="关联模型"/>
+        <setColumnRemarks tableName="aigc_app" columnName="knowledge_ids" remarks="关联知识库"/>
+        <setColumnRemarks tableName="aigc_app" columnName="cover" remarks="封面"/>
+        <setColumnRemarks tableName="aigc_app" columnName="name" remarks="名称"/>
+        <setColumnRemarks tableName="aigc_app" columnName="prompt" remarks="提示词"/>
+        <setColumnRemarks tableName="aigc_app" columnName="des" remarks="描述"/>
+        <setColumnRemarks tableName="aigc_app" columnName="save_time" remarks="保存时间"/>
+        <setColumnRemarks tableName="aigc_app" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="007a-create-aigc-conversation-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_conversation"/>
+            </not>
+        </preConditions>
+        <comment>创建对话表</comment>
+        <createTable tableName="aigc_conversation">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="prompt_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="title" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_conversation" remarks="对话窗口表"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="user_id" remarks="用户ID"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="prompt_id" remarks="提示词ID"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="title" remarks="标题"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="007b-create-aigc-message-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_message"/>
+            </not>
+        </preConditions>
+        <comment>创建消息表</comment>
+        <createTable tableName="aigc_message">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="conversation_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="chat_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="username" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ip" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="role" type="VARCHAR(10)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="model" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="message" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tokens" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="prompt_tokens" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_message" remarks="对话消息表"/>
+        <setColumnRemarks tableName="aigc_message" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_message" columnName="user_id" remarks="用户ID"/>
+        <setColumnRemarks tableName="aigc_message" columnName="conversation_id" remarks="会话ID"/>
+        <setColumnRemarks tableName="aigc_message" columnName="chat_id" remarks="消息的ID"/>
+        <setColumnRemarks tableName="aigc_message" columnName="username" remarks="用户名"/>
+        <setColumnRemarks tableName="aigc_message" columnName="ip" remarks="IP地址"/>
+        <setColumnRemarks tableName="aigc_message" columnName="role" remarks="角色，user和assistant"/>
+        <setColumnRemarks tableName="aigc_message" columnName="model" remarks="模型名称"/>
+        <setColumnRemarks tableName="aigc_message" columnName="message" remarks="消息内容"/>
+        <setColumnRemarks tableName="aigc_message" columnName="tokens" remarks="总token数"/>
+        <setColumnRemarks tableName="aigc_message" columnName="prompt_tokens" remarks="提示token数"/>
+        <setColumnRemarks tableName="aigc_message" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="007c-create-aigc-message-indexes" author="system">
+        <comment>创建消息表索引</comment>
+        <sql dbms="postgresql">
+            CREATE INDEX IF NOT EXISTS idx_conversation_id ON aigc_message (conversation_id);
+        </sql>
+        <sql dbms="postgresql">
+            CREATE INDEX IF NOT EXISTS idx_role ON aigc_message (role);
+        </sql>
+    </changeSet>
+
+    <changeSet id="008a-create-aigc-app-api-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_app_api"/>
+            </not>
+        </preConditions>
+        <comment>创建应用 API 表</comment>
+        <createTable tableName="aigc_app_api">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="app_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="channel" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="api_key" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_app_api" remarks="应用"/>
+        <setColumnRemarks tableName="aigc_app_api" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_app_api" columnName="app_id" remarks="应用ID"/>
+        <setColumnRemarks tableName="aigc_app_api" columnName="channel" remarks="应用渠道"/>
+        <setColumnRemarks tableName="aigc_app_api" columnName="api_key" remarks="Key"/>
+        <setColumnRemarks tableName="aigc_app_api" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+    <changeSet id="008b-create-aigc-oss-table" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <tableExists tableName="aigc_oss"/>
+            </not>
+        </preConditions>
+        <comment>创建 OSS 资源文件表</comment>
+        <createTable tableName="aigc_oss">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="oss_id" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="original_filename" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="filename" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="url" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="base_path" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="path" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="size" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ext" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="content_type" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="platform" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <setTableRemarks tableName="aigc_oss" remarks="资源文件表"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="id" remarks="主键"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="user_id" remarks="用户ID"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="oss_id" remarks="OSS ID"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="original_filename" remarks="原始文件名称"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="filename" remarks="文件存储名称"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="url" remarks="文件地址"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="base_path" remarks="桶路径"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="path" remarks="文件的绝对路径"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="size" remarks="文件大小"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="ext" remarks="文件后缀"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="content_type" remarks="文件头"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="platform" remarks="平台"/>
+        <setColumnRemarks tableName="aigc_oss" columnName="create_time" remarks="创建时间"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -7,7 +7,8 @@ import { buildComponentConfig } from '../utils/configBuilder';
 import {
   generateDashboard as apiGenerateDashboard,
   generateDashboardStream,
-  saveHistory
+  saveHistory,
+  optimizeDashboardStream as apiOptimizeDashboardStream
 } from '@/api/dashboard-generator';
 
 export interface GenerationProgress {
@@ -407,6 +408,104 @@ export const useDashboardGenerator = () => {
     }
   };
 
+  // 优化功能
+  const optimizationController = ref<AbortController | null>(null);
+  const optimizationHistory = ref<Array<{ user: string; ai: string }>>([]);
+
+  /**
+   * 流式优化仪表板代码
+   * 支持对话式迭代优化
+   */
+  const optimizeDashboard = async (
+    conversationId: string,
+    currentHtml: string,
+    userRequest: string,
+    onChunk?: (chunk: string) => void,
+    onComplete?: () => void,
+    onError?: (error: Error) => void
+  ): Promise<void> => {
+    try {
+      store.setIsStreaming(true);
+      store.setStreamingCode(''); // 清空之前的流式代码
+
+      // 使用API函数进行优化
+      optimizationController.value = await apiOptimizeDashboardStream(
+        {
+          conversationId,
+          currentHtml,
+          userRequest
+        },
+        // onChunk - 接收每个代码片段
+        (chunk: string) => {
+          store.setStreamingCode(store.streamingCode + chunk);
+          if (onChunk) {
+            onChunk(chunk);
+          }
+        },
+        // onComplete - 完成时的处理
+        (fullContent: string) => {
+          // 优化完成
+          store.setIsStreaming(false);
+          
+          // 更新生成结果
+          if (fullContent) {
+            generationResult.value = {
+              html: fullContent,
+              css: '',
+              javascript: '',
+              linesOfCode: fullContent.split('\n').length,
+              components: store.wizardData.componentIds.length,
+              fileSize: `${Math.round(fullContent.length / 1024)}KB`,
+              description: '优化完成',
+              timestamp: Date.now()
+            };
+            
+            // 更新store中的生成结果
+            store.updateWizardData({ generatedResult: generationResult.value });
+          }
+
+          if (onComplete) {
+            onComplete();
+          }
+          
+          ElMessage.success('优化完成！');
+        },
+        // onError - 错误处理
+        (error: Error) => {
+          console.error('优化错误:', error);
+          store.setIsStreaming(false);
+          
+          if (error.name !== 'AbortError') {
+            ElMessage.error(error.message || '优化失败，请重试');
+            if (onError) {
+              onError(error);
+            }
+          }
+        }
+      );
+    } catch (error: any) {
+      console.error('优化错误:', error);
+      store.setIsStreaming(false);
+      
+      if (error.name !== 'AbortError') {
+        ElMessage.error(error.message || '优化失败，请重试');
+        if (onError) {
+          onError(error);
+        }
+      }
+    }
+  };
+
+  // 中止优化
+  const abortOptimization = () => {
+    if (optimizationController.value) {
+      optimizationController.value.abort();
+      optimizationController.value = null;
+      store.setIsStreaming(false);
+      ElMessage.info('已中止优化');
+    }
+  };
+
   return {
     // 状态
     generationProgress,
@@ -422,6 +521,11 @@ export const useDashboardGenerator = () => {
     downloadCode,
     previewCode,
     abortGeneration,
+    
+    // 优化相关
+    optimizeDashboard,
+    abortOptimization,
+    optimizationHistory,
 
     // 常量
     generationSteps

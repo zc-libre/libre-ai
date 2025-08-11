@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <changeSet id="007-init-sys-role-menu-data" author="system">
+        <comment>初始化系统角色-菜单关联数据（来源于 sql/langchat_postgresql.sql）</comment>
+        <sql dbms="postgresql"><![CDATA[
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '0825f18b3860f8c01a9b0d8221280e3b') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '2f5735d125b4537076893a4b4a37a188') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '374409ab56141b311ccb0f1847dd724a') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '43563b039d30b990f87af37783115ff4') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '5ce2349dc38a84cfbf0f5b260b41a2b6') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '6f8aff1f2c458e5add9adb6d284fb451') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '7c411c7d41034d6708103c8e0da19ced') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '8c0eb60ccef367ce7048e5d486aaa3a9') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '8fb8756a4587cc4c76401a63ea194568') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '97a5eac3bfeeabe4013d828b919786f7') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', 'a2ccfe694cd91cf159ad35626e4ea202') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', 'abb7e994494b96797b262cc2c72ea620') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', 'b1df787d8af5b728181a4b9acf38da93') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', 'b29de942eeabc9419185951f57be11f3') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', 'bdd70f2c1ee068c13bd3288eff07c8e2') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', 'c212381ae7a2333416a18e486f044777') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', 'f1ad3c056ac91fa5292a99f223155afc') ON CONFLICT DO NOTHING;
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES ('d0d0cab7c147d865d35e70fc62f2f19e', '0adfa2c3c4d278aedd88019236c1425e') ON CONFLICT DO NOTHING;
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>
+
+

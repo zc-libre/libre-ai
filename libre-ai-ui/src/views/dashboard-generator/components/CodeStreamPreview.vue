@@ -65,7 +65,7 @@
         ref="monacoEditorRef"
         :model-value="code"
         :language="language"
-        theme="vs"
+        theme="vs-dark"
         :read-only="true"
         :options="editorOptions"
         height="100%"

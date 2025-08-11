@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <!-- 基础系统表结构 -->
+    <include file="db/changelog/v1.0/001-init-system-tables.xml"/>
+    
+    <!-- AIGC核心模块表结构 -->
+    <include file="db/changelog/v1.0/002-init-aigc-tables.xml"/>
+    
+    <!-- Dashboard生成器模块表结构 -->
+    <include file="db/changelog/v1.0/003-init-dashboard-tables.xml"/>
+    
+    <!-- 初始化数据 -->
+    <include file="db/changelog/v1.0/004-init-basic-data.xml"/>
+    
+    <!-- Dashboard模板初始化数据 -->
+    <include file="db/changelog/v1.0/005-init-dashboard-data.xml"/>
+
+</databaseChangeLog>
