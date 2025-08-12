@@ -14,6 +14,7 @@ import {
   ElButton
 } from 'element-plus';
 import { Icon } from '@iconify/vue';
+import { Plus } from '@element-plus/icons-vue';
 import { ModelTypeEnum } from '@/api/models';
 
 const provider = ref(LLMProviders[0]?.model || '');
@@ -99,52 +100,106 @@ function handleDel(record: any) {
 </script>
 
 <template>
-  <div class="chat-provider-container">
-    <!-- 移动端和桌面端自适应布局 -->
-    <div class="flex flex-col lg:flex-row gap-4 lg:gap-6">
-      <!-- 侧边栏 - 模型供应商列表 -->
-      <div class="w-full lg:w-64 flex-shrink-0">
-        <div class="model-provider-sidebar rounded-lg p-3 sm:p-4">
-          <h3 class="font-semibold mb-3 flex items-center gap-2">
-            <Icon icon="lets-icons:chat" class="text-blue-500 text-lg" />
-            <span class="hidden sm:inline">聊天模型供应商</span>
-            <span class="sm:hidden">供应商</span>
-          </h3>
-          <el-menu
-            :default-active="provider"
-            class="model-provider-menu border-none bg-transparent"
-            @select="
-              index => {
-                provider = index;
-                reloadTable();
-              }
-            "
-          >
-            <el-menu-item
-              v-for="item in LLMProviders"
-              :key="item.model"
-              :index="item.model"
-              class="rounded-md mb-1 text-sm font-medium"
-            >
-              {{ item.name }}
-            </el-menu-item>
-          </el-menu>
+  <div class="chat-provider-container h-full flex flex-col">
+    <!-- 顶部配置区域 -->
+    <div class="config-header border-b border-gray-200 dark:border-gray-700 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="icon-box p-2.5 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+            <Icon icon="lets-icons:chat" class="text-xl text-blue-600 dark:text-blue-400" />
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+              Chat 对话模型配置
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
+              配置智能对话和文本生成模型
+            </p>
+          </div>
+        </div>
+        <el-button type="primary" :icon="Plus" @click="handleAdd">
+          新增模型
+        </el-button>
+      </div>
+
+      <!-- 提示信息 -->
+      <el-alert
+        class="custom-alert"
+        type="info"
+        :closable="false"
+        show-icon
+      >
+        <template #title>
+          <span class="text-sm">完全兼容 OpenAI 接口格式的模型都可在 OpenAI 配置中使用，只需设置正确的 BaseURL</span>
+        </template>
+      </el-alert>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="config-content flex-1 flex gap-4 p-4 sm:p-6 min-h-0">
+      <!-- 左侧供应商列表 -->
+      <div class="provider-list-container w-64 flex-shrink-0 hidden lg:block">
+        <div class="provider-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+          <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h4 class="font-semibold text-gray-900 dark:text-white">模型供应商</h4>
+          </div>
+          <div class="p-3">
+            <div class="space-y-2">
+              <div
+                v-for="item in LLMProviders"
+                :key="item.model"
+                :class="[
+                  'provider-item px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200',
+                  provider === item.model
+                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                ]"
+                @click="() => {
+                  provider = item.model;
+                  reloadTable();
+                }"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <Icon
+                      v-if="item.icon"
+                      :icon="item.icon"
+                      class="text-base"
+                    />
+                    <span class="text-sm">{{ item.name }}</span>
+                  </div>
+                  <Icon
+                    v-if="provider === item.model"
+                    icon="ep:check"
+                    class="text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 主内容区域 -->
-      <div class="flex-1 min-w-0">
-        <!-- 提示信息 -->
-        <el-alert
-          class="mb-4"
-          title="对于完全适配OpenAI接口格式的模型都可在OpenAI中配置（只需要定义BaseUrl）"
-          type="info"
-          :closable="false"
-          show-icon
-        />
+      <!-- 移动端供应商选择器 -->
+      <div class="provider-mobile-selector w-full mb-4 lg:hidden">
+        <el-select
+          v-model="provider"
+          placeholder="选择供应商"
+          class="w-full"
+          @change="reloadTable"
+        >
+          <el-option
+            v-for="item in LLMProviders"
+            :key="item.model"
+            :label="item.name"
+            :value="item.model"
+          />
+        </el-select>
+      </div>
 
-        <!-- 表格容器 -->
-        <div class="model-table-container rounded-lg overflow-hidden">
+      <!-- 右侧表格 -->
+      <div class="table-container flex-1 min-w-0">
+        <div class="model-table-wrapper bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full overflow-hidden">
           <BasicTable
             ref="actionRef"
             :actionColumn="actionColumn"
@@ -153,33 +208,185 @@ function handleDel(record: any) {
             :request="loadDataTable"
             :row-key="(row: any) => row.model"
             :single-line="false"
-            class="model-custom-table"
-          >
-            <template #tableTitle>
-              <div
-                class="model-table-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 sm:p-4"
-              >
-                <h4 class="font-semibold text-base">模型配置列表</h4>
-                <el-button type="primary" @click="handleAdd">
-                  <Icon icon="ep:plus" class="mr-1" />
-                  <span class="hidden sm:inline">新增模型</span>
-                  <span class="sm:hidden">新增</span>
-                </el-button>
-              </div>
-            </template>
-          </BasicTable>
+            class="model-data-table"
+          />
         </div>
-
-        <Edit ref="editRef" :provider="provider" @reload="reloadTable" />
       </div>
     </div>
+
+    <Edit ref="editRef" :provider="provider" @reload="reloadTable" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '../styles.scss';
-
 .chat-provider-container {
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 头部配置区域 */
+.config-header {
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.config-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-box {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.icon-box:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* 自定义提示框 */
+.custom-alert {
+  background: rgba(239, 246, 255, 0.6);
+  border: 1px solid rgba(147, 197, 253, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+:deep(.custom-alert) {
+  .el-alert__icon {
+    color: #3b82f6;
+  }
+}
+
+/* 内容区域 */
+.config-content {
+  overflow: hidden;
+}
+
+/* 供应商卡片 */
+.provider-card {
+  transition: all 0.3s ease;
+}
+
+.provider-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.provider-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.provider-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.provider-item:hover::before {
+  left: 100%;
+}
+
+/* 表格容器 */
+.model-table-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 表格样式覆盖 */
+.model-data-table {
+  :deep(.el-table) {
+    background: transparent;
+    font-size: 14px;
+    
+    .el-table__header {
+      th {
+        background-color: #f8fafc;
+        color: #1e293b;
+        font-weight: 600;
+        border-bottom: 2px solid #e2e8f0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+    
+    .el-table__body {
+      tr {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        
+        &:hover {
+          background-color: #f8fafc !important;
+          transform: translateX(2px);
+        }
+      }
+      
+      td {
+        padding: 14px 12px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/* 暗色模式适配 */
+html.dark {
+  .model-data-table {
+    :deep(.el-table) {
+      .el-table__header th {
+        background-color: #0f172a !important;
+        color: #e2e8f0 !important;
+        border-bottom-color: #475569 !important;
+      }
+      
+      .el-table__body tr:hover {
+        background-color: #334155 !important;
+      }
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .config-content {
+    flex-direction: column;
+  }
+  
+  .provider-mobile-selector {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .config-header {
+    padding: 1rem;
+  }
+  
+  .config-content {
+    padding: 1rem;
+  }
 }
 </style>

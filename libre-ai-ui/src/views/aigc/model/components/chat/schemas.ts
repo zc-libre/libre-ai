@@ -57,6 +57,7 @@ const baseSchemas: FormSchema[] = [
     labelMessage:
       '控制模型输出的Tokens长度上限。通常 100 Tokens 约等于150个中文汉字',
     component: 'ElSlider',
+    defaultValue: 32000,
     rules: [
       {
         type: 'number',
@@ -67,10 +68,9 @@ const baseSchemas: FormSchema[] = [
     ],
     componentProps: {
       showTooltip: true,
-      modelValue: 2000,
       step: 1,
       min: 1,
-      max: 8192
+      max: 32000
     }
   },
   {
@@ -79,6 +79,7 @@ const baseSchemas: FormSchema[] = [
     labelMessage:
       '调高参数会使得模型的输出更多样性和创新性，反之降低参数将会减少多样性',
     component: 'ElSlider',
+    defaultValue: 1,
     rules: [
       {
         type: 'number',
@@ -89,7 +90,6 @@ const baseSchemas: FormSchema[] = [
     ],
     componentProps: {
       showTooltip: true,
-      modelValue: 0.2,
       step: 0.05,
       min: 0,
       max: 2
@@ -101,12 +101,12 @@ const baseSchemas: FormSchema[] = [
     labelMessage:
       '模型在生成输出时会从概率最高的词汇开始选择，直到这些词汇的总概率累积达到Top p值。这样可以限制模型只选择这些高概率的词汇，从而控制输出内容的多样性。建议不要与"生成随机性"同时调整',
     component: 'ElSlider',
+    defaultValue: 0.8,
     rules: [
       { type: 'number', required: true, message: '请输入', trigger: ['blur'] }
     ],
     componentProps: {
       showTooltip: true,
-      modelValue: 0.8,
       step: 0.1,
       min: 0,
       max: 1

@@ -3,12 +3,13 @@ import { ProviderEnum } from '@/views/aigc/model/provider';
 export const baseColumns = [
   {
     title: '模型别名',
-    key: 'name'
+    key: 'name',
+    width: '150'
   },
   {
     title: '模型版本',
     key: 'model',
-    width: '140'
+    width: '150'
   },
   {
     title: '回复上限',

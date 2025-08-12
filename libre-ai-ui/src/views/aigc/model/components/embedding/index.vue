@@ -14,6 +14,7 @@ import {
   ElButton
 } from 'element-plus';
 import { Icon } from '@iconify/vue';
+import { Plus } from '@element-plus/icons-vue';
 import { ModelTypeEnum } from '@/api/models';
 
 const provider = ref(LLMProviders[0]?.model || '');
@@ -99,50 +100,106 @@ function handleDel(record: any) {
 </script>
 
 <template>
-  <div class="embedding-provider-container">
-    <div class="flex flex-col lg:flex-row gap-4 lg:gap-6">
-      <!-- 侧边栏 - 模型供应商列表 -->
-      <div class="w-full lg:w-64 flex-shrink-0">
-        <div class="model-provider-sidebar rounded-lg p-3 sm:p-4">
-          <h3 class="font-semibold mb-3 flex items-center gap-2">
-            <Icon icon="ph:database" class="text-green-500 text-lg" />
-            <span class="hidden sm:inline">Embedding模型列表</span>
-            <span class="sm:hidden">Embedding</span>
-          </h3>
-          <el-menu
-            :default-active="provider"
-            class="model-provider-menu border-none bg-transparent"
-            @select="
-              index => {
-                provider = index;
-                reloadTable();
-              }
-            "
-          >
-            <el-menu-item
-              v-for="item in LLMProviders"
-              :key="item.model"
-              :index="item.model"
-              class="rounded-md mb-1 text-sm font-medium"
-            >
-              {{ item.name }}
-            </el-menu-item>
-          </el-menu>
+  <div class="embedding-provider-container h-full flex flex-col">
+    <!-- 顶部配置区域 -->
+    <div class="config-header border-b border-gray-200 dark:border-gray-700 p-4 sm:p-6 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-800 dark:to-gray-900">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="icon-box p-2.5 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+            <Icon icon="ph:database" class="text-xl text-slate-600 dark:text-slate-400" />
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+              Embedding 向量模型配置
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
+              配置文本向量化和语义搜索模型
+            </p>
+          </div>
+        </div>
+        <el-button type="primary" :icon="Plus" @click="handleAdd">
+          新增模型
+        </el-button>
+      </div>
+
+      <!-- 提示信息 -->
+      <el-alert
+        class="custom-alert"
+        type="info"
+        :closable="false"
+        show-icon
+      >
+        <template #title>
+          <span class="text-sm">为了实现向量数据库的动态切换，Embedding 供应商统一选择支持 1024 维度的模型</span>
+        </template>
+      </el-alert>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="config-content flex-1 flex gap-4 p-4 sm:p-6 min-h-0">
+      <!-- 左侧供应商列表 -->
+      <div class="provider-list-container w-64 flex-shrink-0 hidden lg:block">
+        <div class="provider-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+          <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h4 class="font-semibold text-gray-900 dark:text-white">模型供应商</h4>
+          </div>
+          <div class="p-3">
+            <div class="space-y-2">
+              <div
+                v-for="item in LLMProviders"
+                :key="item.model"
+                :class="[
+                  'provider-item px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200',
+                  provider === item.model
+                    ? 'bg-slate-100 dark:bg-slate-900/30 text-slate-600 dark:text-slate-400 font-semibold shadow-sm'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                ]"
+                @click="() => {
+                  provider = item.model;
+                  reloadTable();
+                }"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <Icon
+                      v-if="item.icon"
+                      :icon="item.icon"
+                      class="text-base"
+                    />
+                    <span class="text-sm">{{ item.name }}</span>
+                  </div>
+                  <Icon
+                    v-if="provider === item.model"
+                    icon="ep:check"
+                    class="text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 主内容区域 -->
-      <div class="flex-1 min-w-0">
-        <el-alert
-          class="mb-4"
-          title="注意：为了实现向量数据库的动态切换，这里Embedding供应商统一选择支持1024纬度的模型"
-          type="info"
-          :closable="false"
-          show-icon
-        />
+      <!-- 移动端供应商选择器 -->
+      <div class="provider-mobile-selector w-full mb-4 lg:hidden">
+        <el-select
+          v-model="provider"
+          placeholder="选择供应商"
+          class="w-full"
+          @change="reloadTable"
+        >
+          <el-option
+            v-for="item in LLMProviders"
+            :key="item.model"
+            :label="item.name"
+            :value="item.model"
+          />
+        </el-select>
+      </div>
 
-        <!-- 表格容器 -->
-        <div class="model-table-container rounded-lg overflow-hidden">
+      <!-- 右侧表格 -->
+      <div class="table-container flex-1 min-w-0">
+        <div class="model-table-wrapper bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full overflow-hidden">
           <BasicTable
             ref="actionRef"
             :actionColumn="actionColumn"
@@ -151,33 +208,194 @@ function handleDel(record: any) {
             :request="loadDataTable"
             :row-key="(row: any) => row.model"
             :single-line="false"
-            class="model-custom-table"
-          >
-            <template #tableTitle>
-              <div
-                class="model-table-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 sm:p-4"
-              >
-                <h4 class="font-semibold text-base">模型配置列表</h4>
-                <el-button type="primary" @click="handleAdd">
-                  <Icon icon="ep:plus" class="mr-1" />
-                  <span class="hidden sm:inline">新增模型</span>
-                  <span class="sm:hidden">新增</span>
-                </el-button>
-              </div>
-            </template>
-          </BasicTable>
+            class="model-data-table"
+          />
         </div>
-
-        <Edit ref="editRef" :provider="provider" @reload="reloadTable" />
       </div>
     </div>
+
+    <Edit ref="editRef" :provider="provider" @reload="reloadTable" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '../styles.scss';
-
 .embedding-provider-container {
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 头部配置区域 */
+.config-header {
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.config-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(100, 116, 139, 0.05) 0%, transparent 70%);
+  animation: pulse 20s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+.icon-box {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.icon-box:hover {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
+}
+
+/* 自定义提示框 */
+.custom-alert {
+  background: rgba(239, 246, 255, 0.6);
+  border: 1px solid rgba(147, 197, 253, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+:deep(.custom-alert) {
+  .el-alert__icon {
+    color: #3b82f6;
+  }
+}
+
+/* 内容区域 */
+.config-content {
+  overflow: hidden;
+  background: linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
+}
+
+/* 供应商卡片 */
+.provider-card {
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #ffffff 0%, #f9fafb 100%);
+}
+
+.provider-card:hover {
+  box-shadow: 0 8px 16px rgba(100, 116, 139, 0.1);
+  transform: translateY(-2px);
+}
+
+.provider-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.provider-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.provider-item:hover::before {
+  left: 100%;
+}
+
+/* 表格容器 */
+.model-table-wrapper {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+}
+
+/* 表格样式覆盖 */
+.model-data-table {
+  :deep(.el-table) {
+    background: transparent;
+    font-size: 14px;
+    
+    .el-table__header {
+      th {
+        background-color: #f8fafc;
+        color: #1e293b;
+        font-weight: 600;
+        border-bottom: 2px solid #e2e8f0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+    
+    .el-table__body {
+      tr {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        
+        &:hover {
+          background-color: #f8fafc !important;
+          transform: translateX(2px);
+        }
+      }
+      
+      td {
+        padding: 14px 12px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/* 暗色模式适配 */
+html.dark {
+  .config-header {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  }
+  
+  .model-data-table {
+    :deep(.el-table) {
+      .el-table__header th {
+        background-color: #0f172a !important;
+        color: #e2e8f0 !important;
+        border-bottom-color: #475569 !important;
+      }
+      
+      .el-table__body tr:hover {
+        background-color: #334155 !important;
+      }
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .config-content {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .config-header {
+    padding: 1rem;
+  }
+  
+  .config-content {
+    padding: 1rem;
+  }
 }
 </style>

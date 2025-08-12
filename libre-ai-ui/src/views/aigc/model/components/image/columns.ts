@@ -19,34 +19,13 @@ export const openaiColumns = [
   }
 ];
 
-export const azureOpenaiColumns = [
-  ...baseColumns,
-  {
-    title: 'Api Key',
-    key: 'apiKey'
-  },
-  {
-    title: 'Endpoint',
-    key: 'endpoint'
-  },
-  {
-    title: 'Deployment Name',
-    key: 'azureDeploymentName'
-  }
-];
-
-export const zhipuColumns = [...baseColumns];
-
 export function getColumns(provider: string) {
   switch (provider) {
     case ProviderEnum.OPENAI: {
       return openaiColumns;
     }
-    case ProviderEnum.AZURE_OPENAI: {
-      return azureOpenaiColumns;
-    }
-    case ProviderEnum.ZHIPU: {
-      return zhipuColumns;
+    case ProviderEnum.GEMINI: {
+      return openaiColumns;
     }
   }
   return [];

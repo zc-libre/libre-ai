@@ -35,8 +35,7 @@ public class DashboardLangChain4jConfig {
 
 	/**
 	 * 配置OpenAI ChatModel用于Dashboard生成
-	 *
-	 * 体现YAGNI原则：仅配置当前需要的功能 体现容错设计：合理的超时和重试配置
+	 * <p>
 	 * @return ChatLanguageModel实例
 	 */
 	@Bean

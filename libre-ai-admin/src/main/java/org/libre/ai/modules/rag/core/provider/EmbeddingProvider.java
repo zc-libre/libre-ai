@@ -16,10 +16,14 @@
 
 package org.libre.ai.modules.rag.core.provider;
 
+import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer;
+import ai.djl.modality.nlp.preprocess.Tokenizer;
 import dev.langchain4j.data.document.DocumentSplitter;
+import dev.langchain4j.data.document.splitter.DocumentBySentenceSplitter;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.HuggingFaceTokenCountEstimator;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +51,9 @@ public class EmbeddingProvider {
 	private final ModelStoreFactory modelStoreFactory;
 
 	public static DocumentSplitter splitter() {
-		return DocumentSplitters.recursive(300, 20);
+		HuggingFaceTokenCountEstimator tokenCountEstimator = new HuggingFaceTokenCountEstimator();
+		return new DocumentBySentenceSplitter(100, 0,
+				tokenCountEstimator);
 	}
 
 	public EmbeddingModel getEmbeddingModel(List<String> knowledgeIds) {

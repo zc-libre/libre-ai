@@ -21,6 +21,8 @@ spring:
     enabled: false
     # 在开发环境下可以设置为true，生产环境建议设置为false
     drop-first: false
+  profiles:
+    active: dev
 
 # Dashboard Generator模块配置
 # 遵循配置外部化原则：所有配置通过环境变量或配置文件管理
@@ -47,19 +49,12 @@ dashboard:
     # 是否启用结果缓存
     enable-cache: ${DASHBOARD_ENABLE_CACHE:false}
 
-# RAG模块配置
-rag:
-  embedding:
-    # 批处理大小，用于处理大文档时分批生成向量
-    batch-size: ${RAG_EMBEDDING_BATCH_SIZE:50}
 
 # 日志配置（可选）
 logging:
   level:
     org.libre.ai.modules.dashboard: debug
     dev.langchain4j: DEBUG
-  pattern:
-    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
 # AWS S3配置
 aws:

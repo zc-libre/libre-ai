@@ -19,11 +19,7 @@ const title = computed(() => {
     ? 'Add Model'
     : getTitle(info.value.provider, LLMProviders);
 });
-const form: any = {
-  responseLimit: 2000,
-  temperature: 0.2,
-  topP: 0.8
-};
+const form: any = {};
 
 const schemas = computed(() => {
   nextTick();
