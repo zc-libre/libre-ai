@@ -46,6 +46,9 @@ logs/
 .env.development
 .env.production
 
+# Spring local config (do not commit secrets)
+libre-ai-admin/src/main/resources/application-local.yml
+
 ### Database ###
 *.db
 *.sqlite

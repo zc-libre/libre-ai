@@ -15,45 +15,28 @@ spring:
       minimum-idle: 1
       connection-test-query: SELECT 1
 
-  # Liquibase数据库版本管理配置
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     enabled: false
-    # 在开发环境下可以设置为true，生产环境建议设置为false
     drop-first: false
 
-# Dashboard Generator模块配置
-# 遵循配置外部化原则：所有配置通过环境变量或配置文件管理
 dashboard:
-  # OpenAI配置
   openai:
-    # API密钥，建议通过环境变量OPENAI_API_KEY设置
     api-key: ${OPENAI_API_KEY}
-    # API基础URL，支持代理或自定义端点
     base-url: ${OPENAI_BASE_URL}
-    # 使用的模型名称
     model-name: ${OPENAI_MODEL_NAME:qwen3}
-    # 温度参数，控制输出随机性（0-1）
     temperature: ${OPENAI_TEMPERATURE:1}
-    # 最大输出token数
     max-tokens: ${OPENAI_MAX_TOKENS:12800}
 
-  # 代码生成配置
   generation:
-    # AI调用超时时间（秒）
     timeout: ${DASHBOARD_TIMEOUT:120000}
-    # 最大重试次数
     max-retries: ${DASHBOARD_MAX_RETRIES:3}
-    # 是否启用结果缓存
     enable-cache: ${DASHBOARD_ENABLE_CACHE:false}
 
-# RAG模块配置
 rag:
   embedding:
-    # 批处理大小，用于处理大文档时分批生成向量
     batch-size: ${RAG_EMBEDDING_BATCH_SIZE:50}
 
-# 日志配置（可选）
 logging:
   level:
     org.libre.ai.modules.dashboard: debug
@@ -61,18 +44,13 @@ logging:
   pattern:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
-# AWS S3配置
 aws:
   s3:
-    # AWS访问密钥ID
     access-key-id: ${AWS_ACCESS_KEY_ID}
-    # AWS访问密钥
     secret-access-key: ${AWS_SECRET_ACCESS_KEY}
-    # S3存储桶名称
-    bucket-name: ${AWS_S3_BUCKET_NAME:libre-ai}
-    # AWS区域
-  #  region: ${AWS_REGION:us-east-1}
-    # 自定义端点（可选，用于兼容S3的对象存储服务如MinIO）
-    endpoint: ${AWS_S3_ENDPOINT:https://minio.zclibre.org}
-    # 是否启用路径样式访问（MinIO等需要设置为true）
+    bucket-name: ${AWS_S3_BUCKET_NAME}
+    # region: ${AWS_REGION:us-east-1}
+    endpoint: ${AWS_S3_ENDPOINT}
     path-style-access: ${AWS_S3_PATH_STYLE_ACCESS:true}
+
+
