@@ -69,7 +69,7 @@ public class EmbeddingProvider {
 			throw new ServiceException("存在多个不同Embedding Model的知识库，请先检查配置");
 		}
 
-		return modelStoreFactory.getEmbeddingModel(storeIds.get(0));
+		return modelStoreFactory.getEmbeddingModel(storeIds.getFirst());
 	}
 
 	public EmbeddingModel getEmbeddingModel(String knowledgeId) {
@@ -111,7 +111,7 @@ public class EmbeddingProvider {
 			throw new ServiceException("存在多个不同Embedding Store数据源的知识库，请先检查配置");
 		}
 
-		return embeddingStoreFactory.getEmbeddingStore(storeIds.get(0));
+		return embeddingStoreFactory.getEmbeddingStore(storeIds.getFirst());
 	}
 
 }

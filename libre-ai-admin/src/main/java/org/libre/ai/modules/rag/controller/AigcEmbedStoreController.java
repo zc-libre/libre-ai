@@ -39,7 +39,11 @@ public class AigcEmbedStoreController {
 	@GetMapping("/page")
 	public R<Dict> page(AigcEmbedStore embedStore, QueryPage queryPage) {
 		IPage<AigcEmbedStore> page = embedStoreService.page(MybatisUtil.wrap(embedStore, queryPage),
-				Wrappers.lambdaQuery());
+				Wrappers.<AigcEmbedStore>lambdaQuery()
+					.like(StrUtil.isNotBlank(embedStore.getName()), AigcEmbedStore::getName, embedStore.getName())
+					.eq(StrUtil.isNotBlank(embedStore.getProvider()), AigcEmbedStore::getProvider,
+							embedStore.getProvider())
+					.orderByDesc(AigcEmbedStore::getCreateTime));
 		page.getRecords().forEach(this::hide);
 		return R.ok(MybatisUtil.getData(page));
 	}

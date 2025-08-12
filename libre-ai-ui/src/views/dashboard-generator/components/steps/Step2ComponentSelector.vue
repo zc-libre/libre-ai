@@ -730,7 +730,6 @@ const generateSampleData = async (componentId: string) => {
   );
 };
 
-
 const getSampleDataError = (componentId: string) => {
   try {
     const data = componentDataConfigs[componentId].sampleData;

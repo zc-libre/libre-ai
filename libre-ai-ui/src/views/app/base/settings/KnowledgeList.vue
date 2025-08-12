@@ -19,9 +19,17 @@ const appStore = useAppStore();
 const dialogVisible = ref(false);
 
 async function show() {
-  knowledges.value = await getList({});
-  await nextTick();
-  dialogVisible.value = true;
+  try {
+    const res = await getList({});
+    // 处理后端返回的 R 对象
+    knowledges.value = res?.result || res || [];
+    await nextTick();
+    dialogVisible.value = true;
+  } catch (error) {
+    console.error('获取知识库列表失败:', error);
+    ms.error('获取知识库列表失败');
+    knowledges.value = [];
+  }
 }
 
 function onAdd(item) {
@@ -52,7 +60,7 @@ defineExpose({ show });
     />
 
     <ElScrollbar max-height="400px">
-      <div class="space-y-3">
+      <div v-if="knowledges && knowledges.length > 0" class="space-y-3">
         <div
           v-for="item in knowledges"
           :key="item.id"
@@ -115,6 +123,7 @@ defineExpose({ show });
           </div>
         </div>
       </div>
+      <div v-else class="text-center text-gray-500 py-8">暂无可用的知识库</div>
     </ElScrollbar>
   </ElDialog>
 </template>

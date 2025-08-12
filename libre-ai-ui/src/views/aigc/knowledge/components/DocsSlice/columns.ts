@@ -37,10 +37,10 @@ export const columns: BasicColumn[] = [
         ElTag,
         {
           size: 'small',
-          type: row.status == true ? 'success' : 'info'
+          type: row.status == 1 ? 'success' : 'info'
         },
         {
-          default: () => (row.status == true ? '已训练' : '未训练')
+          default: () => (row.status == 1 ? '已训练' : '未训练')
         }
       );
     }

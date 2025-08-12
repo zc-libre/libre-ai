@@ -446,7 +446,7 @@ export const useDashboardGenerator = () => {
         (fullContent: string) => {
           // 优化完成
           store.setIsStreaming(false);
-          
+
           // 更新生成结果
           if (fullContent) {
             generationResult.value = {
@@ -459,7 +459,7 @@ export const useDashboardGenerator = () => {
               description: '优化完成',
               timestamp: Date.now()
             };
-            
+
             // 更新store中的生成结果
             store.updateWizardData({ generatedResult: generationResult.value });
           }
@@ -467,14 +467,14 @@ export const useDashboardGenerator = () => {
           if (onComplete) {
             onComplete();
           }
-          
+
           ElMessage.success('优化完成！');
         },
         // onError - 错误处理
         (error: Error) => {
           console.error('优化错误:', error);
           store.setIsStreaming(false);
-          
+
           if (error.name !== 'AbortError') {
             ElMessage.error(error.message || '优化失败，请重试');
             if (onError) {
@@ -486,7 +486,7 @@ export const useDashboardGenerator = () => {
     } catch (error: any) {
       console.error('优化错误:', error);
       store.setIsStreaming(false);
-      
+
       if (error.name !== 'AbortError') {
         ElMessage.error(error.message || '优化失败，请重试');
         if (onError) {
@@ -521,7 +521,7 @@ export const useDashboardGenerator = () => {
     downloadCode,
     previewCode,
     abortGeneration,
-    
+
     // 优化相关
     optimizeDashboard,
     abortOptimization,

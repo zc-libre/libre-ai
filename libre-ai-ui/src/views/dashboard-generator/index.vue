@@ -226,7 +226,10 @@ const handleOptimize = async (data: {
     // onError - 优化失败
     (error: Error) => {
       if (previewPanelRef.value) {
-        previewPanelRef.value.onOptimizationComplete(false, `优化失败: ${error.message}`);
+        previewPanelRef.value.onOptimizationComplete(
+          false,
+          `优化失败: ${error.message}`
+        );
       }
     }
   );

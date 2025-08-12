@@ -26,12 +26,14 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.libre.ai.modules.rag.core.consts.EmbedConst;
 import org.libre.ai.modules.rag.core.provider.EmbeddingProvider;
 import org.libre.ai.modules.rag.core.service.LangEmbeddingService;
 import org.libre.ai.modules.rag.dto.ChatRequest;
 import org.libre.ai.modules.rag.dto.EmbeddingResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -74,6 +76,7 @@ public class LangEmbeddingServiceImpl implements LangEmbeddingService {
 		try {
 			DocumentSplitter splitter = EmbeddingProvider.splitter();
 			List<TextSegment> segments = splitter.split(document);
+			log.info("文档分片完成，共生成 {} 个片段", segments.size());
 
 			EmbeddingModel embeddingModel = embeddingProvider.getEmbeddingModel(req.getKnowledgeId());
 			EmbeddingStore<TextSegment> embeddingStore = embeddingProvider.getEmbeddingStore(req.getKnowledgeId());
@@ -85,7 +88,8 @@ public class LangEmbeddingServiceImpl implements LangEmbeddingService {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("文档向量化处理失败，KnowledgeId={}, DocsName={}", req.getKnowledgeId(), req.getDocsName(), e);
+			throw new RuntimeException("文档向量化处理失败: " + e.getMessage(), e);
 		}
 
 		log.info(">>>>>>>>>>>>>> Docs文档向量解析结束，KnowledgeId={}, DocsName={}", req.getKnowledgeId(), req.getDocsName());

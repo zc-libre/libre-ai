@@ -1,4 +1,4 @@
-import { ProviderEnum } from './data';
+import { ProviderEnum } from '@/views/aigc/model/provider';
 
 export const baseColumns = [
   {

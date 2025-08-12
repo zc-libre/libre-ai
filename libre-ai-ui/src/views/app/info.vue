@@ -1,115 +1,594 @@
 <script lang="ts" setup>
+import { ref, onMounted, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import {
+  ArrowLeft,
+  Setting,
+  Connection,
+  DataAnalysis,
+  Refresh,
+  Check,
+  ChatLineRound
+} from '@element-plus/icons-vue';
+import { getAppInfo } from '@/api/aigc/chat';
 import AppBase from './base/index.vue';
 import ApiChannel from './channel-api/index.vue';
-import router from '@/router';
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import { useAppStore } from './store';
-import { getAppInfo } from '@/api/aigc/chat';
-import { ElButton, ElIcon } from 'element-plus';
-import { ArrowLeft, Setting, Share } from '@element-plus/icons-vue';
 
 const route = useRoute();
+const router = useRouter();
 const appStore = useAppStore();
-const form = ref<any>({});
+
 const loading = ref(false);
-const activeMenus = [
-  { key: 'setting', icon: 'uil:setting', label: '应用配置' },
-  { key: 'api', icon: 'hugeicons:api', label: 'API接入渠道' }
+const appInfo = ref<any>({});
+const activeTab = ref('settings');
+const isSaving = ref(false);
+const lastSaveTime = ref('');
+
+const tabs = [
+  {
+    key: 'settings',
+    label: '应用配置',
+    icon: Setting,
+    color: '#6366F1',
+    description: '配置应用基础信息、提示词和知识库'
+  },
+  {
+    key: 'api',
+    label: 'API 接入',
+    icon: Connection,
+    color: '#8B5CF6',
+    description: '管理应用的 API 接入渠道和权限'
+  }
 ];
 
-onMounted(async () => {
-  await fetchData();
+onMounted(() => {
+  loadAppInfo();
+  updateSaveTime();
 });
 
-async function fetchData() {
+async function loadAppInfo() {
   loading.value = true;
   try {
     const id = route.params.id;
-    const data = await getAppInfo({
+    const res = await getAppInfo({
       appId: id,
       conversationId: null
     });
-    form.value = data || {};
+    const data = res.result || res;
+    appInfo.value = data || {};
+
+    // 同步数据到 store，供子组件使用
+    if (data) {
+      appStore.info = data;
+      appStore.knowledgeIds = data.knowledgeIds || [];
+      appStore.modelId = data.modelId || null;
+      appStore.knowledges = data.knowledges || [];
+      appStore.model = data.model || null; // 保存模型信息
+    }
   } catch (error) {
-    console.error('Failed to fetch app info:', error);
-    form.value = {};
+    console.error('加载应用信息失败:', error);
+    ElMessage.error('加载应用信息失败');
+    appInfo.value = {};
   } finally {
     loading.value = false;
   }
 }
+
+function updateSaveTime() {
+  const now = new Date();
+  lastSaveTime.value = now.toLocaleTimeString('zh-CN', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+async function handleSave() {
+  isSaving.value = true;
+  try {
+    await appStore.updateInfo();
+    updateSaveTime();
+    ElMessage.success('保存成功');
+  } catch (error) {
+    console.error('保存失败:', error);
+    ElMessage.error('保存失败，请重试');
+  } finally {
+    isSaving.value = false;
+  }
+}
+
+function handleBack() {
+  router.push('/aigc/app');
+}
+
+function handleRefresh() {
+  loadAppInfo();
+}
+
+const appGradient = computed(() => {
+  const gradients = [
+    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+  ];
+  const id = appInfo.value?.id || '0';
+  return gradients[parseInt(id) % gradients.length];
+});
+
+function getCurrentTabInfo() {
+  return tabs.find(tab => tab.key === activeTab.value);
+}
 </script>
 
 <template>
-  <div
-    v-if="form && Object.keys(form).length > 0"
-    class="view-container rounded bg-[#f9f9f9] pb-10"
-  >
-    <div class="p-4 flex justify-between items-center bg-white rounded">
-      <div class="flex gap-5 items-center min-w-20">
-        <ElButton text type="primary" @click="router.push('/aigc/app')">
-          <ElIcon class="text-xl">
-            <ArrowLeft />
-          </ElIcon>
-        </ElButton>
-        <div class="flex gap-2 items-center pr-4">
-          <div class="mr-3">
-            <div class="relative bg-orange-100 p-4 rounded-lg">
-              <ElIcon class="text-3xl" :size="30">
-                <Share />
-              </ElIcon>
+  <div class="view-container app-detail-page bg-bg_color">
+    <!-- 顶部导航栏 -->
+    <div class="header-section flex-shrink-0 w-full">
+      <div class="header-content">
+        <!-- 主导航行 -->
+        <div class="nav-row">
+          <div class="nav-left">
+            <button class="back-btn" @click="handleBack">
+              <el-icon :size="20">
+                <ArrowLeft />
+              </el-icon>
+            </button>
 
+            <div v-if="appInfo.name" class="app-info">
               <div
-                class="absolute bottom-[-6px] p-1 right-[-5px] shadow bg-white mx-auto rounded-lg"
+                class="app-icon-wrapper"
+                :style="{ background: appGradient }"
               >
-                <ElIcon class="text-sm text-orange-500" :size="14">
-                  <Setting />
-                </ElIcon>
+                <el-icon :size="24" color="white">
+                  <DataAnalysis />
+                </el-icon>
+              </div>
+
+              <div class="app-details">
+                <h1 class="app-name">{{ appInfo.name }}</h1>
+                <div class="app-meta">
+                  <span class="meta-item">
+                    <el-icon :size="12"><Check /></el-icon>
+                    自动保存
+                  </span>
+                  <span class="meta-time">{{ lastSaveTime }}</span>
+                  <span v-if="isSaving" class="saving-indicator">
+                    <el-icon class="animate-spin" :size="12">
+                      <Refresh />
+                    </el-icon>
+                    保存中...
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col justify-between gap-2">
-            <div class="font-bold text-lg">{{ form.name || '' }}</div>
-            <div v-if="!loading" class="text-gray-400 text-xs">
-              自动保存：{{ form.saveTime || '' }}
-            </div>
-            <div v-else class="flex items-center gap-1 text-gray-400 text-xs">
-              <ElIcon class="animate-spin">
-                <Setting />
-              </ElIcon>
-              保存中...
-            </div>
+          <div class="nav-right">
+            <el-button
+              :icon="Refresh"
+              :loading="loading"
+              circle
+              @click="handleRefresh"
+            />
+            <el-button
+              type="primary"
+              :icon="ChatLineRound"
+              @click="router.push(`/aigc/chat/${appInfo.id}`)"
+            >
+              开始对话
+            </el-button>
+          </div>
+        </div>
+
+        <!-- Tab 导航行 -->
+        <div class="tab-row">
+          <div class="tabs-container">
+            <button
+              v-for="tab in tabs"
+              :key="tab.key"
+              class="tab-item"
+              :class="{ active: activeTab === tab.key }"
+              @click="activeTab = tab.key"
+            >
+              <div class="tab-content">
+                <el-icon
+                  :size="18"
+                  :color="activeTab === tab.key ? tab.color : '#909399'"
+                  class="tab-icon"
+                >
+                  <component :is="tab.icon" />
+                </el-icon>
+                <span class="tab-label">{{ tab.label }}</span>
+              </div>
+              <div
+                v-if="activeTab === tab.key"
+                class="tab-indicator"
+                :style="{ background: tab.color }"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content flex-1 overflow-auto">
+      <!-- 加载状态 -->
+      <div v-if="loading && !appInfo.name" class="loading-state">
+        <el-icon class="loading-icon" :size="48" color="#C0C4CC">
+          <Refresh />
+        </el-icon>
+        <p class="loading-text">加载中...</p>
+      </div>
+
+      <!-- Tab 内容面板 -->
+      <div v-else-if="appInfo.name" class="content-panel">
+        <!-- Tab 描述卡片 -->
+        <div class="tab-description-card">
+          <el-icon
+            :size="20"
+            :color="getCurrentTabInfo()?.color"
+            class="desc-icon"
+          >
+            <component :is="getCurrentTabInfo()?.icon" />
+          </el-icon>
+          <span class="desc-text">{{ getCurrentTabInfo()?.description }}</span>
+        </div>
+
+        <!-- Tab 内容区域 -->
+        <div class="tab-content-area">
+          <!-- 应用配置 -->
+          <div v-show="activeTab === 'settings'" class="config-container">
+            <AppBase />
+          </div>
+
+          <!-- API 接入 -->
+          <div v-show="activeTab === 'api'" class="api-container">
+            <ApiChannel />
           </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <ElButton
-          v-for="item in activeMenus"
-          :key="item.key"
-          :type="appStore.activeMenu === item.key ? 'primary' : 'default'"
-          class="!px-5 !rounded-2xl"
-          @click="appStore.setActiveMenu(item.key)"
-        >
-          <template #icon>
-            <ElIcon>
-              <component :is="item.key === 'setting' ? Setting : Share" />
-            </ElIcon>
-          </template>
-          {{ item.label }}
-        </ElButton>
+      <!-- 错误状态 -->
+      <div v-else class="error-state">
+        <div class="error-content">
+          <div class="error-icon-wrapper">
+            <el-icon class="error-icon" :size="48" color="#F56C6C">
+              <Setting />
+            </el-icon>
+          </div>
+          <h3 class="error-title">加载失败</h3>
+          <p class="error-description">无法加载应用信息，请检查网络连接</p>
+          <el-button type="primary" :icon="Refresh" @click="loadAppInfo">
+            重新加载
+          </el-button>
+        </div>
       </div>
     </div>
-
-    <template v-if="appStore.activeMenu === 'setting'">
-      <AppBase />
-    </template>
-
-    <template v-if="appStore.activeMenu === 'api'">
-      <ApiChannel />
-    </template>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.app-detail-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+// 头部样式
+.header-section {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid #e4e7ed;
+
+  .header-content {
+    width: 100%;
+    padding: 0 24px;
+  }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f2f5;
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .back-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid #e4e7ed;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          background: #f5f7fa;
+          border-color: #409eff;
+        }
+      }
+
+      .app-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .app-icon-wrapper {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-details {
+          .app-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #303133;
+            margin: 0 0 4px 0;
+          }
+
+          .app-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #909399;
+
+            .meta-item {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+            }
+
+            .saving-indicator {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              color: #409eff;
+            }
+          }
+        }
+      }
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+
+  .tab-row {
+    padding: 0;
+
+    .tabs-container {
+      display: flex;
+      gap: 0;
+
+      .tab-item {
+        position: relative;
+        padding: 12px 24px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          background: #f5f7fa;
+        }
+
+        &.active {
+          background: #f5f7fa;
+
+          .tab-content {
+            .tab-label {
+              color: #303133;
+              font-weight: 600;
+            }
+          }
+        }
+
+        .tab-content {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .tab-icon {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+          }
+
+          .tab-label {
+            font-size: 14px;
+            color: #606266;
+            font-weight: 500;
+          }
+        }
+
+        .tab-indicator {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          transition: all 0.3s;
+        }
+      }
+    }
+  }
+}
+
+// 主内容区域 - 修复宽度问题
+.main-content {
+  background: #f5f7fa;
+  width: 100%;
+  padding: 24px;
+
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+
+    .loading-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #909399;
+    }
+  }
+
+  .content-panel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .tab-description-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+      .desc-icon {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+
+      .desc-text {
+        font-size: 14px;
+        color: #606266;
+      }
+    }
+
+    .tab-content-area {
+      background: white;
+      border-radius: 12px;
+      flex: 1;
+      min-height: 600px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      padding: 0;
+
+      .config-container,
+      .api-container {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+    }
+  }
+
+  .error-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+
+    .error-content {
+      text-align: center;
+
+      .error-icon-wrapper {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #fee, #fff);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .error-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #303133;
+        margin: 0 0 8px 0;
+      }
+
+      .error-description {
+        font-size: 14px;
+        color: #909399;
+        margin: 0 0 20px 0;
+      }
+    }
+  }
+}
+
+// 动画
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// 响应式
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-section {
+    .header-content {
+      padding: 0 16px;
+    }
+
+    .nav-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .nav-right {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    .tab-row {
+      .tabs-container {
+        overflow-x: auto;
+
+        .tab-item {
+          padding: 12px 16px;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .main-content {
+    padding: 12px;
+  }
+}
+</style>

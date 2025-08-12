@@ -355,10 +355,10 @@ export async function optimizeDashboardStream(
           }
 
           const chunk = decoder.decode(value, { stream: true });
-          
+
           // 将新数据添加到缓冲区
           buffer += chunk;
-          
+
           // 处理完整的行
           const lines = buffer.split('\n\n');
           // 保留最后一个可能不完整的行

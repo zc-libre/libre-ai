@@ -105,10 +105,9 @@ public class OpenAIModelBuildHandler implements ModelBuildHandler {
 			.apiKey(model.getApiKey())
 			.baseUrl(model.getBaseUrl())
 			.modelName(model.getModel())
-			.dimensions(model.getDimension())
+			.dimensions(model.getDimension() != null ? model.getDimension() : 1024)
 			.logRequests(true)
 			.logResponses(true)
-			.dimensions(1024)
 			.timeout(Duration.ofMinutes(10))
 			.build();
 	}

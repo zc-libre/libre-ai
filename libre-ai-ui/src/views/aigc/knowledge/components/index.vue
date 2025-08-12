@@ -6,7 +6,7 @@ import DocsSliceSearch from './DocsSliceSearch/index.vue';
 import ImportFile from './ImportFile/index.vue';
 import { onMounted, ref } from 'vue';
 import { Icon } from '@iconify/vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import {
   ElRow,
   ElCol,
@@ -16,8 +16,10 @@ import {
   ElTabs,
   ElTabPane
 } from 'element-plus';
+import { ArrowLeft } from '@element-plus/icons-vue';
 import { getById } from '@/api/aigc/knowledge';
 
+const route = useRoute();
 const router = useRouter();
 const active = ref('import-file');
 const menuOptions = ref([
@@ -35,8 +37,9 @@ const menuOptions = ref([
 
 const knowledge = ref<any>({});
 onMounted(async () => {
-  const id = router.currentRoute.value.params.id;
-  knowledge.value = await getById(String(id));
+  const id = route.params.id;
+  const response = await getById(String(id));
+  knowledge.value = (response as any).result || response;
   active.value = menuOptions.value[0].key;
 
   menuOptions.value.push(
@@ -63,68 +66,312 @@ function handleReturn() {
 </script>
 
 <template>
-  <div class="mt-2" style="height: calc(100vh - 130px) !important">
-    <el-row :gutter="13" class="h-full">
-      <el-col :span="5" class="bg-white p-4 rounded-md">
-        <el-button
-          class="mb-4 w-full"
-          plain
-          size="small"
-          type="primary"
-          @click="handleReturn"
-        >
-          <Icon icon="ep:back" class="mr-1" />
-          知识库列表
-        </el-button>
-
-        <div class="flex items-center gap-2">
-          <div class="relative bg-blue-100 p-2 rounded">
-            <SvgIcon class="text-lg" icon="ep:document" />
-          </div>
-          <span class="font-semibold text-[16px]">{{ knowledge.name }}</span>
-        </div>
-        <div class="text-[13px] text-gray-400 mt-3">{{ knowledge.des }}</div>
-        <el-divider class="my-3" />
-        <div class="my-3 flex flex-col gap-2">
-          <div class="text-xs">知识库ID</div>
-          <el-input v-model="knowledge.id" readonly />
-        </div>
-        <div class="my-3 flex flex-col gap-2">
-          <div class="text-xs">关联向量数据库</div>
-          <div v-if="knowledge.embedStore == null" class="py-2 text-gray-400">
-            没有配置关联向量数据库
-          </div>
-          <el-input v-else v-model="knowledge.embedStore.name" readonly />
-        </div>
-        <div class="my-3 flex flex-col gap-2">
-          <div class="text-xs">关联向量化模型</div>
-          <div v-if="knowledge.embedModel == null" class="py-2 text-gray-400">
-            没有配置关联向量化模型
-          </div>
-          <el-input v-else v-model="knowledge.embedModel.name" readonly />
-        </div>
-      </el-col>
-      <el-col :span="19" class="h-full bg-white p-4 overflow-y-auto rounded-md">
-        <el-tabs v-model="active" class="mb-6" @tab-change="handleSelect">
-          <el-tab-pane
-            v-for="item in menuOptions"
-            :key="item.key"
-            :name="item.key"
-            :label="item.label"
+  <div class="view-container knowledge-detail-app bg-bg_color h-full">
+    <!-- 头部导航区域 -->
+    <div class="header-section flex-shrink-0 w-full px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <el-button
+            type="primary"
+            plain
+            :icon="ArrowLeft"
+            size="large"
+            class="shadow-md hover:shadow-lg transition-all duration-300"
+            @click="handleReturn"
           >
-            <template #label>
-              <Icon :icon="item.icon" class="mr-1" />
-              <span class="font-bold">{{ item.label }}</span>
-            </template>
-          </el-tab-pane>
-        </el-tabs>
-        <DocList v-if="active == 'doc-list'" />
-        <DocsSlice v-if="active == 'slice-list'" />
-        <DocsSliceSearch v-if="active == 'slice-search'" />
-        <ImportFile v-if="active == 'import-file'" :data="knowledge" />
-      </el-col>
-    </el-row>
+            返回列表
+          </el-button>
+          <div class="flex items-center gap-3">
+            <div
+              class="bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 p-3 rounded-xl shadow-lg"
+            >
+              <Icon
+                icon="fluent:document-database-24-regular"
+                class="text-2xl text-blue-600 dark:text-blue-400"
+              />
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ knowledge.name }}
+              </h1>
+              <p class="text-gray-600 dark:text-gray-400 text-sm">
+                {{ knowledge.des || '暂无描述' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div
+      class="k-main-content flex-1 flex flex-col lg:flex-row gap-4 px-4 sm:px-6 lg:px-8 pb-4 pt-4 min-h-0"
+    >
+      <!-- 左侧信息面板 -->
+      <div
+        class="k-sidebar-container flex-shrink-0 w-full lg:w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+      >
+        <div class="p-6">
+          <!-- 知识库基本信息 -->
+          <div class="info-section mb-6">
+            <div class="section-header mb-4">
+              <Icon icon="tabler:info-circle" class="section-icon" />
+              <span class="section-title">基本信息</span>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">知识库ID</label>
+              <div
+                class="info-value bg-gray-50 dark:bg-gray-700 p-3 rounded-lg text-sm font-mono"
+              >
+                {{ knowledge.id }}
+              </div>
+            </div>
+          </div>
+
+          <!-- 配置信息 -->
+          <div class="config-section">
+            <div class="section-header mb-4">
+              <Icon icon="tabler:settings" class="section-icon" />
+              <span class="section-title">配置信息</span>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">向量数据库</label>
+              <div v-if="knowledge.embedStore" class="config-card">
+                <div class="flex items-center gap-2">
+                  <div class="bg-blue-100 dark:bg-blue-900/30 p-1.5 rounded">
+                    <Icon
+                      icon="tabler:database"
+                      class="text-blue-600 dark:text-blue-400 text-sm"
+                    />
+                  </div>
+                  <span class="text-sm font-medium">{{
+                    knowledge.embedStore.name
+                  }}</span>
+                </div>
+              </div>
+              <div v-else class="config-empty">
+                <Icon icon="tabler:database-off" class="text-gray-400 mb-1" />
+                <span class="text-xs text-gray-400">未配置</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">向量模型</label>
+              <div v-if="knowledge.embedModel" class="config-card">
+                <div class="flex items-center gap-2">
+                  <div class="bg-green-100 dark:bg-green-900/30 p-1.5 rounded">
+                    <Icon
+                      icon="tabler:brain"
+                      class="text-green-600 dark:text-green-400 text-sm"
+                    />
+                  </div>
+                  <span class="text-sm font-medium">{{
+                    knowledge.embedModel.name
+                  }}</span>
+                </div>
+              </div>
+              <div v-else class="config-empty">
+                <Icon icon="tabler:brain-off" class="text-gray-400 mb-1" />
+                <span class="text-xs text-gray-400">未配置</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧内容区域 -->
+      <div
+        class="content-container flex-1 min-w-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col"
+      >
+        <!-- 标签页导航 -->
+        <div
+          class="tabs-header bg-gradient-to-r from-gray-50 to-blue-50/30 dark:from-gray-800/50 dark:to-blue-900/10 border-b border-gray-200 dark:border-gray-700 p-4"
+        >
+          <el-tabs
+            v-model="active"
+            class="knowledge-tabs"
+            @tab-change="handleSelect"
+          >
+            <el-tab-pane
+              v-for="item in menuOptions"
+              :key="item.key"
+              :name="item.key"
+              :label="item.label"
+            >
+              <template #label>
+                <div class="flex items-center gap-2">
+                  <Icon :icon="item.icon" class="text-lg" />
+                  <span class="font-medium">{{ item.label }}</span>
+                </div>
+              </template>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+
+        <!-- 标签页内容 -->
+        <div class="tabs-content flex-1 p-6 overflow-y-auto min-h-0">
+          <DocList v-if="active == 'doc-list'" />
+          <DocsSlice v-if="active == 'slice-list'" />
+          <DocsSliceSearch v-if="active == 'slice-search'" />
+          <ImportFile v-if="active == 'import-file'" :data="knowledge" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<style lang="less" scoped></style>
+<style lang="scss" scoped>
+.knowledge-detail-app {
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  max-height: calc(100vh - 60px);
+}
+
+.header-section {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.08),
+    rgba(99, 102, 241, 0.08),
+    rgba(168, 85, 247, 0.06)
+  );
+
+  :global(.dark) & {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.15),
+      rgba(99, 102, 241, 0.15),
+      rgba(168, 85, 247, 0.1)
+    );
+  }
+}
+
+.main-content {
+  box-sizing: border-box;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.section-icon {
+  font-size: 18px;
+  color: var(--el-color-primary);
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+
+.info-item {
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.info-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--el-text-color-regular);
+  margin-bottom: 8px;
+}
+
+.info-value {
+  word-break: break-all;
+  border: 1px solid var(--el-border-color-light);
+  transition: all 0.3s ease;
+}
+
+.config-card {
+  background: var(--el-bg-color-page);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: var(--el-color-primary-light-7);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.config-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--el-bg-color-page);
+  border: 1px dashed var(--el-border-color-light);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.knowledge-tabs {
+  :deep(.el-tabs__header) {
+    margin: 0;
+  }
+
+  :deep(.el-tabs__nav-wrap) {
+    &::after {
+      display: none;
+    }
+  }
+
+  :deep(.el-tabs__item) {
+    font-weight: 500;
+    padding: 0 20px;
+    height: 44px;
+    line-height: 44px;
+
+    &.is-active {
+      color: var(--el-color-primary);
+    }
+  }
+
+  :deep(.el-tabs__active-bar) {
+    background-color: var(--el-color-primary);
+    height: 3px;
+  }
+}
+
+// 响应式优化
+@media (max-width: 1024px) {
+  .k-main-content {
+    flex-direction: column;
+  }
+
+  .k-sidebar-container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .knowledge-detail-app {
+    height: calc(100vh - 120px);
+    max-height: calc(100vh - 120px);
+  }
+
+  .header-section {
+    padding: 16px;
+  }
+
+  .k-main-content {
+    gap: 16px;
+    padding: 0 16px 16px;
+  }
+}
+</style>

@@ -1,8 +1,4 @@
-export enum ProviderEnum {
-  OPENAI = 'OPENAI',
-  AZURE_OPENAI = 'AZURE_OPENAI',
-  ZHIPU = 'ZHIPU'
-}
+import { ProviderEnum } from '@/views/aigc/model/provider';
 
 export const LLMProviders: any[] = [
   {
@@ -11,13 +7,8 @@ export const LLMProviders: any[] = [
     models: ['dall-e-2', 'dall-e-3']
   },
   {
-    model: ProviderEnum.AZURE_OPENAI,
-    name: 'Azure OpenAI',
+    model: ProviderEnum.GEMINI,
+    name: 'Gemini',
     models: ['dall-e-2', 'dall-e-3']
-  },
-  {
-    model: ProviderEnum.ZHIPU,
-    name: '智谱清言',
-    models: ['cogview-3']
   }
 ];

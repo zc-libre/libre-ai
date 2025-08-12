@@ -105,6 +105,10 @@
             <artifactId>langchain4j-open-ai</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-google-ai-gemini</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>dev.langchain4j</groupId>
@@ -167,6 +171,11 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.28.17</version>
+        </dependency>
     </dependencies>
 
     <build>

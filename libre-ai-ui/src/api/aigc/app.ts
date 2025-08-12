@@ -20,12 +20,12 @@ export function getByModelId(id: string) {
   return http.request('get', `/aigc/app/byModelId/${id}`);
 }
 
-export function add(params: any) {
-  return http.request('post', '/aigc/app', { params });
+export function add(data: any) {
+  return http.request('post', '/aigc/app', { data });
 }
 
-export function update(params: any) {
-  return http.request('put', '/aigc/app', { params });
+export function update(data: any) {
+  return http.request('put', '/aigc/app', { data });
 }
 
 export function del(id: string) {

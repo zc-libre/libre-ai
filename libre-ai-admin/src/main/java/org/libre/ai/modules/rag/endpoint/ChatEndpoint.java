@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
  * @since 2024/1/30
  */
 @Slf4j
-@RequestMapping("/aigc")
+@RequestMapping("/api/aigc")
 @RestController
 @AllArgsConstructor
 public class ChatEndpoint {
@@ -65,6 +65,17 @@ public class ChatEndpoint {
 			conversationId = app.getId();
 		}
 
+		// 填充模型信息
+		if (StrUtil.isNotBlank(app.getModelId())) {
+			AigcModel model = aigcModelService.getById(app.getModelId());
+			if (model != null) {
+				// 清除敏感信息
+				model.setApiKey(null);
+				model.setSecretKey(null);
+				app.setModel(model);
+			}
+		}
+
 		if (StrUtil.isNotBlank(app.getPrompt())) {
 			// initialize chat memory
 			SystemMessage message = new SystemMessage(app.getPrompt());
@@ -87,7 +98,8 @@ public class ChatEndpoint {
 	// }
 	// if (item.getRole().equals(RoleEnum.ASSISTANT.getName())) {
 	// chatMessages.add(new AiMessage(item.getMessage()));
-	// } else {
+	// }
+	// else {
 	// chatMessages.add(new UserMessage(item.getMessage()));
 	// }
 	// });

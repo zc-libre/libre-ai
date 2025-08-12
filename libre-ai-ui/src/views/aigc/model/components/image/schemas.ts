@@ -1,5 +1,6 @@
 import type { FormSchema } from '@/components/Form';
-import { LLMProviders, ProviderEnum } from './data';
+import { LLMProviders } from './data';
+import { ProviderEnum } from '@/views/aigc/model/provider';
 import { ModelTypeEnum } from '@/api/models';
 import { isNullOrWhitespace } from '@/utils/is';
 

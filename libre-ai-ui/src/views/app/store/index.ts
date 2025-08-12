@@ -5,6 +5,7 @@ export interface AppState {
   activeMenu: string;
   info: any;
   modelId: string | null;
+  model: any;
   knowledgeIds: any[];
   knowledges: any[];
 }
@@ -15,6 +16,7 @@ export const useAppStore = defineStore('app-store', {
       activeMenu: 'setting',
       info: {},
       modelId: '',
+      model: null,
       knowledgeIds: [],
       knowledges: []
     },
@@ -44,11 +46,12 @@ export const useAppStore = defineStore('app-store', {
           return;
         }
 
+        // 只发送后端需要的字段
+        const { model, knowledges, ...baseInfo } = this.info;
         const updateData = {
-          ...this.info,
+          ...baseInfo,
           modelId: this.modelId,
-          knowledgeIds: this.knowledgeIds,
-          knowledges: this.knowledges
+          knowledgeIds: this.knowledgeIds
         };
 
         await update(updateData);

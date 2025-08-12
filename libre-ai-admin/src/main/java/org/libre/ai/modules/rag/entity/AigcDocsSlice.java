@@ -55,9 +55,9 @@ public class AigcDocsSlice implements Serializable {
 	private Integer wordNum;
 
 	/**
-	 * 是否Embedding
+	 * Embedding状态 (0: 未处理, 1: 已完成)
 	 */
-	private Boolean status = false;
+	private Integer status = 0;
 
 	/**
 	 * 创建时间

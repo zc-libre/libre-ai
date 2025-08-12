@@ -201,12 +201,16 @@
           class="optimization-panel border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
         >
           <div class="optimization-container p-4">
-            <div class="optimization-header mb-3 flex justify-between items-center">
+            <div
+              class="optimization-header mb-3 flex justify-between items-center"
+            >
               <div class="flex items-center gap-2">
                 <el-icon :size="20" color="#F56C6C">
                   <ChatDotRound />
                 </el-icon>
-                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <span
+                  class="text-sm font-semibold text-gray-700 dark:text-gray-300"
+                >
                   对话式优化
                 </span>
               </div>
@@ -226,14 +230,22 @@
                 class="chat-message mb-3 last:mb-0"
               >
                 <div class="user-message mb-2">
-                  <span class="text-xs text-gray-500 dark:text-gray-400">您:</span>
-                  <div class="mt-1 p-2 rounded bg-blue-100 dark:bg-blue-900 text-sm">
+                  <span class="text-xs text-gray-500 dark:text-gray-400"
+                    >您:</span
+                  >
+                  <div
+                    class="mt-1 p-2 rounded bg-blue-100 dark:bg-blue-900 text-sm"
+                  >
                     {{ msg.user }}
                   </div>
                 </div>
                 <div class="ai-message">
-                  <span class="text-xs text-gray-500 dark:text-gray-400">AI:</span>
-                  <div class="mt-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-sm">
+                  <span class="text-xs text-gray-500 dark:text-gray-400"
+                    >AI:</span
+                  >
+                  <div
+                    class="mt-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-sm"
+                  >
                     {{ msg.ai }}
                   </div>
                 </div>
@@ -313,7 +325,9 @@ const emit = defineEmits<{
   close: [];
   'abort-generation': [];
   'new-dashboard': [];
-  optimize: [data: { conversationId: string; userRequest: string; currentHtml: string }];
+  optimize: [
+    data: { conversationId: string; userRequest: string; currentHtml: string }
+  ];
 }>();
 
 // 状态
@@ -432,9 +446,8 @@ const generateUUID = () => {
 const onOptimizationComplete = (success: boolean, message?: string) => {
   isOptimizing.value = false;
   if (chatHistory.value.length > 0) {
-    chatHistory.value[chatHistory.value.length - 1].ai = message || (
-      success ? '优化完成！' : '优化失败，请重试'
-    );
+    chatHistory.value[chatHistory.value.length - 1].ai =
+      message || (success ? '优化完成！' : '优化失败，请重试');
   }
 };
 

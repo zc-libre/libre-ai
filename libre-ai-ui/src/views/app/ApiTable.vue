@@ -3,7 +3,7 @@ import { reactive, ref, onMounted } from 'vue';
 import SvgIcon from '@/components/ReIcon/src/iconifyIconOffline';
 import { createApi, del, list as getApiList } from '@/api/aigc/appApi';
 import { ElMessage, ElMessageBox, ElButton } from 'element-plus';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { copyToClip } from '@/utils/copy';
 import { PureTableBar } from '@/components/RePureTableBar';
 import { useColumns } from './hooks';
@@ -19,6 +19,7 @@ const props = defineProps({
 });
 
 const ms = ElMessage;
+const route = useRoute();
 const router = useRouter();
 const dataList = ref([]);
 const loading = ref(true);
@@ -31,13 +32,17 @@ async function fetchData() {
   try {
     loading.value = true;
     const res = await getApiList({
-      appId: router.currentRoute.value.params.id,
+      appId: route.params.id,
       channel: props.channel
     });
-    dataList.value = res.map(item => ({
-      ...item,
-      apiKeyDisplay: hideKey(item.apiKey)
-    }));
+    // 处理后端返回的 R 对象
+    const data = res?.result || res || [];
+    dataList.value = Array.isArray(data)
+      ? data.map(item => ({
+          ...item,
+          apiKeyDisplay: hideKey(item.apiKey)
+        }))
+      : [];
   } finally {
     loading.value = false;
   }
@@ -45,7 +50,7 @@ async function fetchData() {
 
 // 新增秘钥
 async function onSubmit() {
-  await createApi(router.currentRoute.value.params.id, props.channel);
+  await createApi(route.params.id, props.channel);
   ms.success('新增成功');
   await fetchData();
 }

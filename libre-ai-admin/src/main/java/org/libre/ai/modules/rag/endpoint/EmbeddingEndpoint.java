@@ -35,10 +35,12 @@ import org.libre.ai.modules.rag.utils.R;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.concurrent.Executors;
+
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/aigc/embedding")
+@RequestMapping("/api/aigc/embedding")
 public class EmbeddingEndpoint {
 
 	private final LangEmbeddingService langEmbeddingService;
@@ -59,7 +61,7 @@ public class EmbeddingEndpoint {
 		if (StrUtil.isBlank(data.getId())) {
 			aigcKnowledgeService.addDocs(data);
 		}
-		data.setType(EmbedConst.ORIGIN_TYPE_INPUT).setSliceStatus(false);
+		data.setType(EmbedConst.ORIGIN_TYPE_INPUT).setSliceStatus(0);
 
 		try {
 			EmbeddingResult embeddingR = langEmbeddingService
@@ -74,7 +76,7 @@ public class EmbeddingEndpoint {
 				.setName(data.getName())
 				.setContent(embeddingR.getText()));
 
-			aigcKnowledgeService.updateDocs(new AigcDocs().setId(data.getId()).setSliceStatus(true).setSliceNum(1));
+			aigcKnowledgeService.updateDocs(new AigcDocs().setId(data.getId()).setSliceStatus(1).setSliceNum(1));
 		}
 		catch (Exception e) {
 
@@ -90,16 +92,14 @@ public class EmbeddingEndpoint {
 		String userId = "admin";
 		AigcOss oss = aigcOssService.upload(file, userId);
 		AigcDocs data = new AigcDocs().setName(oss.getOriginalFilename())
-			.setSliceStatus(false)
+			.setSliceStatus(0)
 			.setUrl(oss.getUrl())
 			.setSize(file.getSize())
 			.setType(EmbedConst.ORIGIN_TYPE_UPLOAD)
 			.setKnowledgeId(knowledgeId);
 		aigcKnowledgeService.addDocs(data);
 
-		// TaskManager.submitTask(userId, Executors.callable(() -> {
-		// embeddingService.embedDocsSlice(data, oss.getUrl());
-		// }));
+		embeddingService.embedDocsSlice(data, oss.getUrl());
 		return R.ok();
 	}
 
@@ -116,15 +116,14 @@ public class EmbeddingEndpoint {
 		if (EmbedConst.ORIGIN_TYPE_UPLOAD.equals(docs.getType())) {
 			// clear before re-embed
 			embeddingService.clearDocSlices(docsId);
-			// TaskManager.submitTask(userId, Executors.callable(() -> {
-			// embeddingService.embedDocsSlice(docs, docs.getUrl());
-			// }));
+			embeddingService.embedDocsSlice(docs, docs.getUrl());
 		}
 		return R.ok();
 	}
 
 	@PostMapping("/search")
 	public R search(@RequestBody AigcDocs data) {
+		log.info("Embedding search request - knowledgeId: {}, content: {}", data.getKnowledgeId(), data.getContent());
 		return R.ok(embeddingService.search(data));
 	}
 

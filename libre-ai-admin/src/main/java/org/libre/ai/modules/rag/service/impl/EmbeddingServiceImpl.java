@@ -92,8 +92,7 @@ public class EmbeddingServiceImpl implements EmbeddingService {
 				.setContent(i.getText()));
 		});
 
-		aigcKnowledgeService
-			.updateDocs(new AigcDocs().setId(data.getId()).setSliceStatus(true).setSliceNum(list.size()));
+		aigcKnowledgeService.updateDocs(new AigcDocs().setId(data.getId()).setSliceStatus(1).setSliceNum(list.size()));
 	}
 
 	@Override
@@ -114,6 +113,7 @@ public class EmbeddingServiceImpl implements EmbeddingService {
 			TextSegment embedded = i.embedded();
 			Map<String, Object> map = embedded.metadata().toMap();
 			map.put("text", embedded.text());
+			map.put("score", i.score());
 			result.add(map);
 		});
 		return result;

@@ -2,7 +2,7 @@
 import PromptPage from '@/views/app/base/prompt/index.vue';
 import SettingsPage from '@/views/app/base/settings/index.vue';
 import Chat from '@/views/chat/Chat.vue';
-import router from '@/router';
+import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useAppStore } from '../store';
@@ -10,6 +10,7 @@ import { useChatStore } from '@/views/chat/store/useChatStore';
 import { getAppInfo } from '@/api/aigc/chat';
 import { formatToDateTime } from '@/utils/dateUtil';
 
+const route = useRoute();
 const appStore = useAppStore();
 const chatStore = useChatStore();
 const form = ref<any>({});
@@ -26,15 +27,17 @@ onMounted(async () => {
 
 async function fetchData() {
   loading.value = true;
-  const id = router.currentRoute.value.params.id;
-  const data = await getAppInfo({
+  const id = route.params.id;
+  const res = await getAppInfo({
     appId: id,
     conversationId: null
   });
+  const data = res.result || res;
   form.value = data;
   appStore.info = data;
   appStore.knowledgeIds = data.knowledgeIds == null ? [] : data.knowledgeIds;
   appStore.modelId = data.modelId == null ? null : data.modelId;
+  appStore.model = data.model == null ? null : data.model;
   appStore.knowledges = data.knowledges == null ? [] : data.knowledges;
   chatStore.modelId = data.modelId == null ? null : data.modelId;
   chatStore.appId = data.id;

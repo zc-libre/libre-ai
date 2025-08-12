@@ -3,8 +3,6 @@ server:
 
 spring:
   datasource:
-    #    driver-class-name: org.postgresql.Driver
-    #    url: jdbc:postgresql://127.0.0.1:5432/libre?reWriteBatchedInserts=true
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://127.0.0.1:5432/libre_ai
     username: libre
@@ -49,6 +47,12 @@ dashboard:
     # 是否启用结果缓存
     enable-cache: ${DASHBOARD_ENABLE_CACHE:false}
 
+# RAG模块配置
+rag:
+  embedding:
+    # 批处理大小，用于处理大文档时分批生成向量
+    batch-size: ${RAG_EMBEDDING_BATCH_SIZE:50}
+
 # 日志配置（可选）
 logging:
   level:
@@ -56,3 +60,19 @@ logging:
     dev.langchain4j: DEBUG
   pattern:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# AWS S3配置
+aws:
+  s3:
+    # AWS访问密钥ID
+    access-key-id: ${AWS_ACCESS_KEY_ID:libre}
+    # AWS访问密钥
+    secret-access-key: ${AWS_SECRET_ACCESS_KEY:***REMOVED***}
+    # S3存储桶名称
+    bucket-name: ${AWS_S3_BUCKET_NAME:libre-ai}
+    # AWS区域
+    region: ${AWS_REGION:us-east-1}
+    # 自定义端点（可选，用于兼容S3的对象存储服务如MinIO）
+    endpoint: ${AWS_S3_ENDPOINT:https://minio.zclibre.org}
+    # 是否启用路径样式访问（MinIO等需要设置为true）
+    path-style-access: ${AWS_S3_PATH_STYLE_ACCESS:true}

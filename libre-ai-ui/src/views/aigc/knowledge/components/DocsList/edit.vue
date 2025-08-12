@@ -23,7 +23,7 @@ async function show(kbId: string, id: string) {
   if (id) {
     setFieldsValue(await getById(id));
   }
-  setFieldsValue({ kbId });
+  setFieldsValue({ knowledgeId: kbId });
 }
 
 async function handleSubmit(values: any) {

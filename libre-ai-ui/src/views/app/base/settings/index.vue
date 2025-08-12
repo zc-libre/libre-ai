@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { IconifyIconOffline as SvgIcon } from '@/components/ReIcon';
+import { IconifyIconOffline } from '@/components/ReIcon';
+import { Plus, Delete } from '@element-plus/icons-vue';
 import KnowledgeList from './KnowledgeList.vue';
-import ModelSelect from '@/views/common/ModelSelect.vue';
 import { ref } from 'vue';
 import { useAppStore } from '@/views/app/store';
 import { ElCollapse, ElCollapseItem, ElButton } from 'element-plus';
@@ -11,13 +11,12 @@ const appStore = useAppStore();
 const knowledgeRef = ref();
 const activeNames = ref(['0', '1']);
 
-async function onSaveModel(val) {
-  appStore.modelId = val.id;
-  emit('update');
-}
-
 function onShowKbPane() {
-  knowledgeRef.value.show();
+  if (knowledgeRef.value && knowledgeRef.value.show) {
+    knowledgeRef.value.show();
+  } else {
+    console.error('知识库组件未正确初始化');
+  }
 }
 
 function onRemove(item) {
@@ -31,7 +30,9 @@ function onRemove(item) {
       <ElCollapseItem name="0" title="基础配置">
         <div class="flex items-center">
           <div class="w-24">对话模型：</div>
-          <ModelSelect :id="appStore.modelId" class="" @update="onSaveModel" />
+          <div class="flex-1">
+            {{ appStore.model?.name || appStore.modelId || '未设置' }}
+          </div>
         </div>
       </ElCollapseItem>
 
@@ -39,8 +40,14 @@ function onRemove(item) {
         <template #title>
           <div class="flex items-center justify-between w-full pr-4">
             <span>知识库</span>
-            <ElButton text @click.stop="onShowKbPane">
-              <SvgIcon class="text-lg" icon="ic:round-plus" />
+            <ElButton
+              text
+              type="primary"
+              size="small"
+              :icon="Plus"
+              @click.stop="onShowKbPane"
+            >
+              添加
             </ElButton>
           </div>
         </template>
@@ -54,12 +61,13 @@ function onRemove(item) {
             >
               <div class="flex items-center justify-between">
                 <div class="flex gap-1 items-center">
-                  <SvgIcon class="text-3xl" icon="flat-color-icons:document" />
+                  <IconifyIconOffline
+                    icon="flat-color-icons:document"
+                    class="text-3xl"
+                  />
                   <div>{{ item.name }}</div>
                 </div>
-                <ElButton text @click="onRemove(item)">
-                  <SvgIcon icon="gg:remove" />
-                </ElButton>
+                <ElButton text :icon="Delete" @click="onRemove(item)" />
               </div>
             </div>
           </div>

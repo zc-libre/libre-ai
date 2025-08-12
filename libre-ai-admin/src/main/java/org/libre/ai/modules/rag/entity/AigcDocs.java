@@ -57,9 +57,9 @@ public class AigcDocs implements Serializable {
 	private Integer sliceNum;
 
 	/**
-	 * 切片状态
+	 * 切片状态 (0: 未切片, 1: 已切片)
 	 */
-	private Boolean sliceStatus;
+	private Integer sliceStatus;
 
 	/**
 	 * 文档内容

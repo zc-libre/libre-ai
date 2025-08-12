@@ -54,10 +54,10 @@ export const columns: BasicColumn[] = [
         ElTag,
         {
           size: 'small',
-          type: row.sliceStatus == true ? 'success' : 'info'
+          type: row.sliceStatus == 1 ? 'success' : 'info'
         },
         {
-          default: () => (row.sliceStatus == true ? '已训练' : '未训练')
+          default: () => (row.sliceStatus == 1 ? '已向量化' : '待向量化')
         }
       );
     }
@@ -88,6 +88,12 @@ export const formSchemas: FormSchema[] = [
   {
     field: 'id',
     label: 'ID',
+    component: 'ElInput',
+    isHidden: true
+  },
+  {
+    field: 'knowledgeId',
+    label: '知识库ID',
     component: 'ElInput',
     isHidden: true
   },

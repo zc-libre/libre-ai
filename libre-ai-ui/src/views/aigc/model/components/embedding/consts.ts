@@ -11,6 +11,11 @@ export const LLMProviders: any[] = [
     ]
   },
   {
+    model: ProviderEnum.GEMINI,
+    name: 'Gemini',
+    models: ['gemini-embedding-001']
+  },
+  {
     model: ProviderEnum.OLLAMA,
     name: 'Ollama',
     models: ['text2vec-bge-large-chinese:latest']

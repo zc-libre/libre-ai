@@ -17,12 +17,15 @@
 package org.libre.ai.modules.rag.core.provider;
 
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Lists;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.googleai.GoogleAiGeminiStreamingChatModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.milvus.MilvusEmbeddingStore;
 import dev.langchain4j.store.embedding.pgvector.PgVectorEmbeddingStore;
 import dev.langchain4j.store.embedding.redis.RedisEmbeddingStore;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.libre.ai.modules.rag.core.consts.EmbedStoreEnum;
 import org.libre.ai.modules.rag.entity.AigcEmbedStore;
@@ -42,12 +45,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class EmbeddingStoreFactory {
 
-	@Autowired
-	private AigcEmbedStoreService aigcEmbedStoreService;
+	private final AigcEmbedStoreService aigcEmbedStoreService;
 
-	private final List<AigcEmbedStore> modelStore = new ArrayList<>();
+	private final List<AigcEmbedStore> modelStore = Lists.newCopyOnWriteArrayList();
 
 	private final Map<String, EmbeddingStore<TextSegment>> embedStoreMap = new ConcurrentHashMap<>();
 
@@ -55,6 +58,7 @@ public class EmbeddingStoreFactory {
 	@PostConstruct
 	public void init() {
 		modelStore.clear();
+
 		List<AigcEmbedStore> list = aigcEmbedStoreService.list();
 		list.forEach(embed -> {
 			try {
@@ -101,8 +105,7 @@ public class EmbeddingStoreFactory {
 				modelStore.add(embed);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
-				log.error("向量数据库初始化失败：[{}] --- [{}]，数据库配置信息：[{}]", embed.getName(), embed.getProvider(), embed);
+				log.error("向量数据库初始化失败：[{}] --- [{}]，数据库配置信息：[{}]", embed.getName(), embed.getProvider(), embed, e);
 			}
 		});
 

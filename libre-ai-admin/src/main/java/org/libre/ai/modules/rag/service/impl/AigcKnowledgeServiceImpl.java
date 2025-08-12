@@ -48,7 +48,7 @@ public class AigcKnowledgeServiceImpl extends ServiceImpl<AigcKnowledgeMapper, A
 	@Override
 	@Transactional
 	public void addDocsSlice(AigcDocsSlice data) {
-		data.setCreateTime(new Date()).setWordNum(data.getContent().length()).setStatus(true);
+		data.setCreateTime(new Date()).setWordNum(data.getContent().length()).setStatus(1);
 		aigcDocsSliceMapper.insert(data);
 	}
 

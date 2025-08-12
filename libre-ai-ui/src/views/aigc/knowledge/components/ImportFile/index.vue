@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import DocImport from '@/views/aigc/knowledge/components/ImportFile/components/DocImport.vue';
+import DocImport from './components/DocImport.vue';
 
 interface Props {
   data?: any;
@@ -8,8 +8,15 @@ defineProps<Props>();
 </script>
 
 <template>
-  <div v-if="data" class="flex flex-col gap-3">
-    <DocImport />
+  <div class="import-container">
+    <DocImport :data="data" />
   </div>
 </template>
-<style lang="less" scoped></style>
+
+<style lang="scss" scoped>
+.import-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+</style>

@@ -39,7 +39,7 @@ public class AigcAppController {
 	public R<AigcAppApi> getApiChanel(@PathVariable String appId) {
 		List<AigcAppApi> list = aigcAppApiService
 			.list(Wrappers.<AigcAppApi>lambdaQuery().eq(AigcAppApi::getAppId, appId));
-		return R.ok(list.isEmpty() ? null : list.get(0));
+		return R.ok(list.isEmpty() ? null : list.getFirst());
 	}
 
 	@GetMapping("/list")

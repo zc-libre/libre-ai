@@ -16,6 +16,7 @@
 
 package org.libre.ai.modules.rag.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,9 @@ public class AigcDocsController {
 
 	@GetMapping("/list")
 	public R<List<AigcDocs>> list(AigcDocs data) {
-		return R.ok(docsMapper.selectList(Wrappers.<AigcDocs>lambdaQuery().orderByDesc(AigcDocs::getCreateTime)));
+		return R.ok(docsMapper.selectList(Wrappers.<AigcDocs>lambdaQuery()
+			.eq(StringUtils.isNotBlank(data.getKnowledgeId()), AigcDocs::getKnowledgeId, data.getKnowledgeId())
+			.orderByDesc(AigcDocs::getCreateTime)));
 	}
 
 	@GetMapping("/page")

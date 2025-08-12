@@ -4,14 +4,16 @@ import { add, getById, update } from '@/api/aigc/knowledge';
 import { list as getModelStores } from '@/api/aigc/embed-store';
 import { list as getEmbedModels } from '@/api/aigc/model';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
-import { basicModal, useModal } from '@/components/Modal';
 import { isNullOrWhitespace } from '@/utils/is';
 import { ModelTypeEnum } from '@/api/models';
+import { Icon } from '@iconify/vue';
 
 const emit = defineEmits(['reload']);
 const embedStoreList = ref([]);
 const embedModelList = ref([]);
 const formRef = ref<FormInstance>();
+const dialogVisible = ref(false);
+const submitLoading = ref(false);
 
 const formData = reactive({
   id: '',
@@ -32,18 +34,10 @@ const rules: FormRules = {
   des: [{ required: true, message: '请输入知识库描述', trigger: 'blur' }]
 };
 
-const [modalRegister, { openModal, closeModal }] = useModal({
-  title: '新增/编辑知识库',
-  closable: true,
-  maskClosable: false,
-  showCloseBtn: false,
-  showSubBtn: false
-});
-
 async function show(id?: string) {
   try {
-    // 先打开模态框
-    openModal();
+    // 先打开对话框
+    dialogVisible.value = true;
 
     // 重置表单数据
     Object.assign(formData, {
@@ -56,16 +50,9 @@ async function show(id?: string) {
 
     // 加载向量数据库列表
     try {
-      const stores = await getModelStores({});
-      if (stores != null && Array.isArray(stores)) {
-        embedStoreList.value = stores.map((item: any) => {
-          return {
-            label: item.name,
-            value: item.id
-          };
-        });
-      } else if (stores?.data && Array.isArray(stores.data)) {
-        embedStoreList.value = stores.data.map((item: any) => {
+      const response = await getModelStores({});
+      if (response?.result && Array.isArray(response.result)) {
+        embedStoreList.value = response.result.map((item: any) => {
           return {
             label: item.name,
             value: item.id
@@ -82,16 +69,9 @@ async function show(id?: string) {
 
     // 加载向量模型列表
     try {
-      const models = await getEmbedModels({ type: ModelTypeEnum.EMBEDDING });
-      if (models != null && Array.isArray(models)) {
-        embedModelList.value = models.map((item: any) => {
-          return {
-            label: item.name,
-            value: item.id
-          };
-        });
-      } else if (models?.data && Array.isArray(models.data)) {
-        embedModelList.value = models.data.map((item: any) => {
+      const response = await getEmbedModels({ type: ModelTypeEnum.EMBEDDING });
+      if (response?.result && Array.isArray(response.result)) {
+        embedModelList.value = response.result.map((item: any) => {
           return {
             label: item.name,
             value: item.id
@@ -111,12 +91,12 @@ async function show(id?: string) {
     // 如果是编辑模式，加载现有数据
     if (id) {
       try {
-        const data = await getById(id);
-        Object.assign(formData, data);
+        const response = await getById(id);
+        Object.assign(formData, response.result || response);
       } catch (error) {
         console.error('加载知识库数据失败:', error);
         ElMessage.error('加载知识库数据失败');
-        closeModal();
+        dialogVisible.value = false;
         return;
       }
     }
@@ -131,7 +111,7 @@ async function show(id?: string) {
   } catch (error) {
     console.error('打开知识库编辑窗口失败:', error);
     ElMessage.error('打开编辑窗口失败，请重试');
-    closeModal();
+    dialogVisible.value = false;
   }
 }
 
@@ -140,81 +120,242 @@ async function handleSubmit() {
 
   try {
     await formRef.value.validate();
+    submitLoading.value = true;
+
     if (isNullOrWhitespace(formData.id)) {
       await add(formData);
-      closeModal();
+      dialogVisible.value = false;
       emit('reload');
-      ElMessage.success('新增成功');
+      ElMessage.success('知识库创建成功');
     } else {
       await update(formData);
-      closeModal();
+      dialogVisible.value = false;
       emit('reload');
-      ElMessage.success('修改成功');
+      ElMessage.success('知识库修改成功');
     }
-  } catch (error) {
-    ElMessage.error('请完善表单');
+  } catch (error: any) {
+    if (error?.message) {
+      ElMessage.error(error.message);
+    } else {
+      ElMessage.error('请完善表单信息');
+    }
+  } finally {
+    submitLoading.value = false;
   }
+}
+
+function handleCancel() {
+  dialogVisible.value = false;
 }
 defineExpose({ show });
 </script>
 
 <template>
-  <basicModal style="width: 35%" @register="modalRegister">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="rules"
-      label-width="120px"
-      class="mt-5"
-    >
-      <el-form-item label="知识库名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入知识库名称" />
-      </el-form-item>
+  <el-dialog
+    v-model="dialogVisible"
+    :title="formData.id ? '编辑知识库' : '创建知识库'"
+    width="600px"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    class="knowledge-edit-dialog"
+  >
+    <div class="dialog-content">
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="rules"
+        label-position="top"
+        class="knowledge-form"
+      >
+        <!-- 基础信息区域 -->
+        <div class="form-section">
+          <div class="section-header">
+            <Icon icon="tabler:info-circle" class="section-icon" />
+            <span class="section-title">基础信息</span>
+          </div>
 
-      <el-form-item label="向量数据库" prop="embedStoreId">
-        <el-select
-          v-model="formData.embedStoreId"
-          placeholder="请选择关联向量数据库"
-          style="width: 100%"
+          <el-form-item label="知识库名称" prop="name">
+            <el-input
+              v-model="formData.name"
+              placeholder="请输入知识库名称"
+              size="large"
+              clearable
+            >
+              <template #prefix>
+                <Icon icon="tabler:database" class="text-gray-400" />
+              </template>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="知识库描述" prop="des">
+            <el-input
+              v-model="formData.des"
+              type="textarea"
+              :rows="4"
+              placeholder="请输入知识库描述，帮助他人了解知识库的用途和内容"
+              show-word-limit
+              maxlength="200"
+            />
+          </el-form-item>
+        </div>
+
+        <!-- 配置信息区域 -->
+        <div class="form-section">
+          <div class="section-header">
+            <Icon icon="tabler:settings" class="section-icon" />
+            <span class="section-title">配置信息</span>
+          </div>
+
+          <el-row :gutter="16">
+            <el-col :span="12">
+              <el-form-item label="向量数据库" prop="embedStoreId">
+                <el-select
+                  v-model="formData.embedStoreId"
+                  placeholder="请选择向量数据库"
+                  size="large"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in embedStoreList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>{{ item.label }}</span>
+                      <Icon icon="tabler:database" class="text-gray-400" />
+                    </div>
+                  </el-option>
+                  <template #empty>
+                    <div class="text-center py-4 text-gray-400">
+                      <Icon icon="tabler:database-off" class="text-2xl mb-2" />
+                      <p>暂无可用的向量数据库</p>
+                    </div>
+                  </template>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item label="向量模型" prop="embedModelId">
+                <el-select
+                  v-model="formData.embedModelId"
+                  placeholder="请选择向量模型"
+                  size="large"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in embedModelList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>{{ item.label }}</span>
+                      <Icon icon="tabler:brain" class="text-gray-400" />
+                    </div>
+                  </el-option>
+                  <template #empty>
+                    <div class="text-center py-4 text-gray-400">
+                      <Icon icon="tabler:brain-off" class="text-2xl mb-2" />
+                      <p>暂无可用的向量模型</p>
+                    </div>
+                  </template>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+      </el-form>
+    </div>
+
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button size="large" @click="handleCancel">取消</el-button>
+        <el-button
+          type="primary"
+          size="large"
+          :loading="submitLoading"
+          @click="handleSubmit"
         >
-          <el-option
-            v-for="item in embedStoreList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="向量模型" prop="embedModelId">
-        <el-select
-          v-model="formData.embedModelId"
-          placeholder="请选择关联向量化模型"
-          style="width: 100%"
-        >
-          <el-option
-            v-for="item in embedModelList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="知识库描述" prop="des">
-        <el-input
-          v-model="formData.des"
-          type="textarea"
-          :rows="3"
-          placeholder="请输入知识库描述"
-        />
-      </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary" @click="handleSubmit">提交</el-button>
-      </el-form-item>
-    </el-form>
-  </basicModal>
+          {{ formData.id ? '保存修改' : '创建知识库' }}
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
-<style lang="less" scoped></style>
+<style lang="scss" scoped>
+.knowledge-edit-dialog {
+  :deep(.el-dialog__header) {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
+    margin-bottom: 0;
+  }
+
+  :deep(.el-dialog__body) {
+    padding: 0;
+  }
+
+  :deep(.el-dialog__footer) {
+    padding: 16px 24px;
+    border-top: 1px solid var(--el-border-color-lighter);
+  }
+}
+
+.dialog-content {
+  padding: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.knowledge-form {
+  .form-section {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
+  }
+
+  .section-icon {
+    font-size: 20px;
+    color: var(--el-color-primary);
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--el-text-color-primary);
+  }
+
+  :deep(.el-form-item__label) {
+    font-weight: 500;
+    color: var(--el-text-color-regular);
+    margin-bottom: 8px;
+  }
+
+  :deep(.el-select) {
+    width: 100%;
+  }
+
+  :deep(.el-textarea__inner) {
+    resize: none;
+  }
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+</style>
