@@ -76,9 +76,9 @@ public class ChatEndpoint {
 			}
 		}
 
-		if (StrUtil.isNotBlank(app.getPrompt())) {
+		if (StrUtil.isNotBlank(app.getSystemPrompt())) {
 			// initialize chat memory
-			SystemMessage message = new SystemMessage(app.getPrompt());
+			SystemMessage message = new SystemMessage(app.getSystemPrompt());
 			PersistentChatMemoryStore.init(conversationId, message);
 		}
 

@@ -3,6 +3,7 @@ package org.libre.ai.modules.dashboard.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.libre.ai.modules.dashboard.dto.*;
 import org.libre.ai.modules.dashboard.entity.DashboardTemplate;
@@ -20,12 +21,13 @@ import java.util.List;
  * @author AI Assistant
  * @since 2025-01-15
  */
-@Service
+
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class DashboardTemplateService implements IDashboardTemplateService {
 
-	@Autowired
-	private DashboardTemplateMapper templateMapper;
+	private final DashboardTemplateMapper templateMapper;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 

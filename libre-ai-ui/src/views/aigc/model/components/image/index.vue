@@ -102,11 +102,18 @@ function handleDel(record: any) {
 <template>
   <div class="image-provider-container h-full flex flex-col">
     <!-- 顶部配置区域 -->
-    <div class="config-header border-b border-gray-200 dark:border-gray-700 p-4 sm:p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900">
+    <div
+      class="config-header border-b border-gray-200 dark:border-gray-700 p-4 sm:p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900"
+    >
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-3">
-          <div class="icon-box p-2.5 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
-            <Icon icon="ph:image" class="text-xl text-purple-600 dark:text-purple-400" />
+          <div
+            class="icon-box p-2.5 bg-white dark:bg-gray-700 rounded-lg shadow-sm"
+          >
+            <Icon
+              icon="ph:image"
+              class="text-xl text-purple-600 dark:text-purple-400"
+            />
           </div>
           <div>
             <h3 class="text-lg font-bold text-gray-900 dark:text-white">
@@ -123,14 +130,12 @@ function handleDel(record: any) {
       </div>
 
       <!-- 提示信息 -->
-      <el-alert
-        class="custom-alert"
-        type="info"
-        :closable="false"
-        show-icon
-      >
+      <el-alert class="custom-alert" type="info" :closable="false" show-icon>
         <template #title>
-          <span class="text-sm">鉴于很多模型的文生图效果很差甚至没有，这里只建议使用 OpenAI 的 DALL-E 模型</span>
+          <span class="text-sm"
+            >鉴于很多模型的文生图效果很差甚至没有，这里只建议使用 OpenAI 的
+            DALL-E 模型</span
+          >
         </template>
       </el-alert>
     </div>
@@ -139,9 +144,13 @@ function handleDel(record: any) {
     <div class="config-content flex-1 flex gap-4 p-4 sm:p-6 min-h-0">
       <!-- 左侧供应商列表 -->
       <div class="provider-list-container w-64 flex-shrink-0 hidden lg:block">
-        <div class="provider-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+        <div
+          class="provider-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full"
+        >
           <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-            <h4 class="font-semibold text-gray-900 dark:text-white">模型供应商</h4>
+            <h4 class="font-semibold text-gray-900 dark:text-white">
+              模型供应商
+            </h4>
           </div>
           <div class="p-3">
             <div class="space-y-2">
@@ -154,10 +163,12 @@ function handleDel(record: any) {
                     ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 font-semibold shadow-sm'
                     : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
                 ]"
-                @click="() => {
-                  provider = item.model;
-                  reloadTable();
-                }"
+                @click="
+                  () => {
+                    provider = item.model;
+                    reloadTable();
+                  }
+                "
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
@@ -199,7 +210,9 @@ function handleDel(record: any) {
 
       <!-- 右侧表格 -->
       <div class="table-container flex-1 min-w-0">
-        <div class="model-table-wrapper bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full overflow-hidden">
+        <div
+          class="model-table-wrapper bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full overflow-hidden"
+        >
           <BasicTable
             ref="actionRef"
             :actionColumn="actionColumn"
@@ -239,7 +252,11 @@ function handleDel(record: any) {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(147, 51, 234, 0.08) 0%,
+    transparent 70%
+  );
   animation: rotate 20s linear infinite;
 }
 
@@ -301,7 +318,12 @@ function handleDel(record: any) {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(147, 51, 234, 0.1),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -320,7 +342,7 @@ function handleDel(record: any) {
   :deep(.el-table) {
     background: transparent;
     font-size: 14px;
-    
+
     .el-table__header {
       th {
         background-color: #f8fafc;
@@ -332,18 +354,18 @@ function handleDel(record: any) {
         letter-spacing: 0.5px;
       }
     }
-    
+
     .el-table__body {
       tr {
         transition: all 0.2s ease;
         cursor: pointer;
-        
+
         &:hover {
           background-color: #f8fafc !important;
           transform: translateX(2px);
         }
       }
-      
+
       td {
         padding: 14px 12px;
         font-weight: 500;
@@ -361,7 +383,7 @@ html.dark {
         color: #e2e8f0 !important;
         border-bottom-color: #475569 !important;
       }
-      
+
       .el-table__body tr:hover {
         background-color: #334155 !important;
       }
@@ -374,7 +396,7 @@ html.dark {
   .config-content {
     flex-direction: column;
   }
-  
+
   .provider-mobile-selector {
     display: block;
   }
@@ -384,7 +406,7 @@ html.dark {
   .config-header {
     padding: 1rem;
   }
-  
+
   .config-content {
     padding: 1rem;
   }

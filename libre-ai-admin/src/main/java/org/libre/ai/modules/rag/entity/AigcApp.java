@@ -47,9 +47,14 @@ public class AigcApp implements Serializable {
 	private String cover;
 
 	/**
-	 * Prompt
+	 * 系统提示词（定义AI的角色和行为）
 	 */
-	private String prompt;
+	private String systemPrompt;
+
+	/**
+	 * 用户提示词模板（可包含占位符如 {{question}}）
+	 */
+	private String userPromptTemplate;
 
 	/**
 	 * 应用描述

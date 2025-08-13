@@ -23,8 +23,6 @@ import java.util.UUID;
 /**
  * 仪表板核心业务服务
  *
- * 遵循SRP原则：统一协调各个子服务，处理核心业务逻辑 遵循DIP原则：依赖抽象服务接口 体现KISS原则：简洁的业务流程管理
- *
  * @author AI Assistant
  * @since 2025-01-15
  */
@@ -37,8 +35,6 @@ public class DashboardService implements IDashboardService {
 	private final IDashboardTemplateService templateService;
 
 	private final DashboardHistoryMapper historyMapper;
-
-	public final IDashboardStreamService streamService;
 
 	/**
 	 * 保存历史记录

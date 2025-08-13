@@ -44,12 +44,12 @@ public class DashboardPromptBuilder {
 	 * @param request 仪表板请求
 	 * @return 生成的提示词
 	 */
-	public String buildPrompt(DashboardRequest request) {
+	public String buildPrompt(DashboardRequest request, String promptTemplateStr) {
 		// 构建模板变量映射
 		Map<String, Object> variables = buildTemplateVariables(request);
 
 		// 使用 PromptTemplate 生成提示词
-		PromptTemplate promptTemplate = PromptTemplate.from(DashboardPromptTemplate.DASHBOARD_GENERATION);
+		PromptTemplate promptTemplate = PromptTemplate.from(promptTemplateStr);
 		Prompt prompt = promptTemplate.apply(variables);
 
 		String result = prompt.text();

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import PromptPage from '@/views/app/base/prompt/index.vue';
 import SettingsPage from '@/views/app/base/settings/index.vue';
 import Chat from '@/views/chat/Chat.vue';
 import { useRoute } from 'vue-router';
@@ -17,9 +16,8 @@ const form = ref<any>({});
 const loading = ref(false);
 const ms = ElMessage;
 
-// 分割面板尺寸
-const leftSize = ref(30);
-const middleSize = ref(40);
+// 分割面板尺寸 - 改为双栏布局
+const leftSize = ref(40);
 
 onMounted(async () => {
   await fetchData();
@@ -58,20 +56,8 @@ async function onSave() {
 
 <template>
   <div class="flex h-full">
-    <!-- 左侧面板 - Prompt -->
+    <!-- 左侧面板 - Settings -->
     <div class="h-full p-2" :style="{ width: leftSize + '%' }">
-      <div class="p-2 h-full bg-white rounded-lg">
-        <PromptPage @update="onSave" />
-      </div>
-    </div>
-
-    <!-- 分隔条 -->
-    <div
-      class="w-px bg-gray-300 cursor-col-resize hover:bg-gray-400 transition-colors"
-    />
-
-    <!-- 中间面板 - Settings -->
-    <div class="h-full p-2" :style="{ width: middleSize + '%' }">
       <div class="p-2 h-full bg-white rounded-lg">
         <SettingsPage @update="onSave" />
       </div>

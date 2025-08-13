@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.libre.ai.modules.dashboard.assistant.StreamDashboardAiAssistant;
 import org.libre.ai.modules.dashboard.prompt.DashboardPromptBuilder;
 import org.libre.ai.modules.dashboard.dto.DashboardRequest;
+import org.libre.ai.modules.dashboard.prompt.DashboardPromptTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -22,9 +25,13 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 public class DashboardStreamService implements IDashboardStreamService {
 
-	private final StreamDashboardAiAssistant streamDashboardAiAssistant;
 
 	private final DashboardPromptBuilder dashboardPromptBuilder;
+
+	private final DashboardAigcService dashboardAigcService;
+
+	@Value("${dashboard.use-aigc-app:false}")
+	private boolean useAigcApp;
 
 	/**
 	 * 流式生成仪表板代码
@@ -38,13 +45,7 @@ public class DashboardStreamService implements IDashboardStreamService {
 	public Flux<String> generateDashboardStream(DashboardRequest request) {
 		log.info("开始流式生成仪表板，配置: {}", request);
 
-		// 使用 DashboardPromptBuilder 构建AI提示词
-		// 该构建器内部使用 LangChain4j 的 PromptTemplate 实现模板化的提示词生成
-		String prompt = dashboardPromptBuilder.buildPrompt(request);
-		log.debug("使用 PromptTemplate 生成的提示词长度: {}", prompt.length());
-
-		// 调用AI助手进行流式生成
-		return streamDashboardAiAssistant.generateDashboardFlux(prompt);
+		return dashboardAigcService.generateDashboardWithAigcApp(request);
 	}
 
 }

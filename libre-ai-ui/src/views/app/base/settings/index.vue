@@ -5,6 +5,7 @@ import KnowledgeList from './KnowledgeList.vue';
 import { ref } from 'vue';
 import { useAppStore } from '@/views/app/store';
 import { ElCollapse, ElCollapseItem, ElButton } from 'element-plus';
+import ModelSelect from '@/views/common/ModelSelect.vue';
 
 const emit = defineEmits(['update']);
 const appStore = useAppStore();
@@ -22,6 +23,12 @@ function onShowKbPane() {
 function onRemove(item) {
   appStore.removeKnowledge(item);
 }
+
+function onModelChange(model: any) {
+  appStore.modelId = model.id;
+  appStore.model = model;
+  emit('update');
+}
 </script>
 
 <template>
@@ -31,7 +38,11 @@ function onRemove(item) {
         <div class="flex items-center">
           <div class="w-24">对话模型：</div>
           <div class="flex-1">
-            {{ appStore.model?.name || appStore.modelId || '未设置' }}
+            <ModelSelect
+              :id="appStore.modelId"
+              @update="onModelChange"
+              @load="onModelChange"
+            />
           </div>
         </div>
       </ElCollapseItem>

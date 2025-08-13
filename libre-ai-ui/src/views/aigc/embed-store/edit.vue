@@ -360,7 +360,7 @@ defineExpose({ show });
       <el-form
         ref="formRef"
         :model="formData"
-        label-width="130px"
+        label-width="140px"
         :rules="formRules"
         label-position="left"
         class="config-form"

@@ -9,11 +9,13 @@ import {
   DataAnalysis,
   Refresh,
   Check,
-  ChatLineRound
+  ChatLineRound,
+  EditPen
 } from '@element-plus/icons-vue';
 import { getAppInfo } from '@/api/aigc/chat';
 import AppBase from './base/index.vue';
 import ApiChannel from './channel-api/index.vue';
+import PromptConfig from './base/prompt/PromptConfigPage.vue';
 import { useAppStore } from './store';
 
 const route = useRoute();
@@ -32,7 +34,14 @@ const tabs = [
     label: '应用配置',
     icon: Setting,
     color: '#6366F1',
-    description: '配置应用基础信息、提示词和知识库'
+    description: '配置应用基础信息和知识库'
+  },
+  {
+    key: 'prompt',
+    label: '提示词配置',
+    icon: EditPen,
+    color: '#10B981',
+    description: '配置系统提示词和用户提示词模板'
   },
   {
     key: 'api',
@@ -242,6 +251,11 @@ function getCurrentTabInfo() {
           <!-- 应用配置 -->
           <div v-show="activeTab === 'settings'" class="config-container">
             <AppBase />
+          </div>
+
+          <!-- 提示词配置 -->
+          <div v-show="activeTab === 'prompt'" class="prompt-container">
+            <PromptConfig />
           </div>
 
           <!-- API 接入 -->
@@ -493,6 +507,7 @@ function getCurrentTabInfo() {
       padding: 0;
 
       .config-container,
+      .prompt-container,
       .api-container {
         width: 100%;
         height: 100%;

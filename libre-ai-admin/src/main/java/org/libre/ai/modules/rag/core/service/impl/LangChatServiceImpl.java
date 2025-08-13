@@ -19,6 +19,7 @@ package org.libre.ai.modules.rag.core.service.impl;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import dev.langchain4j.data.image.Image;
+import dev.langchain4j.http.client.sse.ServerSentEvent;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -43,6 +44,7 @@ import org.libre.ai.modules.rag.exception.ServiceException;
 import org.libre.ai.modules.rag.properties.ChatProperties;
 import org.libre.ai.modules.rag.utils.PromptUtil;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.function.Function;
 
@@ -71,8 +73,9 @@ public class LangChatServiceImpl implements LangChatService {
 				.chatMemoryStore(new PersistentChatMemoryStore())
 				.maxMessages(chatProperties.getMemoryMaxMessage())
 				.build());
-		if (StrUtil.isNotBlank(req.getPromptText())) {
-			aiServices.systemMessageProvider(memoryId -> req.getPromptText());
+
+		if (StrUtil.isNotBlank(req.getSystemPrompt())) {
+			aiServices.systemMessageProvider(memoryId -> req.getSystemPrompt());
 		}
 		if (streamModel != null) {
 			aiServices.streamingChatModel(streamModel);
@@ -119,9 +122,35 @@ public class LangChatServiceImpl implements LangChatService {
 
 		Agent agent = build(model, null, req).build();
 		if (req.getPrompt() == null) {
-			req.setPrompt(PromptUtil.build(req.getMessage(), req.getPromptText()));
+			// 处理用户提示词模板
+			String message = req.getMessage();
+			if (StrUtil.isNotBlank(req.getUserPromptTemplate())) {
+				// 使用用户提示词模板，替换占位符
+				message = req.getUserPromptTemplate().replace("{{question}}", message);
+			}
+			req.setPrompt(PromptUtil.build(message, ""));
 		}
 		return agent.stream(req.getConversationId(), req.getPrompt().text());
+	}
+
+	@Override
+	public Flux<String> chatFlux(ChatRequest req) {
+		StreamingChatModel model = provider.stream(req.getModelId());
+		if (StrUtil.isBlank(req.getConversationId())) {
+			req.setConversationId(IdUtil.simpleUUID());
+		}
+
+		Agent agent = build(model, null, req).build();
+		if (req.getPrompt() == null) {
+			// 处理用户提示词模板
+			String message = req.getMessage();
+			if (StrUtil.isNotBlank(req.getUserPromptTemplate())) {
+				// 使用用户提示词模板，替换占位符
+				message = req.getUserPromptTemplate().replace("{{question}}", message);
+			}
+			req.setPrompt(PromptUtil.build(message, ""));
+		}
+		return agent.streamFlux(req.getConversationId(), req.getPrompt().text());
 	}
 
 	@Override

@@ -38,37 +38,56 @@ const modelTabs = [
     <div class="header-section flex-shrink-0 w-full px-4 sm:px-6 lg:px-8 py-4">
       <div class="flex justify-between items-center">
         <div class="flex items-center gap-3">
-          <div class="header-icon bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
-            <Icon icon="carbon:machine-learning" class="text-2xl text-blue-600" />
+          <div
+            class="header-icon bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg"
+          >
+            <Icon
+              icon="carbon:machine-learning"
+              class="text-2xl text-blue-600"
+            />
           </div>
           <div>
-            <h1 class="text-xl font-bold text-gray-900 dark:text-white">AI模型管理</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">配置和管理各类AI模型供应商</p>
+            <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+              AI模型管理
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              配置和管理各类AI模型供应商
+            </p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 主要内容区域 -->
-    <div class="main-content flex-1 flex flex-col px-4 sm:px-6 lg:px-8 pb-4 min-h-0">
-      <div class="model-container flex-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+    <div
+      class="main-content flex-1 flex flex-col px-4 sm:px-6 lg:px-8 pb-4 min-h-0"
+    >
+      <div
+        class="model-container flex-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden"
+      >
         <!-- 模型类型选择器 -->
-        <div class="model-nav-section bg-gray-50 dark:bg-gray-900/50 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div
+          class="model-nav-section bg-gray-50 dark:bg-gray-900/50 px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+        >
           <div class="flex flex-wrap gap-2">
             <button
               v-for="tab in modelTabs"
               :key="tab.value"
               :class="[
                 'model-nav-btn px-4 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
-                active === tab.value 
-                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 shadow-sm' 
+                active === tab.value
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               ]"
               @click="active = tab.value"
             >
               <Icon :icon="tab.icon" :class="['text-lg', tab.color]" />
-              <span class="text-sm font-medium hidden sm:inline">{{ tab.label }}</span>
-              <span class="text-sm font-medium sm:hidden">{{ tab.shortLabel }}</span>
+              <span class="text-sm font-medium hidden sm:inline">{{
+                tab.label
+              }}</span>
+              <span class="text-sm font-medium sm:hidden">{{
+                tab.shortLabel
+              }}</span>
             </button>
           </div>
         </div>

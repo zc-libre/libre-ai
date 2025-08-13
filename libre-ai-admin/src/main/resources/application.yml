@@ -48,6 +48,9 @@ dashboard:
     max-retries: ${DASHBOARD_MAX_RETRIES:3}
     # 是否启用结果缓存
     enable-cache: ${DASHBOARD_ENABLE_CACHE:false}
+  
+  # 是否使用AIGC应用配置（集成模式）
+  use-aigc-app: ${DASHBOARD_USE_AIGC_APP:true}
 
 
 # 日志配置（可选）

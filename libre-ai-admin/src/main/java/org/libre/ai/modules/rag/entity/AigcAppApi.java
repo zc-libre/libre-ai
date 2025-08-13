@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -34,7 +35,7 @@ public class AigcAppApi implements Serializable {
 
 	private String channel;
 
-	private Date createTime;
+	private LocalDateTime createTime;
 
 	@TableField(exist = false)
 	private AigcApp app;

@@ -51,7 +51,9 @@ export const useAppStore = defineStore('app-store', {
         const updateData = {
           ...baseInfo,
           modelId: this.modelId,
-          knowledgeIds: this.knowledgeIds
+          knowledgeIds: this.knowledgeIds,
+          systemPrompt: this.info.systemPrompt,
+          userPromptTemplate: this.info.userPromptTemplate
         };
 
         await update(updateData);

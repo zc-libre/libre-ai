@@ -15,6 +15,7 @@ import org.libre.ai.modules.rag.utils.QueryPage;
 import org.libre.ai.modules.rag.utils.R;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class AigcAppApiController {
 	@GetMapping("/create/{id}/{channel}")
 	public R create(@PathVariable String id, @PathVariable String channel) {
 		String uuid = "libre" + IdUtil.simpleUUID();
-		appApiService.save(new AigcAppApi().setAppId(id).setApiKey(uuid).setChannel(channel).setCreateTime(new Date()));
+		appApiService.save(new AigcAppApi().setAppId(id).setApiKey(uuid).setChannel(channel)
+				.setCreateTime(LocalDateTime.now()));
 		appChannelStore.init();
 		return R.ok();
 	}
@@ -62,7 +64,7 @@ public class AigcAppApiController {
 
 	@PostMapping
 	public R add(@RequestBody AigcAppApi data) {
-		data.setCreateTime(new Date());
+		data.setCreateTime(LocalDateTime.now());
 		appApiService.save(data);
 		appChannelStore.init();
 		return R.ok();
