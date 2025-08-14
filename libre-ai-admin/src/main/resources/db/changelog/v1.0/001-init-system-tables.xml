@@ -29,12 +29,12 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
-        <setTableRemarks tableName="sys_dept" remarks="部门表"/>
-        <setColumnRemarks tableName="sys_dept" columnName="id" remarks="部门ID"/>
-        <setColumnRemarks tableName="sys_dept" columnName="parent_id" remarks="上级部门ID"/>
-        <setColumnRemarks tableName="sys_dept" columnName="name" remarks="部门名称"/>
-        <setColumnRemarks tableName="sys_dept" columnName="order_no" remarks="排序"/>
-        <setColumnRemarks tableName="sys_dept" columnName="des" remarks="描述"/>
+        <addRemarksToTable tableName="sys_dept" remarks="部门表"/>
+        <addRemarksToColumn tableName="sys_dept" columnName="id" remarks="部门ID"/>
+        <addRemarksToColumn tableName="sys_dept" columnName="parent_id" remarks="上级部门ID"/>
+        <addRemarksToColumn tableName="sys_dept" columnName="name" remarks="部门名称"/>
+        <addRemarksToColumn tableName="sys_dept" columnName="order_no" remarks="排序"/>
+        <addRemarksToColumn tableName="sys_dept" columnName="des" remarks="描述"/>
     </changeSet>
 
     <changeSet id="002-create-sys-role-table" author="system">
@@ -58,11 +58,11 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
-        <setTableRemarks tableName="sys_role" remarks="角色表"/>
-        <setColumnRemarks tableName="sys_role" columnName="id" remarks="主键"/>
-        <setColumnRemarks tableName="sys_role" columnName="name" remarks="角色名称"/>
-        <setColumnRemarks tableName="sys_role" columnName="code" remarks="角色别名"/>
-        <setColumnRemarks tableName="sys_role" columnName="des" remarks="描述"/>
+        <addRemarksToTable tableName="sys_role" remarks="角色表"/>
+        <addRemarksToColumn tableName="sys_role" columnName="id" remarks="主键"/>
+        <addRemarksToColumn tableName="sys_role" columnName="name" remarks="角色名称"/>
+        <addRemarksToColumn tableName="sys_role" columnName="code" remarks="角色别名"/>
+        <addRemarksToColumn tableName="sys_role" columnName="des" remarks="描述"/>
     </changeSet>
 
     <changeSet id="003-create-sys-user-table" author="system">
@@ -107,18 +107,18 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
-        <setTableRemarks tableName="sys_user" remarks="用户表"/>
-        <setColumnRemarks tableName="sys_user" columnName="id" remarks="用户ID"/>
-        <setColumnRemarks tableName="sys_user" columnName="username" remarks="用户名"/>
-        <setColumnRemarks tableName="sys_user" columnName="password" remarks="密码"/>
-        <setColumnRemarks tableName="sys_user" columnName="real_name" remarks="真实姓名"/>
-        <setColumnRemarks tableName="sys_user" columnName="sex" remarks="性别"/>
-        <setColumnRemarks tableName="sys_user" columnName="phone" remarks="手机"/>
-        <setColumnRemarks tableName="sys_user" columnName="email" remarks="邮箱"/>
-        <setColumnRemarks tableName="sys_user" columnName="dept_id" remarks="部门ID"/>
-        <setColumnRemarks tableName="sys_user" columnName="avatar" remarks="头像"/>
-        <setColumnRemarks tableName="sys_user" columnName="status" remarks="状态 0锁定 1有效"/>
-        <setColumnRemarks tableName="sys_user" columnName="create_time" remarks="创建时间"/>
+        <addRemarksToTable tableName="sys_user" remarks="用户表"/>
+        <addRemarksToColumn tableName="sys_user" columnName="id" remarks="用户ID"/>
+        <addRemarksToColumn tableName="sys_user" columnName="username" remarks="用户名"/>
+        <addRemarksToColumn tableName="sys_user" columnName="password" remarks="密码"/>
+        <addRemarksToColumn tableName="sys_user" columnName="real_name" remarks="真实姓名"/>
+        <addRemarksToColumn tableName="sys_user" columnName="sex" remarks="性别"/>
+        <addRemarksToColumn tableName="sys_user" columnName="phone" remarks="手机"/>
+        <addRemarksToColumn tableName="sys_user" columnName="email" remarks="邮箱"/>
+        <addRemarksToColumn tableName="sys_user" columnName="dept_id" remarks="部门ID"/>
+        <addRemarksToColumn tableName="sys_user" columnName="avatar" remarks="头像"/>
+        <addRemarksToColumn tableName="sys_user" columnName="status" remarks="状态 0锁定 1有效"/>
+        <addRemarksToColumn tableName="sys_user" columnName="create_time" remarks="创建时间"/>
     </changeSet>
 
     <changeSet id="004-create-sys-menu-table" author="system">
@@ -169,20 +169,20 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
-        <setTableRemarks tableName="sys_menu" remarks="菜单表"/>
-        <setColumnRemarks tableName="sys_menu" columnName="id" remarks="主键"/>
-        <setColumnRemarks tableName="sys_menu" columnName="name" remarks="菜单名称"/>
-        <setColumnRemarks tableName="sys_menu" columnName="parent_id" remarks="父级ID"/>
-        <setColumnRemarks tableName="sys_menu" columnName="path" remarks="菜单路径"/>
-        <setColumnRemarks tableName="sys_menu" columnName="perms" remarks="权限标识"/>
-        <setColumnRemarks tableName="sys_menu" columnName="type" remarks="菜单类型"/>
-        <setColumnRemarks tableName="sys_menu" columnName="order_no" remarks="排序"/>
-        <setColumnRemarks tableName="sys_menu" columnName="icon" remarks="菜单图标"/>
-        <setColumnRemarks tableName="sys_menu" columnName="component" remarks="组件路径"/>
-        <setColumnRemarks tableName="sys_menu" columnName="is_disabled" remarks="是否禁用"/>
-        <setColumnRemarks tableName="sys_menu" columnName="is_ext" remarks="是否外链"/>
-        <setColumnRemarks tableName="sys_menu" columnName="is_keepalive" remarks="是否缓存"/>
-        <setColumnRemarks tableName="sys_menu" columnName="is_show" remarks="是否显示"/>
+        <addRemarksToTable tableName="sys_menu" remarks="菜单表"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="id" remarks="主键"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="name" remarks="菜单名称"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="parent_id" remarks="父级ID"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="path" remarks="菜单路径"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="perms" remarks="权限标识"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="type" remarks="菜单类型"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="order_no" remarks="排序"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="icon" remarks="菜单图标"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="component" remarks="组件路径"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="is_disabled" remarks="是否禁用"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="is_ext" remarks="是否外链"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="is_keepalive" remarks="是否缓存"/>
+        <addRemarksToColumn tableName="sys_menu" columnName="is_show" remarks="是否显示"/>
     </changeSet>
 
     <changeSet id="005a-create-sys-user-role-table" author="system">
@@ -194,15 +194,15 @@
         <comment>创建系统关系表-用户角色</comment>
         <createTable tableName="sys_user_role">
             <column name="user_id" type="VARCHAR(50)">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="role_id" type="VARCHAR(50)">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
-        <setTableRemarks tableName="sys_user_role" remarks="用户角色关联表"/>
-        <setColumnRemarks tableName="sys_user_role" columnName="user_id" remarks="用户ID"/>
-        <setColumnRemarks tableName="sys_user_role" columnName="role_id" remarks="角色ID"/>
+        <addRemarksToTable tableName="sys_user_role" remarks="用户角色关联表"/>
+        <addRemarksToColumn tableName="sys_user_role" columnName="user_id" remarks="用户ID"/>
+        <addRemarksToColumn tableName="sys_user_role" columnName="role_id" remarks="角色ID"/>
     </changeSet>
 
     <changeSet id="005b-create-sys-role-menu-table" author="system">
@@ -214,15 +214,15 @@
         <comment>创建系统关系表-角色菜单</comment>
         <createTable tableName="sys_role_menu">
             <column name="role_id" type="VARCHAR(50)">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="menu_id" type="VARCHAR(50)">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
-        <setTableRemarks tableName="sys_role_menu" remarks="角色资源关联表"/>
-        <setColumnRemarks tableName="sys_role_menu" columnName="role_id" remarks="角色ID"/>
-        <setColumnRemarks tableName="sys_role_menu" columnName="menu_id" remarks="菜单/按钮ID"/>
+        <addRemarksToTable tableName="sys_role_menu" remarks="角色资源关联表"/>
+        <addRemarksToColumn tableName="sys_role_menu" columnName="role_id" remarks="角色ID"/>
+        <addRemarksToColumn tableName="sys_role_menu" columnName="menu_id" remarks="菜单/按钮ID"/>
     </changeSet>
 
     <changeSet id="006-create-sys-log-table" author="system">
@@ -267,18 +267,43 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
-        <setTableRemarks tableName="sys_log" remarks="日志表"/>
-        <setColumnRemarks tableName="sys_log" columnName="id" remarks="编号"/>
-        <setColumnRemarks tableName="sys_log" columnName="type" remarks="日志类型，1正常 2异常"/>
-        <setColumnRemarks tableName="sys_log" columnName="username" remarks="操作用户"/>
-        <setColumnRemarks tableName="sys_log" columnName="operation" remarks="操作描述"/>
-        <setColumnRemarks tableName="sys_log" columnName="url" remarks="请求URL"/>
-        <setColumnRemarks tableName="sys_log" columnName="time" remarks="耗时(毫秒)"/>
-        <setColumnRemarks tableName="sys_log" columnName="method" remarks="操作方法"/>
-        <setColumnRemarks tableName="sys_log" columnName="params" remarks="操作参数"/>
-        <setColumnRemarks tableName="sys_log" columnName="ip" remarks="IP地址"/>
-        <setColumnRemarks tableName="sys_log" columnName="user_agent" remarks="用户代理"/>
-        <setColumnRemarks tableName="sys_log" columnName="create_time" remarks="操作时间"/>
+        <addRemarksToTable tableName="sys_log" remarks="日志表"/>
+        <addRemarksToColumn tableName="sys_log" columnName="id" remarks="编号"/>
+        <addRemarksToColumn tableName="sys_log" columnName="type" remarks="日志类型，1正常 2异常"/>
+        <addRemarksToColumn tableName="sys_log" columnName="username" remarks="操作用户"/>
+        <addRemarksToColumn tableName="sys_log" columnName="operation" remarks="操作描述"/>
+        <addRemarksToColumn tableName="sys_log" columnName="url" remarks="请求URL"/>
+        <addRemarksToColumn tableName="sys_log" columnName="time" remarks="耗时(毫秒)"/>
+        <addRemarksToColumn tableName="sys_log" columnName="method" remarks="操作方法"/>
+        <addRemarksToColumn tableName="sys_log" columnName="params" remarks="操作参数"/>
+        <addRemarksToColumn tableName="sys_log" columnName="ip" remarks="IP地址"/>
+        <addRemarksToColumn tableName="sys_log" columnName="user_agent" remarks="用户代理"/>
+        <addRemarksToColumn tableName="sys_log" columnName="create_time" remarks="操作时间"/>
+    </changeSet>
+
+    <!-- 保护性复合主键补充，避免部分数据库/驱动对多列 primaryKey 解析差异 -->
+    <changeSet id="005c-add-pk-sys-user-role" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1)
+                FROM pg_constraint c
+                JOIN pg_class t ON t.oid = c.conrelid
+                WHERE c.contype = 'p' AND t.relname = 'sys_user_role'
+            </sqlCheck>
+        </preConditions>
+        <addPrimaryKey tableName="sys_user_role" columnNames="user_id, role_id" constraintName="pk_sys_user_role"/>
+    </changeSet>
+
+    <changeSet id="005d-add-pk-sys-role-menu" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1)
+                FROM pg_constraint c
+                JOIN pg_class t ON t.oid = c.conrelid
+                WHERE c.contype = 'p' AND t.relname = 'sys_role_menu'
+            </sqlCheck>
+        </preConditions>
+        <addPrimaryKey tableName="sys_role_menu" columnNames="role_id, menu_id" constraintName="pk_sys_role_menu"/>
     </changeSet>
 
 </databaseChangeLog>

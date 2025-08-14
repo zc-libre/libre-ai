@@ -1,8 +1,17 @@
 <template>
-  <el-form ref="formElRef" v-bind="getFormProps" :model="formModel" class="enhanced-form">
+  <el-form
+    ref="formElRef"
+    v-bind="getFormProps"
+    :model="formModel"
+    class="enhanced-form"
+  >
     <!-- 渲染分组表单 -->
     <template v-if="hasGroupedSchemas">
-      <div v-for="(group, sectionName) in groupedSchemas" :key="sectionName" class="form-section">
+      <div
+        v-for="(group, sectionName) in groupedSchemas"
+        :key="sectionName"
+        class="form-section"
+      >
         <!-- 分组标题 -->
         <div v-if="sectionName !== 'default'" class="section-header">
           <el-icon><Icon icon="ep:setting" /></el-icon>

@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "vue": "./vue/vue.esm-browser.js",
+    "@vue/compiler-sfc": "./vue/compiler-sfc.esm-browser.js",
+    "element-plus": "./element-plus/index.full.js",
+    "@element-plus/icons-vue": "./element-plus/icons.js",
+    "echarts": "./echarts/echarts.min.js",
+    "vue-echarts": "./echarts/vue-echarts.esm.min.js"
+  }
+}

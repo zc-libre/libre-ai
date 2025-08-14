@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAppStoreHook } from '@/store/modules/app';
 import { ElMessage, ElMessageBox, ElIcon } from 'element-plus';
 import {
   Plus,
@@ -16,23 +17,24 @@ import {
   DataAnalysis,
   Connection
 } from '@element-plus/icons-vue';
-import { del, list as getList } from '@/api/aigc/app';
+import { del, page as getPage } from '@/api/aigc/app';
 import AppEditModal from './AppEditModal.vue';
 
 const router = useRouter();
+const appStore = useAppStoreHook();
 const loading = ref(false);
 const apps = ref<any[]>([]);
+const pagination = ref({
+  current: 1,
+  pageSize: 10,
+  total: 0
+});
 const editModalRef = ref();
 const searchQuery = ref('');
 const viewMode = ref<'grid' | 'list'>('grid');
 
 const filteredApps = computed(() => {
-  if (!searchQuery.value) return apps.value;
-  return apps.value.filter(
-    app =>
-      app.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      app.des?.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  return apps.value;
 });
 
 onMounted(() => {
@@ -42,15 +44,32 @@ onMounted(() => {
 async function loadApps() {
   loading.value = true;
   try {
-    const result = await getList({});
+    const params = {
+      page: pagination.value.current,
+      limit: pagination.value.pageSize
+    };
+
+    // 如果有搜索条件，加入搜索参数
+    if (searchQuery.value?.trim()) {
+      params.name = searchQuery.value.trim();
+    }
+
+    const result = await getPage(params);
     if (result && typeof result === 'object') {
       const data = (result as any).result;
-      apps.value = Array.isArray(data) ? data : [];
+      if (data && data.rows && data.total !== undefined) {
+        apps.value = Array.isArray(data.rows) ? data.rows : [];
+        pagination.value.total = data.total || 0;
+      } else {
+        apps.value = [];
+        pagination.value.total = 0;
+      }
     }
   } catch (error) {
     console.error('加载应用列表失败:', error);
     ElMessage.error('加载应用列表失败');
     apps.value = [];
+    pagination.value.total = 0;
   } finally {
     loading.value = false;
   }
@@ -87,7 +106,7 @@ async function handleDelete(app: any) {
 }
 
 function handleView(app: any) {
-  router.push(`/aigc/app/${app.id}`);
+  router.push(`/base/app/${app.id}`);
 }
 
 function getModelDisplay(app: any) {
@@ -111,6 +130,22 @@ const appColors = [
 
 function getAppColor(index: number) {
   return appColors[index % appColors.length];
+}
+
+function handlePageChange(current: number) {
+  pagination.value.current = current;
+  loadApps();
+}
+
+function handleSizeChange(size: number) {
+  pagination.value.pageSize = size;
+  pagination.value.current = 1;
+  loadApps();
+}
+
+function handleSearch() {
+  pagination.value.current = 1;
+  loadApps();
 }
 </script>
 
@@ -142,6 +177,8 @@ function getAppColor(index: number) {
               :prefix-icon="Search"
               clearable
               class="search-input"
+              @keyup.enter="handleSearch"
+              @clear="handleSearch"
             />
           </div>
 
@@ -173,7 +210,9 @@ function getAppColor(index: number) {
     </div>
 
     <!-- 主内容区域 -->
-    <div class="main-content flex-1 px-4 sm:px-6 lg:px-8 pb-4 overflow-auto">
+    <div
+      class="main-content flex-1 px-4 sm:px-6 lg:px-8 pb-4 overflow-auto flex justify-between flex-col"
+    >
       <!-- 加载状态 -->
       <div v-if="loading" class="loading-container">
         <div class="app-grid">
@@ -348,6 +387,29 @@ function getAppColor(index: number) {
             创建应用
           </el-button>
         </div>
+      </div>
+
+      <!-- 分页组件 -->
+      <div
+        v-if="!loading && filteredApps.length > 0"
+        class="pagination-wrapper pt-6"
+      >
+        <el-pagination
+          v-model:current-page="pagination.current"
+          v-model:page-size="pagination.pageSize"
+          :total="pagination.total"
+          :page-sizes="[10, 20, 50, 100]"
+          :layout="
+            appStore.device === 'mobile'
+              ? 'prev, pager, next'
+              : 'total, sizes, prev, pager, next, jumper'
+          "
+          :small="appStore.device === 'mobile'"
+          background
+          class="justify-center sm:justify-end"
+          @size-change="handleSizeChange"
+          @current-change="handlePageChange"
+        />
       </div>
     </div>
 
@@ -667,6 +729,16 @@ function getAppColor(index: number) {
     .empty-action-btn {
       min-width: 120px;
     }
+  }
+}
+
+// 分页组件样式
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 640px) {
+    justify-content: flex-end;
   }
 }
 

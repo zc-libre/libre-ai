@@ -118,7 +118,7 @@ async function handleSave() {
 }
 
 function handleBack() {
-  router.push('/aigc/app');
+  router.push('/base/app');
 }
 
 function handleRefresh() {
@@ -142,7 +142,10 @@ function getCurrentTabInfo() {
 
 // 检查提示词是否有未保存的更改
 function checkPromptUnsavedChanges(): boolean {
-  if (promptConfigRef.value && typeof promptConfigRef.value.hasUnsavedChanges === 'function') {
+  if (
+    promptConfigRef.value &&
+    typeof promptConfigRef.value.hasUnsavedChanges === 'function'
+  ) {
     return promptConfigRef.value.hasUnsavedChanges();
   }
   return false;

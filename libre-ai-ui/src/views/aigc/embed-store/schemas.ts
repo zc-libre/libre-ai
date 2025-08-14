@@ -136,7 +136,9 @@ export function getSchemas(provider: string): FormSchema[] {
         field: 'databaseName',
         label: 'Redis库索引名',
         component: 'ElInput',
-        rules: [{ required: true, message: '请输入Redis库索引名', trigger: ['blur'] }],
+        rules: [
+          { required: true, message: '请输入Redis库索引名', trigger: ['blur'] }
+        ],
         componentProps: {
           placeholder: '请输入Redis库索引名'
         }
@@ -152,7 +154,9 @@ export function getSchemas(provider: string): FormSchema[] {
         field: 'databaseName',
         label: '数据库名',
         component: 'ElInput',
-        rules: [{ required: true, message: '请输入数据库名', trigger: ['blur'] }],
+        rules: [
+          { required: true, message: '请输入数据库名', trigger: ['blur'] }
+        ],
         componentProps: {
           placeholder: '请输入数据库名'
         }
@@ -177,7 +181,9 @@ export function getSchemas(provider: string): FormSchema[] {
         field: 'databaseName',
         label: '数据库名',
         component: 'ElInput',
-        rules: [{ required: true, message: '请输入数据库名', trigger: ['blur'] }],
+        rules: [
+          { required: true, message: '请输入数据库名', trigger: ['blur'] }
+        ],
         componentProps: {
           placeholder: '请输入数据库名'
         }

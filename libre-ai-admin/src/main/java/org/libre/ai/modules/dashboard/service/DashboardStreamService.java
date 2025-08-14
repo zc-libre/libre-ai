@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.libre.ai.modules.dashboard.assistant.OptimizeDashboardAiAssistant;
 import org.libre.ai.modules.dashboard.assistant.StreamDashboardAiAssistant;
 import org.libre.ai.modules.dashboard.dto.OptimizeRequest;
+import org.libre.ai.modules.dashboard.enums.CodeType;
 import org.libre.ai.modules.dashboard.prompt.DashboardPromptBuilder;
 import org.libre.ai.modules.dashboard.dto.DashboardRequest;
 import org.libre.ai.modules.dashboard.prompt.DashboardPromptTemplate;
@@ -39,6 +40,8 @@ public class DashboardStreamService implements IDashboardStreamService {
 
 	private static final String DASHBOARD_APP_ID = "1955447497396629506";
 
+	private static final String DASHBOARD_VUE_APP_ID = "1955887401035694081";
+
 	private static final String DASHBOARD_OPTIMIZE_APP_ID = "1955818928569774082";
 
 	private final AigcAppService aigcAppService;
@@ -57,12 +60,18 @@ public class DashboardStreamService implements IDashboardStreamService {
 	 */
 	@Override
 	public Flux<String> generateDashboardStream(DashboardRequest request) {
-		log.debug("使用AIGC应用配置生成Dashboard，应用ID: {}, request: {}", DASHBOARD_APP_ID, request);
+		// 根据代码类型选择相应的应用ID
+		String appId = getAppIdByCodeType(request.getCodeTypeEnum());
+		log.debug("使用AIGC应用配置生成Dashboard，代码类型: {}, 应用ID: {}, request: {}", 
+				request.getCodeTypeEnum(), appId, request);
+		
 		// 获取Dashboard应用配置
-		AigcApp dashboardApp = aigcAppService.getById(DASHBOARD_APP_ID);
+		AigcApp dashboardApp = aigcAppService.getById(appId);
 		if (Objects.isNull(dashboardApp)) {
-			log.error("Dashboard应用未找到，请确保已执行初始化脚本");
-			throw new RuntimeException("Dashboard应用未初始化，请执行dashboard_app_init.sql脚本");
+			log.error("Dashboard应用未找到，代码类型: {}, 应用ID: {}, 请确保已执行初始化脚本", 
+					request.getCodeTypeEnum(), appId);
+			throw new RuntimeException(String.format("Dashboard应用未初始化，代码类型: %s，请执行相应初始化脚本", 
+					request.getCodeTypeEnum()));
 		}
 		// 获取模型
 		String modelId = dashboardApp.getModelId();
@@ -104,6 +113,17 @@ public class DashboardStreamService implements IDashboardStreamService {
 				optimizeDashboardApp.getUserPromptTemplate());
 
 		return assistant.optimizeDashboardStream(request.getConversationId(), prompt);
+	}
+
+	/**
+	 * 根据代码类型获取应用ID
+	 * 遵循SRP原则：专注于应用ID的选择逻辑
+	 */
+	private String getAppIdByCodeType(CodeType codeType) {
+		return switch (codeType) {
+			case VUE -> DASHBOARD_VUE_APP_ID;
+			case HTML -> DASHBOARD_APP_ID;
+		};
 	}
 
 	private static void checkModel(String modelId) {

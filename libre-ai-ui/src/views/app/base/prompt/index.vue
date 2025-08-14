@@ -1,7 +1,14 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, watch, onBeforeUnmount } from 'vue';
 import { useAppStore } from '@/views/app/store';
-import { ElDivider, ElRadioGroup, ElRadioButton, ElIcon, ElMessage, ElMessageBox } from 'element-plus';
+import {
+  ElDivider,
+  ElRadioGroup,
+  ElRadioButton,
+  ElIcon,
+  ElMessage,
+  ElMessageBox
+} from 'element-plus';
 import { Edit, View, FullScreen } from '@element-plus/icons-vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import MarkdownEditor from '@/components/MarkdownEditor/index.vue';
@@ -61,7 +68,6 @@ const handleSave = async () => {
     updateSaveTime();
     ElMessage.success('保存成功');
     emit('update');
-
   } catch (error) {
     console.error('保存提示词配置失败:', error);
     ElMessage.error('保存失败，请重试');
@@ -217,7 +223,10 @@ onMounted(() => {
 onUnmounted(() => {
   // 清理事件监听器
   document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+  document.removeEventListener(
+    'webkitfullscreenchange',
+    handleFullscreenChange
+  );
   document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
   document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
   document.removeEventListener('keydown', handleKeydown);

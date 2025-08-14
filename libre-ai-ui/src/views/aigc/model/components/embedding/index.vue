@@ -5,12 +5,7 @@ import { computed, h, reactive, ref } from 'vue';
 import { getColumns } from './columns';
 import { LLMProviders } from './consts';
 import { del, list as getModels } from '@/api/aigc/model';
-import {
-  ElMessage,
-  ElMessageBox,
-  ElAlert,
-  ElButton
-} from 'element-plus';
+import { ElMessage, ElMessageBox, ElAlert, ElButton } from 'element-plus';
 import { Icon } from '@iconify/vue';
 import { Plus, Edit as EditIcon, Delete } from '@element-plus/icons-vue';
 import { ModelTypeEnum } from '@/api/models';

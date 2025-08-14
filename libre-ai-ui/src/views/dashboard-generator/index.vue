@@ -13,9 +13,12 @@
           <el-step title="生成看板" description="AI 智能生成看板代码" />
         </el-steps>
 
-        <!-- 重置按钮（只在有配置数据时显示） -->
+        <!-- 新建看板和历史记录按钮（只在第5步显示） -->
         <div
-          v-if="store.currentStep > 1 || store.wizardData.generatedResult"
+          v-if="
+            store.currentStep === 5 &&
+            (store.currentStep > 1 || store.wizardData.generatedResult)
+          "
           class="flex gap-2"
         >
           <el-tooltip content="保存当前配置并创建新看板" placement="bottom">
@@ -75,8 +78,8 @@
         <PreviewPanel
           ref="previewPanelRef"
           :dashboard-config="store.wizardData"
-          :generated-html="generatedDashboard"
-          :streaming-html="store.streamingCode"
+          :generated-code="generatedDashboard"
+          :streaming-code="store.streamingCode"
           :is-streaming="store.isStreaming"
           @close="store.setShowPreview(false)"
           @abort-generation="handleAbortGeneration"
@@ -203,12 +206,12 @@ const handleNewDashboard = () => {
 const handleOptimize = async (data: {
   conversationId: string;
   userRequest: string;
-  currentHtml: string;
+  currentCode: string;
 }) => {
   // 调用优化功能
   await optimizeDashboard(
     data.conversationId,
-    data.currentHtml,
+    data.currentCode,
     data.userRequest,
     // onChunk - 接收优化的代码片段
     (chunk: string) => {
@@ -241,11 +244,9 @@ watch(
   newResult => {
     if (newResult?.html) {
       generatedDashboard.value = newResult.html;
-      console.log('Generated result updated, length:', newResult.html.length);
     } else {
       // 当结果被清空时，也要清空显示
       generatedDashboard.value = '';
-      console.log('Generated result cleared');
     }
   }
 );

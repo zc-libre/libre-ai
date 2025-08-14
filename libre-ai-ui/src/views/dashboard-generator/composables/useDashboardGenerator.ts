@@ -114,6 +114,7 @@ export const useDashboardGenerator = () => {
         },
         components: wizardData.componentIds,
         componentConfigs: componentConfigs,
+        codeType: generationOptions.codeType || 'html', // 添加代码类型字段
         options: {
           responsive: generationOptions.responsive !== false,
           includeData: generationOptions.includeData !== false,
@@ -167,6 +168,8 @@ export const useDashboardGenerator = () => {
           generationResult.value = result;
           isStreaming.value = false;
           store.setIsStreaming(false);
+          // 清空流式代码，因为生成已完成
+          store.setStreamingCode('');
 
           // 更新进度 - 保存历史
           generationProgress.value = {
@@ -231,6 +234,8 @@ export const useDashboardGenerator = () => {
       isStreaming.value = false;
       store.setIsStreaming(false);
       store.setGenerating(false);
+      // 清空流式代码
+      store.setStreamingCode('');
 
       // 判断是否可以重试
       if (retryCount.value < maxRetries) {
@@ -284,6 +289,7 @@ export const useDashboardGenerator = () => {
           }
         },
         components: wizardData.componentIds,
+        codeType: generationOptions.codeType || 'html', // 添加代码类型字段
         options: {
           responsive: generationOptions.responsive !== false,
           includeData: generationOptions.includeData !== false,
@@ -446,6 +452,8 @@ export const useDashboardGenerator = () => {
         (fullContent: string) => {
           // 优化完成
           store.setIsStreaming(false);
+          // 清空流式代码，因为优化已完成
+          store.setStreamingCode('');
 
           // 更新生成结果
           if (fullContent) {
@@ -474,6 +482,8 @@ export const useDashboardGenerator = () => {
         (error: Error) => {
           console.error('优化错误:', error);
           store.setIsStreaming(false);
+          // 清空流式代码
+          store.setStreamingCode('');
 
           if (error.name !== 'AbortError') {
             ElMessage.error(error.message || '优化失败，请重试');
@@ -486,6 +496,8 @@ export const useDashboardGenerator = () => {
     } catch (error: any) {
       console.error('优化错误:', error);
       store.setIsStreaming(false);
+      // 清空流式代码
+      store.setStreamingCode('');
 
       if (error.name !== 'AbortError') {
         ElMessage.error(error.message || '优化失败，请重试');

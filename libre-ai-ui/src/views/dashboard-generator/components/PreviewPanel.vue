@@ -17,6 +17,29 @@
           <div
             class="preview-controls flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center"
           >
+            <!-- 代码类型切换（只在代码生成完成后显示） -->
+            <el-button-group
+              v-if="generatedHtml && !isStreaming"
+              class="code-type-switcher"
+            >
+              <el-button
+                :type="codeType === 'html' ? 'primary' : 'default'"
+                :icon="Document"
+                size="small"
+                @click="codeType = 'html'"
+              >
+                HTML
+              </el-button>
+              <el-button
+                :type="codeType === 'vue' ? 'primary' : 'default'"
+                :icon="View"
+                size="small"
+                @click="codeType = 'vue'"
+              >
+                Vue
+              </el-button>
+            </el-button-group>
+
             <!-- 视图切换按钮组（只在代码生成完成后显示） -->
             <el-button-group
               v-if="generatedHtml && !isStreaming"
@@ -97,7 +120,8 @@
         <!-- 代码视图 -->
         <div v-if="viewMode === 'code' || isStreaming" class="code-view h-full">
           <CodeStreamPreview
-            :code="streamingHtml || generatedHtml || ''"
+            :code="isStreaming ? streamingHtml : generatedHtml"
+            :language="codeType === 'vue' ? 'vue' : 'html'"
             :is-streaming="isStreaming"
             @abort="$emit('abort-generation')"
             @preview="handleSwitchToPreview"
@@ -138,7 +162,10 @@
             >
               <DashboardPreview
                 :config="dashboardConfig"
-                :generated-html="generatedHtml"
+                :generated-code="generatedHtml"
+                :code-type="codeType"
+                @compilation-complete="onCompilationComplete"
+                @runtime-error="onRuntimeError"
               />
             </div>
           </div>
@@ -291,7 +318,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import {
   Document,
@@ -313,20 +340,34 @@ import CodeStreamPreview from './CodeStreamPreview.vue';
 // Props
 interface Props {
   dashboardConfig: any;
-  generatedHtml?: string;
-  streamingHtml?: string; // 流式生成的HTML
+  generatedCode?: string; // 支持HTML和Vue代码
+  streamingCode?: string; // 流式生成的代码
   isStreaming?: boolean; // 是否正在流式生成
+  defaultCodeType?: 'html' | 'vue'; // 默认代码类型
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  defaultCodeType: 'html'
+});
+
+// 为了兼容现有代码，保留原有属性的计算属性
+const generatedHtml = computed(() => {
+  return props.generatedCode || '';
+});
+
+const streamingHtml = computed(() => {
+  return props.streamingCode || '';
+});
 
 // Emits
 const emit = defineEmits<{
   close: [];
   'abort-generation': [];
   'new-dashboard': [];
+  'compilation-complete': [success: boolean, error?: string];
+  'runtime-error': [error: Error];
   optimize: [
-    data: { conversationId: string; userRequest: string; currentHtml: string }
+    data: { conversationId: string; userRequest: string; currentCode: string }
   ];
 }>();
 
@@ -335,6 +376,7 @@ const viewMode = ref<'code' | 'preview'>('code'); // 默认显示代码视图
 const previewMode = ref('desktop');
 const isFullscreen = ref(false);
 const previewPanelRef = ref<HTMLElement>();
+const codeType = ref<'html' | 'vue'>(props.defaultCodeType); // 代码类型状态
 
 // 优化相关状态
 const showOptimization = ref(false);
@@ -365,7 +407,7 @@ watch(
 
 // 监听生成完成
 watch(
-  () => props.generatedHtml,
+  () => generatedHtml.value,
   newVal => {
     if (newVal && !props.isStreaming) {
       // 生成完成后，自动切换到预览视图
@@ -419,7 +461,7 @@ const sendOptimization = async () => {
   emit('optimize', {
     conversationId: conversationId.value,
     userRequest: optimizationRequest.value,
-    currentHtml: props.generatedHtml
+    currentCode: generatedHtml.value
   });
 
   // 添加到对话历史
@@ -440,6 +482,16 @@ const generateUUID = () => {
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
+};
+
+// Vue组件编译完成处理
+const onCompilationComplete = (success: boolean, error?: string) => {
+  emit('compilation-complete', success, error);
+};
+
+// Vue组件运行时错误处理
+const onRuntimeError = (error: Error) => {
+  emit('runtime-error', error);
 };
 
 // 接收优化完成事件（由父组件调用）

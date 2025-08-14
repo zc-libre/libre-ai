@@ -121,7 +121,6 @@ const actionColumn = reactive({
     });
   }
 });
-
 </script>
 
 <template>

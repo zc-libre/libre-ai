@@ -20,4 +20,10 @@
     <!-- Dashboard模板初始化数据 -->
     <include file="db/changelog/v1.0/005-init-dashboard-data.xml"/>
 
+    <!-- 系统菜单初始化数据 -->
+    <include file="db/changelog/v1.0/006-init-sys-menu-data.xml"/>
+
+    <!-- 系统角色-菜单关联初始化数据 -->
+    <include file="db/changelog/v1.0/007-init-sys-role-menu-data.xml"/>
+
 </databaseChangeLog>

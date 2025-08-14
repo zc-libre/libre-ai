@@ -57,7 +57,10 @@ const getIconName = (icon: any) => {
 
 const getIconComponent = (icon: any) => {
   // 如果已经是 Element Plus 图标组件，直接返回
-  if (typeof icon === 'function' || (typeof icon === 'object' && (icon.__name || icon.name))) {
+  if (
+    typeof icon === 'function' ||
+    (typeof icon === 'object' && (icon.__name || icon.name))
+  ) {
     return icon;
   }
 

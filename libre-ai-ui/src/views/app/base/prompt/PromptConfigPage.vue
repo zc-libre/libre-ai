@@ -1,8 +1,23 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, watch, onBeforeUnmount } from 'vue';
 import { useAppStore } from '@/views/app/store';
-import { ElRadioGroup, ElRadioButton, ElIcon, ElCard, ElMessage, ElButton, ElMessageBox } from 'element-plus';
-import { Edit, View, FullScreen, Document, Check, EditPen } from '@element-plus/icons-vue';
+import {
+  ElRadioGroup,
+  ElRadioButton,
+  ElIcon,
+  ElCard,
+  ElMessage,
+  ElButton,
+  ElMessageBox
+} from 'element-plus';
+import {
+  Edit,
+  View,
+  FullScreen,
+  Document,
+  Check,
+  EditPen
+} from '@element-plus/icons-vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import MarkdownEditor from '@/components/MarkdownEditor/index.vue';
 
@@ -61,7 +76,6 @@ const handleSave = async () => {
     updateSaveTime();
     ElMessage.success('保存成功');
     emit('update');
-
   } catch (error) {
     console.error('保存提示词配置失败:', error);
     ElMessage.error('保存失败，请重试');
@@ -208,7 +222,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+  document.removeEventListener(
+    'webkitfullscreenchange',
+    handleFullscreenChange
+  );
   document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
   document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
   document.removeEventListener('keydown', handleKeydown);
@@ -254,11 +271,11 @@ defineExpose({
         </div>
         <div class="header-actions">
           <!-- 保存状态指示 -->
-          <div class="save-status" v-if="hasUnsavedChanges">
+          <div v-if="hasUnsavedChanges" class="save-status">
             <el-icon color="#e6a23c"><EditPen /></el-icon>
             <span>有未保存的更改</span>
           </div>
-          <div class="save-status" v-else-if="lastSaveTime">
+          <div v-else-if="lastSaveTime" class="save-status">
             <el-icon color="#67c23a"><Check /></el-icon>
             <span>已保存 {{ lastSaveTime }}</span>
           </div>
@@ -277,104 +294,105 @@ defineExpose({
       </div>
       <!-- 提示词配置面板 -->
       <div class="prompt-config-panels">
+        <!-- 系统提示词配置卡片 -->
+        <ElCard class="config-card system-prompt-card" shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <div class="header-left">
+                <h3 class="card-title">系统提示词</h3>
+                <p class="card-subtitle">
+                  定义AI助手的角色、能力和行为规范，这将作为每次对话的系统级指令
+                </p>
+              </div>
+              <div class="header-right">
+                <ElRadioGroup
+                  v-model="systemPromptMode"
+                  size="small"
+                  @change="handleSystemModeChange"
+                >
+                  <ElRadioButton value="preview">
+                    <ElIcon><View /></ElIcon>
+                    预览
+                  </ElRadioButton>
+                  <ElRadioButton value="edit">
+                    <ElIcon><Edit /></ElIcon>
+                    编辑
+                  </ElRadioButton>
+                  <ElRadioButton value="fullscreen">
+                    <ElIcon><FullScreen /></ElIcon>
+                    全屏
+                  </ElRadioButton>
+                </ElRadioGroup>
+              </div>
+            </div>
+          </template>
 
-      <!-- 系统提示词配置卡片 -->
-      <ElCard class="config-card system-prompt-card" shadow="hover">
-        <template #header>
-          <div class="card-header">
-            <div class="header-left">
-              <h3 class="card-title">系统提示词</h3>
-              <p class="card-subtitle">
-                定义AI助手的角色、能力和行为规范，这将作为每次对话的系统级指令
-              </p>
-            </div>
-            <div class="header-right">
-              <ElRadioGroup
-                v-model="systemPromptMode"
-                size="small"
-                @change="handleSystemModeChange"
-              >
-                <ElRadioButton value="preview">
-                  <ElIcon><View /></ElIcon>
-                  预览
-                </ElRadioButton>
-                <ElRadioButton value="edit">
-                  <ElIcon><Edit /></ElIcon>
-                  编辑
-                </ElRadioButton>
-                <ElRadioButton value="fullscreen">
-                  <ElIcon><FullScreen /></ElIcon>
-                  全屏
-                </ElRadioButton>
-              </ElRadioGroup>
-            </div>
+          <div class="editor-container">
+            <MarkdownEditor
+              ref="systemEditorRef"
+              v-model="localSystemPrompt"
+              :mode="
+                systemPromptMode === 'fullscreen' ? 'split' : systemPromptMode
+              "
+              :height="'400px'"
+              :placeholder="'例如：你是一位专业的客服助手，需要礼貌、耐心地回答用户的问题...'"
+              :toolbars-exclude="['github', 'mermaid', 'katex', 'htmlPreview']"
+              @save="handleSystemPromptSave"
+              @change="handleContentChange"
+            />
           </div>
-        </template>
+        </ElCard>
 
-        <div class="editor-container">
-          <MarkdownEditor
-            ref="systemEditorRef"
-            v-model="localSystemPrompt"
-            :mode="systemPromptMode === 'fullscreen' ? 'split' : systemPromptMode"
-            :height="'400px'"
-            :placeholder="'例如：你是一位专业的客服助手，需要礼貌、耐心地回答用户的问题...'"
-            :toolbars-exclude="['github', 'mermaid', 'katex', 'htmlPreview']"
-            @save="handleSystemPromptSave"
-            @change="handleContentChange"
-          />
-        </div>
-      </ElCard>
+        <!-- 用户提示词模板配置卡片 -->
+        <ElCard class="config-card user-prompt-card" shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <div class="header-left">
+                <h3 class="card-title">用户提示词模板（可选）</h3>
+                <p class="card-subtitle">
+                  定义用户输入的格式化模板，使用
+                  <code class="inline-code" v-html="'{{question}}'" />
+                  作为用户输入的占位符。如果不配置，用户输入将直接发送给AI。
+                </p>
+              </div>
+              <div class="header-right">
+                <ElRadioGroup
+                  v-model="userPromptMode"
+                  size="small"
+                  @change="handleUserModeChange"
+                >
+                  <ElRadioButton value="preview">
+                    <ElIcon><View /></ElIcon>
+                    预览
+                  </ElRadioButton>
+                  <ElRadioButton value="edit">
+                    <ElIcon><Edit /></ElIcon>
+                    编辑
+                  </ElRadioButton>
+                  <ElRadioButton value="fullscreen">
+                    <ElIcon><FullScreen /></ElIcon>
+                    全屏
+                  </ElRadioButton>
+                </ElRadioGroup>
+              </div>
+            </div>
+          </template>
 
-      <!-- 用户提示词模板配置卡片 -->
-      <ElCard class="config-card user-prompt-card" shadow="hover">
-        <template #header>
-          <div class="card-header">
-            <div class="header-left">
-              <h3 class="card-title">用户提示词模板（可选）</h3>
-              <p class="card-subtitle">
-                定义用户输入的格式化模板，使用
-                <code class="inline-code" v-html="'{{question}}'" />
-                作为用户输入的占位符。如果不配置，用户输入将直接发送给AI。
-              </p>
-            </div>
-            <div class="header-right">
-              <ElRadioGroup
-                v-model="userPromptMode"
-                size="small"
-                @change="handleUserModeChange"
-              >
-                <ElRadioButton value="preview">
-                  <ElIcon><View /></ElIcon>
-                  预览
-                </ElRadioButton>
-                <ElRadioButton value="edit">
-                  <ElIcon><Edit /></ElIcon>
-                  编辑
-                </ElRadioButton>
-                <ElRadioButton value="fullscreen">
-                  <ElIcon><FullScreen /></ElIcon>
-                  全屏
-                </ElRadioButton>
-              </ElRadioGroup>
-            </div>
+          <div class="editor-container">
+            <MarkdownEditor
+              ref="userEditorRef"
+              v-model="localUserPromptTemplate"
+              :mode="userPromptMode === 'fullscreen' ? 'split' : userPromptMode"
+              :height="'300px'"
+              :placeholder="'例如：请基于以下问题提供详细解答：{{question}}'"
+              :toolbars-exclude="['github', 'mermaid', 'katex', 'htmlPreview']"
+              @save="handleUserPromptSave"
+              @change="handleContentChange"
+            />
           </div>
-        </template>
-
-        <div class="editor-container">
-          <MarkdownEditor
-            ref="userEditorRef"
-            v-model="localUserPromptTemplate"
-            :mode="userPromptMode === 'fullscreen' ? 'split' : userPromptMode"
-            :height="'300px'"
-            :placeholder="'例如：请基于以下问题提供详细解答：{{question}}'"
-            :toolbars-exclude="['github', 'mermaid', 'katex', 'htmlPreview']"
-            @save="handleUserPromptSave"
-            @change="handleContentChange"
-          />
-        </div>
-      </ElCard>
-
-      </div> <!-- 结束 prompt-config-panels -->
+        </ElCard>
+      </div>
+      <!-- 结束 prompt-config-panels -->
     </div>
   </div>
 </template>

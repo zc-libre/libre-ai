@@ -123,7 +123,9 @@ const previewTheme = computed(() => (isDark.value ? 'vuepress' : 'default'));
 const codeTheme = computed(() => (isDark.value ? 'atom' : 'a11y'));
 
 // 编辑器唯一ID
-const editorId = computed(() => `md-editor-${Math.random().toString(36).substr(2, 9)}`);
+const editorId = computed(
+  () => `md-editor-${Math.random().toString(36).substr(2, 9)}`
+);
 
 // 监听外部值变化 - 确保新值始终为字符串
 watch(
@@ -229,7 +231,11 @@ defineExpose({ togglePageFullscreen, toggleFullscreen });
 <template>
   <div class="markdown-editor-wrapper">
     <!-- 纯预览模式 - 使用独立的轻量级预览组件 -->
-    <div v-if="mode === 'preview'" class="preview-only-container" :style="{ height }">
+    <div
+      v-if="mode === 'preview'"
+      class="preview-only-container"
+      :style="{ height }"
+    >
       <div class="preview-content-wrapper">
         <MdPreview
           :id="editorId"
@@ -246,9 +252,9 @@ defineExpose({ togglePageFullscreen, toggleFullscreen });
     <!-- 编辑模式和分屏模式 - 统一使用一个组件，通过动态属性控制 -->
     <MdEditor
       v-else
+      :id="editorId"
       ref="mdEditorRef"
       v-model="content"
-      :id="editorId"
       :language="'zh-CN'"
       :theme="theme"
       :preview-theme="previewTheme"

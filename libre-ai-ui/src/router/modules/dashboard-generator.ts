@@ -3,7 +3,7 @@ export default {
   redirect: '/dashboard-generator/index',
   meta: {
     icon: 'ri:dashboard-3-line',
-    title: '仪表盘生成器',
+    title: '看板生成',
     rank: 2
   },
   children: [
@@ -12,7 +12,7 @@ export default {
       name: 'DashboardGenerator',
       component: () => import('@/views/dashboard-generator/index.vue'),
       meta: {
-        title: '仪表盘生成器',
+        title: '看板生成器',
         keepAlive: true
       }
     }

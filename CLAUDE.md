@@ -43,10 +43,16 @@ cd libre-ai-admin
 mvn spring-boot:run
 
 # 运行测试
-mvn test
+mvn test                                    # 运行所有测试
+mvn test -Dtest=DashboardServiceTest       # 运行单个测试类
+mvn test -Dtest=*Service*Test              # 运行匹配模式的测试
 
 # 单独编译某个模块
 mvn -pl libre-ai-admin clean compile
+
+# 数据库管理
+mvn liquibase:update                       # 执行数据库迁移
+mvn liquibase:rollback -Dliquibase.rollbackCount=1  # 回滚最后一次迁移
 ```
 
 ### 前端开发
@@ -67,6 +73,10 @@ pnpm lint              # 运行所有lint检查
 pnpm lint:eslint      # ESLint检查
 pnpm lint:prettier    # Prettier格式化
 pnpm typecheck        # TypeScript类型检查
+
+# Vue组件预览功能（首次使用或更新依赖时运行）
+pnpm run build:preview-libs    # 构建离线预览依赖库
+pnpm run build:tailwind-full   # 构建完整TailwindCSS
 ```
 
 ## 架构设计原则
@@ -77,16 +87,28 @@ pnpm typecheck        # TypeScript类型检查
 - **Mapper层**：MyBatis-Plus数据访问
 - **Entity层**：数据库实体，使用`@TableName`注解
 
-### 模块设计
-1. **Dashboard模块**：4步向导式AI仪表板生成
-   - `DashboardGeneratorController` - API入口
-   - `DashboardGeneratorService` - 生成逻辑
-   - 支持流式响应（Flux<String>）
+### 核心模块设计
 
-2. **RAG模块**：知识库和对话管理
-   - 知识库管理：文档上传、切片、向量化
-   - 对话管理：多轮对话、记忆存储
-   - 应用配置：多应用隔离
+#### Dashboard模块 (`modules/dashboard/`)
+智能仪表板代码生成系统，采用4步向导式设计：
+- **控制器层**：`DashboardController` - REST API入口，`DashboardStreamController` - 流式响应
+- **服务层**：`DashboardService` - 核心生成逻辑，`DashboardStreamService` - 流式生成服务
+- **AI助手**：`StreamDashboardAiAssistant` - LangChain4j集成，支持多AI模型
+- **数据管理**：历史记录存储、模板配置管理
+- **流式响应**：基于WebFlux的Flux<String>实时生成
+
+#### RAG模块 (`modules/rag/`)
+检索增强生成系统，提供企业级知识库能力：
+- **知识库管理**：文档上传、切片处理、向量化存储
+- **对话管理**：多轮对话、上下文记忆、会话持久化
+- **多应用支持**：应用隔离、权限控制、配置管理
+- **多模型集成**：支持OpenAI、Cohere、MCP等多种AI提供商
+- **向量存储**：PGVector、Redis、Milvus多种选择
+
+#### 模块交互
+- Dashboard模块可集成RAG应用配置（通过`dashboard.use-aigc-app`配置）
+- 共享LangChain4j基础设施和模型配置
+- 统一的异常处理和日志管理
 
 ## 数据库规范
 
@@ -159,13 +181,29 @@ public Flux<String> streamResponse() {
 
 ## 开发注意事项
 
+### 代码规范和提交
 1. **代码提交前**必须运行`mvn validate`确保格式正确
-2. 新增API接口使用`@Tag`注解添加Swagger文档
-3. 复杂JSON配置使用PostgreSQL的JSONB类型存储
-4. AI生成内容使用流式响应（Flux<String>）提升用户体验
-5. 敏感配置通过环境变量注入，不要硬编码
-6. 前端使用pnpm作为包管理器，不要使用npm或yarn
-7. 数据库连接默认配置：PostgreSQL 端口5432，数据库名libre_ai
+2. 使用Spring JavaFormat插件统一代码格式
+3. 新增API接口使用`@Tag`注解添加Swagger文档
+4. 实体类继承`BaseEntity`获得审计字段（创建时间、更新时间等）
+
+### 技术选择和最佳实践
+5. 复杂JSON配置使用PostgreSQL的JSONB类型存储，并创建GIN索引
+6. AI生成内容使用流式响应（Flux<String>）提升用户体验
+7. MyBatis-Plus查询优先使用LambdaQueryWrapper避免硬编码字段名
+8. 统一使用Hutool工具类库处理常见操作
+9. Lombok注解简化样板代码（@Data、@Slf4j、@Builder等）
+
+### 安全和配置
+10. 敏感配置通过环境变量注入，不要硬编码（特别注意API密钥）
+11. 数据库连接默认配置：PostgreSQL 端口5432，数据库名libre_ai
+12. 开发环境使用application-dev.yml，避免在主配置文件中写死敏感信息
+
+### 前端特定注意事项
+13. 前端使用pnpm作为包管理器，不要使用npm或yarn
+14. Node版本要求：^18.18.0 || ^20.9.0 || >=22.0.0
+15. Vue组件预览功能首次使用需运行`pnpm run build:preview-libs`构建依赖
+16. 修改UI组件时检查Element Plus版本兼容性
 
 ## 部署相关
 
@@ -185,3 +223,39 @@ docker run -p 9191:9191 \
 ### 健康检查端点
 - `/actuator/health` - 应用健康状态
 - `/actuator/info` - 应用信息
+
+## 调试和故障排除
+
+### 常见开发问题
+
+#### 后端问题
+- **LangChain4j调用失败**：检查OpenAI API密钥和网络连接
+- **数据库连接失败**：确认PostgreSQL服务运行，检查连接配置
+- **Maven格式验证失败**：运行`mvn spring-javaformat:apply`自动格式化
+- **流式响应中断**：检查AI调用超时配置和网络稳定性
+
+#### 前端问题  
+- **Vue组件预览不显示**：运行`pnpm run build:preview-libs`构建依赖库
+- **TailwindCSS样式不生效**：检查类名是否正确，运行`pnpm run build:tailwind-full`
+- **Element Plus组件异常**：确认版本兼容性，检查主题配置
+- **开发服务器启动失败**：检查Node版本，清理缓存`pnpm clean:cache`
+
+### 日志和监控
+```bash
+# 查看后端日志
+tail -f libre-ai-admin/logs/application.log
+
+# 开启调试模式
+export SPRING_PROFILES_ACTIVE=dev
+export LOGGING_LEVEL_ORG_LIBRE_AI=DEBUG
+
+# 前端调试
+# 在浏览器控制台中设置
+localStorage.setItem('debug', 'true')
+```
+
+### 性能分析
+- Dashboard生成接口预期响应时间：< 30秒
+- RAG对话接口预期响应时间：< 5秒  
+- 前端预览编译时间：< 2秒
+- 数据库查询优化：使用EXPLAIN分析慢查询

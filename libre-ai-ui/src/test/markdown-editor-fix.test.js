@@ -14,7 +14,7 @@ describe('MarkdownEditor null值防护测试', () => {
         modelValue: null
       }
     });
-    
+
     // 验证组件能正常渲染，不会抛出错误
     expect(wrapper.exists()).toBe(true);
   });
@@ -25,7 +25,7 @@ describe('MarkdownEditor null值防护测试', () => {
         modelValue: undefined
       }
     });
-    
+
     // 验证组件能正常渲染，不会抛出错误
     expect(wrapper.exists()).toBe(true);
   });
@@ -36,7 +36,7 @@ describe('MarkdownEditor null值防护测试', () => {
         modelValue: null
       }
     });
-    
+
     // 验证内部content值被正确转换为空字符串
     const vm = wrapper.vm;
     expect(vm.content).toBe('');
@@ -49,7 +49,7 @@ describe('MarkdownEditor null值防护测试', () => {
         modelValue: testContent
       }
     });
-    
+
     const vm = wrapper.vm;
     expect(vm.content).toBe(testContent);
   });

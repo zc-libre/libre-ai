@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.libre.ai.modules.dashboard.enums.CodeType;
 import org.libre.ai.modules.dashboard.enums.DashboardLayout;
 import org.libre.ai.modules.dashboard.enums.DashboardPurpose;
 
@@ -84,11 +85,24 @@ public class DashboardRequest {
 	private GenerationOptions options;
 
 	/**
+	 * 代码类型（HTML/Vue）
+	 */
+	@Builder.Default
+	private String codeType = CodeType.HTML.getCode();
+
+	/**
 	 * 获取布局显示文本
 	 */
 	public String getLayoutText() {
 		DashboardLayout layoutEnum = DashboardLayout.fromCode(layout);
 		return layoutEnum != null ? layoutEnum.getName() : layout;
+	}
+
+	/**
+	 * 获取代码类型枚举
+	 */
+	public CodeType getCodeTypeEnum() {
+		return CodeType.fromCode(codeType);
 	}
 
 }

@@ -21,6 +21,7 @@ export type DashboardRequest = {
   theme: ThemeConfig;
   components: string[];
   componentConfigs?: any[]; // 组件配置列表
+  codeType?: string; // 代码类型：html | vue
   options?: {
     codeStyle?: string;
     responsive?: boolean;

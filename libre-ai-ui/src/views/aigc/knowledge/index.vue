@@ -51,7 +51,10 @@ onMounted(async () => {
 });
 
 async function fetch() {
-  const response: any = await getPage({ name: searchQuery.value, ...pagination.value });
+  const response: any = await getPage({
+    name: searchQuery.value,
+    ...pagination.value
+  });
   pagination.value.total = response.result.total;
   list.value = response.result.rows;
   loading.value = false;
@@ -170,8 +173,9 @@ function handleDelete(record: any) {
     </div>
 
     <!-- 主内容区域 -->
-    <div class="main-content flex-1 px-4 sm:px-6 lg:px-8 pb-4 overflow-auto flex justify-between flex-col">
-
+    <div
+      class="main-content flex-1 px-4 sm:px-6 lg:px-8 pb-4 overflow-auto flex justify-between flex-col"
+    >
       <!-- 加载状态 -->
       <div v-if="loading" class="loading-container">
         <div class="knowledge-grid">
@@ -302,9 +306,7 @@ function handleDelete(record: any) {
                 <div
                   class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400"
                 >
-                  <div
-                    class="bg-green-100 dark:bg-green-900/30 p-1 rounded"
-                  >
+                  <div class="bg-green-100 dark:bg-green-900/30 p-1 rounded">
                     <Icon
                       icon="tabler:database"
                       class="text-green-600 dark:text-green-400"
@@ -370,7 +372,9 @@ function handleDelete(record: any) {
               >
                 {{ item.des || '暂无描述' }}
               </p>
-              <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+              <div
+                class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400"
+              >
                 <div class="flex items-center gap-1.5">
                   <div class="bg-blue-100 dark:bg-blue-900/30 p-1 rounded">
                     <Icon
@@ -388,7 +392,8 @@ function handleDelete(record: any) {
                     />
                   </div>
                   <span class="font-medium">
-                    大小: {{ (Number(item.totalSize || 0) / 1000000).toFixed(1) }}MB
+                    大小:
+                    {{ (Number(item.totalSize || 0) / 1000000).toFixed(1) }}MB
                   </span>
                 </div>
               </div>
@@ -422,9 +427,7 @@ function handleDelete(record: any) {
                   >
                     <Icon
                       :icon="
-                        option.value === 'edit'
-                          ? 'tabler:edit'
-                          : 'tabler:trash'
+                        option.value === 'edit' ? 'tabler:edit' : 'tabler:trash'
                       "
                       class="text-sm"
                     />
@@ -438,7 +441,10 @@ function handleDelete(record: any) {
       </div>
 
       <!-- 空状态 -->
-      <div v-else-if="list.length === 0" class="flex items-center justify-center h-full min-h-[400px]">
+      <div
+        v-else-if="list.length === 0"
+        class="flex items-center justify-center h-full min-h-[400px]"
+      >
         <div class="text-center">
           <div
             class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-8 rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-6"
@@ -448,9 +454,7 @@ function handleDelete(record: any) {
               class="text-5xl text-blue-500 dark:text-blue-400"
             />
           </div>
-          <h3
-            class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
-          >
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             {{ searchQuery ? '没有找到匹配的知识库' : '暂无知识库' }}
           </h3>
           <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
@@ -474,10 +478,7 @@ function handleDelete(record: any) {
       </div>
 
       <!-- 分页 -->
-      <div
-        v-if="list && list.length > 0"
-        class="pagination-wrapper pt-6"
-      >
+      <div v-if="list && list.length > 0" class="pagination-wrapper pt-6">
         <el-pagination
           v-model:current-page="pagination.page"
           v-model:page-size="pagination.limit"
@@ -568,7 +569,6 @@ function handleDelete(record: any) {
     transform: translateY(-6px) scale(1.02);
   }
 }
-
 
 // 分页
 .pagination-wrapper {

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-preview" :class="`theme-${config.theme}`">
-    <div v-if="!generatedHtml" class="preview-placeholder">
+    <div v-if="!generatedCode" class="preview-placeholder">
       <div class="placeholder-content">
         <el-icon :size="48" color="#c0c4cc">
           <Monitor />
@@ -23,7 +23,16 @@
       </div>
     </div>
 
-    <!-- 有生成的HTML时，使用iframe渲染 -->
+    <!-- Vue组件预览 -->
+    <VueComponentPreview
+      v-else-if="codeType === 'vue'"
+      :vue-code="generatedCode"
+      :config="config"
+      @compilation-complete="onCompilationComplete"
+      @runtime-error="onRuntimeError"
+    />
+
+    <!-- HTML预览 -->
     <iframe
       v-else
       ref="previewIframe"
@@ -32,21 +41,37 @@
       frameborder="0"
       width="100%"
       height="100%"
-      sandbox="allow-scripts allow-same-origin"
+      sandbox="allow-scripts"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Monitor } from '@element-plus/icons-vue';
+import VueComponentPreview from './VueComponentPreview.vue';
 
 // Props
 interface Props {
   config: any;
-  generatedHtml?: string;
+  generatedCode?: string; // 支持HTML和Vue代码
+  codeType?: 'html' | 'vue'; // 代码类型
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  codeType: 'html'
+});
+
+// Emits
+const emit = defineEmits<{
+  'compilation-complete': [success: boolean, error?: string];
+  'runtime-error': [error: Error];
+}>();
+
+// 为了兼容现有代码，保留 generatedHtml 计算属性
+const generatedHtml = computed(() => {
+  return props.codeType === 'html' ? props.generatedCode : '';
+});
 
 // 方法
 const getThemeName = () => {
@@ -59,13 +84,23 @@ const getThemeName = () => {
   return themeNames[props.config.theme] || '默认主题';
 };
 
+// Vue组件编译完成处理
+const onCompilationComplete = (success: boolean, error?: string) => {
+  emit('compilation-complete', success, error);
+};
+
+// Vue组件运行时错误处理
+const onRuntimeError = (error: Error) => {
+  emit('runtime-error', error);
+};
+
 // 获取完整的HTML内容（包含样式）
 const getCompleteHtml = () => {
-  if (!props.generatedHtml) return '';
+  if (!generatedHtml.value) return '';
 
   // 如果生成的HTML已经是完整的HTML文档，直接返回
-  if (props.generatedHtml.includes('<!DOCTYPE html>')) {
-    return props.generatedHtml;
+  if (generatedHtml.value.includes('<!DOCTYPE html>')) {
+    return generatedHtml.value;
   }
 
   // 否则包装成完整的HTML文档
@@ -97,7 +132,7 @@ const getCompleteHtml = () => {
     </style>
 </head>
 <body>
-    ${props.generatedHtml}
+    ${generatedHtml.value}
 </body>
 </html>`;
 };

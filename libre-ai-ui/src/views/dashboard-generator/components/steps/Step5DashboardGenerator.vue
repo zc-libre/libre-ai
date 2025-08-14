@@ -65,6 +65,17 @@
         <h3 class="control-title">生成选项</h3>
         <div class="control-grid">
           <div class="control-item">
+            <label class="control-label">代码类型</label>
+            <el-select
+              v-model="generationOptions.codeType"
+              placeholder="选择代码类型"
+              style="width: 100%"
+            >
+              <el-option label="HTML (默认)" value="html" :icon="Document" />
+              <el-option label="Vue组件" value="vue" :icon="SetUp" />
+            </el-select>
+          </div>
+          <div class="control-item">
             <label class="control-label">响应式设计</label>
             <el-switch
               v-model="generationOptions.responsive"
@@ -172,7 +183,15 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
-import { Check, Loading, Clock, View, Download } from '@element-plus/icons-vue';
+import {
+  Check,
+  Loading,
+  Clock,
+  View,
+  Download,
+  Document,
+  SetUp
+} from '@element-plus/icons-vue';
 import { useDashboardGenerator } from '../../composables/useDashboardGenerator';
 import { useDashboardStore } from '../../composables/useDashboardStore';
 
@@ -213,6 +232,7 @@ const generatedResult = computed(() => generatedResultData.value);
 
 // 生成选项
 const generationOptions = reactive({
+  codeType: 'html', // 默认HTML类型，保持向下兼容
   responsive: true,
   includeData: true,
   additionalRequirements: ''
