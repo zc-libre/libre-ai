@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import {
   ArrowLeft,
   Setting,
@@ -27,6 +27,11 @@ const appInfo = ref<any>({});
 const activeTab = ref('settings');
 const isSaving = ref(false);
 const lastSaveTime = ref('');
+
+// 提示词组件引用
+const promptConfigRef = ref<any>(null);
+// 标签切换状态
+const isTabSwitching = ref(false);
 
 const tabs = [
   {
@@ -134,6 +139,60 @@ const appGradient = computed(() => {
 function getCurrentTabInfo() {
   return tabs.find(tab => tab.key === activeTab.value);
 }
+
+// 检查提示词是否有未保存的更改
+function checkPromptUnsavedChanges(): boolean {
+  if (promptConfigRef.value && typeof promptConfigRef.value.hasUnsavedChanges === 'function') {
+    return promptConfigRef.value.hasUnsavedChanges();
+  }
+  return false;
+}
+
+// 标签切换前确认
+async function handleTabSwitch(newTab: string): Promise<boolean> {
+  // 如果当前不是提示词标签，直接允许切换
+  if (activeTab.value !== 'prompt') {
+    return true;
+  }
+
+  // 检查是否有未保存的更改
+  if (!checkPromptUnsavedChanges()) {
+    return true;
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      '提示词配置有未保存的更改，切换标签页将丢失这些更改。',
+      '确认切换',
+      {
+        confirmButtonText: '切换',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+        closeOnClickModal: false,
+        closeOnPressEscape: false
+      }
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// 处理标签点击
+async function onTabClick(tabKey: string) {
+  if (tabKey === activeTab.value) return;
+
+  isTabSwitching.value = true;
+  const canSwitch = await handleTabSwitch(tabKey);
+
+  if (canSwitch) {
+    activeTab.value = tabKey;
+  }
+
+  await nextTick();
+  isTabSwitching.value = false;
+}
 </script>
 
 <template>
@@ -204,7 +263,8 @@ function getCurrentTabInfo() {
               :key="tab.key"
               class="tab-item"
               :class="{ active: activeTab === tab.key }"
-              @click="activeTab = tab.key"
+              :disabled="isTabSwitching"
+              @click="onTabClick(tab.key)"
             >
               <div class="tab-content">
                 <el-icon
@@ -260,7 +320,7 @@ function getCurrentTabInfo() {
 
           <!-- 提示词配置 -->
           <div v-show="activeTab === 'prompt'" class="prompt-container">
-            <PromptConfig />
+            <PromptConfig ref="promptConfigRef" />
           </div>
 
           <!-- API 接入 -->
@@ -408,8 +468,13 @@ function getCurrentTabInfo() {
         cursor: pointer;
         transition: all 0.3s;
 
-        &:hover {
+        &:hover:not(:disabled) {
           background: #f5f7fa;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.6;
         }
 
         &.active {

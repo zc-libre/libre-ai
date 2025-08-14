@@ -1,12 +1,10 @@
 package org.libre.ai.modules.dashboard.prompt;
 
+import com.google.common.collect.Maps;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.libre.ai.modules.dashboard.dto.ComponentConfig;
-import org.libre.ai.modules.dashboard.dto.DashboardRequest;
-import org.libre.ai.modules.dashboard.dto.GenerationOptions;
-import org.libre.ai.modules.dashboard.dto.ThemeConfig;
+import org.libre.ai.modules.dashboard.dto.*;
 import org.libre.ai.modules.dashboard.enums.DashboardComponent;
 import org.libre.ai.modules.dashboard.enums.DashboardLayout;
 import org.libre.ai.modules.dashboard.enums.DashboardPurpose;
@@ -56,6 +54,17 @@ public class DashboardPromptBuilder {
 		log.debug("生成的提示词: {}", result);
 
 		return result;
+	}
+
+	public String buildOptimizeDashboardPrompt(OptimizeRequest request, String promptTemplateStr) {
+		PromptTemplate promptTemplate = PromptTemplate.from(promptTemplateStr);
+		Map<Object, Object> variables = Maps.newLinkedHashMap();
+
+		String currentHtml = request.getCurrentHtml();
+		variables.put("currentHtml", currentHtml);
+		variables.put("userRequest", request.getUserRequest());
+		Prompt prompt = promptTemplate.apply(variables);
+		return prompt.text();
 	}
 
 	/**

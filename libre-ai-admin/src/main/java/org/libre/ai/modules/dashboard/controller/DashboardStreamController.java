@@ -60,8 +60,10 @@ public class DashboardStreamController {
 	public Flux<String> optimizeStream(@RequestBody @Valid OptimizeRequest request) {
 		log.info("收到仪表板优化请求: conversationId={}, userRequest={}", request.getConversationId(), request.getUserRequest());
 
-		return streamDashboardAiAssistant
-			.optimizeDashboardStream(request.getConversationId(), request.getCurrentHtml(), request.getUserRequest())
+
+
+		return dashboardStreamService
+			.optimizeDashboard(request)
 			.map(item -> {
 				item = escapeJson(item);
 				log.debug("优化内容片段：{}", item.length() > 100 ? item.substring(0, 100) + "..." : item);

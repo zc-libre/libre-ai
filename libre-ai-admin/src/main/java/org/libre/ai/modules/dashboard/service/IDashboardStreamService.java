@@ -1,7 +1,11 @@
 package org.libre.ai.modules.dashboard.service;
 
+import jakarta.validation.Valid;
 import org.libre.ai.modules.dashboard.dto.DashboardRequest;
+import org.libre.ai.modules.dashboard.dto.OptimizeRequest;
 import reactor.core.publisher.Flux;
+
+import java.nio.channels.FileChannel;
 
 /**
  * 仪表板流式生成服务接口
@@ -21,5 +25,7 @@ public interface IDashboardStreamService {
 	 * @return 代码片段流
 	 */
 	Flux<String> generateDashboardStream(DashboardRequest request);
+
+	Flux<String> optimizeDashboard(@Valid OptimizeRequest request);
 
 }

@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, onBeforeUnmount } from 'vue';
 import { useAppStore } from '@/views/app/store';
-import { ElDivider, ElRadioGroup, ElRadioButton, ElIcon } from 'element-plus';
+import { ElDivider, ElRadioGroup, ElRadioButton, ElIcon, ElMessage, ElMessageBox } from 'element-plus';
 import { Edit, View, FullScreen } from '@element-plus/icons-vue';
+import { onBeforeRouteLeave } from 'vue-router';
 import MarkdownEditor from '@/components/MarkdownEditor/index.vue';
 
 const emit = defineEmits(['update']);
 const appStore = useAppStore();
 
-// 编辑模式状态 - 默认为预览模式，支持全屏用于编辑
+// 编辑模式状态 - 默认为编辑模式
 const systemPromptMode = ref<'edit' | 'preview' | 'fullscreen'>('edit');
 const userPromptMode = ref<'edit' | 'preview' | 'fullscreen'>('edit');
 
@@ -20,18 +21,121 @@ const previousUserMode = ref<'edit' | 'preview'>('edit');
 const systemEditorRef = ref<any>(null);
 const userEditorRef = ref<any>(null);
 
-async function onUpdate() {
-  emit('update');
-}
+// 本地编辑状态
+const localSystemPrompt = ref('');
+const localUserPromptTemplate = ref('');
 
-// 处理系统提示词保存
-const handleSystemPromptSave = () => {
-  onUpdate();
+// 保存状态
+const isSaving = ref(false);
+const lastSaveTime = ref('');
+const hasUnsavedChanges = ref(false);
+
+// 初始化本地数据
+const initLocalData = () => {
+  localSystemPrompt.value = appStore.info.systemPrompt || '';
+  localUserPromptTemplate.value = appStore.info.userPromptTemplate || '';
+  hasUnsavedChanges.value = false;
 };
 
-// 处理用户提示词模板保存
-const handleUserPromptSave = () => {
-  onUpdate();
+// 监听内容变化
+const handleContentChange = () => {
+  hasUnsavedChanges.value = true;
+};
+
+// 保存函数
+const handleSave = async () => {
+  if (!hasUnsavedChanges.value) return;
+
+  try {
+    isSaving.value = true;
+
+    // 更新store中的数据
+    appStore.info.systemPrompt = localSystemPrompt.value;
+    appStore.info.userPromptTemplate = localUserPromptTemplate.value;
+
+    // 调用保存接口
+    await appStore.updateInfo();
+
+    // 更新状态
+    hasUnsavedChanges.value = false;
+    updateSaveTime();
+    ElMessage.success('保存成功');
+    emit('update');
+
+  } catch (error) {
+    console.error('保存提示词配置失败:', error);
+    ElMessage.error('保存失败，请重试');
+  } finally {
+    isSaving.value = false;
+  }
+};
+
+// 更新保存时间
+const updateSaveTime = () => {
+  const now = new Date();
+  lastSaveTime.value = now.toLocaleTimeString('zh-CN', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
+// 快捷键保存处理
+const handleKeydown = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    handleSave();
+  }
+};
+
+// 页面离开前确认
+const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+  if (hasUnsavedChanges.value) {
+    e.preventDefault();
+    e.returnValue = '您有未保存的更改，确定要离开吗？';
+    return '您有未保存的更改，确定要离开吗？';
+  }
+};
+
+// 确认离开对话框
+const confirmLeave = async (): Promise<boolean> => {
+  if (!hasUnsavedChanges.value) {
+    return true;
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      '您有未保存的更改，离开页面将丢失这些更改。',
+      '确认离开',
+      {
+        confirmButtonText: '离开',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            // 用户确认离开，清除未保存状态避免再次提示
+            hasUnsavedChanges.value = false;
+          }
+          done();
+        }
+      }
+    );
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// 处理系统提示词保存（快捷键触发）
+const handleSystemPromptSave = async () => {
+  await handleSave();
+};
+
+// 处理用户提示词模板保存（快捷键触发）
+const handleUserPromptSave = async () => {
+  await handleSave();
 };
 
 // 监听模式变化，触发编辑器全屏
@@ -86,13 +190,28 @@ const handleFullscreenChange = () => {
   }
 };
 
+// 路由离开守卫
+onBeforeRouteLeave(async (to, from, next) => {
+  const canLeave = await confirmLeave();
+  if (canLeave) {
+    next();
+  } else {
+    next(false);
+  }
+});
+
 // 生命周期钩子
 onMounted(() => {
+  // 初始化本地数据
+  initLocalData();
+
   // 监听全屏状态变化
   document.addEventListener('fullscreenchange', handleFullscreenChange);
   document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
   document.addEventListener('mozfullscreenchange', handleFullscreenChange);
   document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+  document.addEventListener('keydown', handleKeydown);
+  window.addEventListener('beforeunload', handleBeforeUnload);
 });
 
 onUnmounted(() => {
@@ -101,6 +220,14 @@ onUnmounted(() => {
   document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
   document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
   document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+  document.removeEventListener('keydown', handleKeydown);
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+});
+
+// 组件卸载前清理
+onBeforeUnmount(() => {
+  // 清理事件监听器
+  window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 
 // 监听系统提示词模式变化，保存之前的状态
@@ -161,13 +288,13 @@ watch(userPromptMode, (newMode, oldMode) => {
       <div class="editor-wrapper system-editor">
         <MarkdownEditor
           ref="systemEditorRef"
-          v-model="appStore.info.systemPrompt"
+          v-model="localSystemPrompt"
           :mode="systemPromptMode === 'fullscreen' ? 'split' : systemPromptMode"
           :height="'300px'"
           :placeholder="'例如：你是一位专业的客服助手，需要礼貌、耐心地回答用户的问题...'"
           :toolbars-exclude="['github', 'mermaid', 'katex', 'htmlPreview']"
           @save="handleSystemPromptSave"
-          @change="onUpdate"
+          @change="handleContentChange"
         />
       </div>
     </div>
@@ -220,13 +347,13 @@ watch(userPromptMode, (newMode, oldMode) => {
       <div class="editor-wrapper user-editor">
         <MarkdownEditor
           ref="userEditorRef"
-          v-model="appStore.info.userPromptTemplate"
+          v-model="localUserPromptTemplate"
           :mode="userPromptMode === 'fullscreen' ? 'split' : userPromptMode"
           :height="'200px'"
           :placeholder="'例如：请基于以下问题提供详细解答：{{question}}'"
           :toolbars-exclude="['github', 'mermaid', 'katex', 'htmlPreview']"
           @save="handleUserPromptSave"
-          @change="onUpdate"
+          @change="handleContentChange"
         />
       </div>
     </div>

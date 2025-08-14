@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from 'vue';
-import SvgIcon from '@/components/ReIcon/src/iconifyIconOffline';
+import { reactive, ref, h } from 'vue';
+import { Icon } from '@iconify/vue';
 import { createApi, del, list as getApiList } from '@/api/aigc/appApi';
 import { ElMessage, ElMessageBox, ElButton } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
 import { copyToClip } from '@/utils/copy';
-import { PureTableBar } from '@/components/RePureTableBar';
+import { BasicTable, TableAction } from '@/components/Table';
 import { useColumns } from './hooks';
-import { ElTable, ElTableColumn } from 'element-plus';
 import { hideKey } from '@/api/models';
+import { Plus, Delete } from '@element-plus/icons-vue';
 
 const emit = defineEmits(['reload']);
 const props = defineProps({
@@ -21,38 +21,52 @@ const props = defineProps({
 const ms = ElMessage;
 const route = useRoute();
 const router = useRouter();
-const dataList = ref([]);
-const loading = ref(true);
+const actionRef = ref();
 
 // 表格列配置
 const { columns } = useColumns();
 
-// 获取数据
-async function fetchData() {
-  try {
-    loading.value = true;
-    const res = await getApiList({
-      appId: route.params.id,
-      channel: props.channel
-    });
-    // 处理后端返回的 R 对象
-    const data = res?.result || res || [];
-    dataList.value = Array.isArray(data)
-      ? data.map(item => ({
-          ...item,
-          apiKeyDisplay: hideKey(item.apiKey)
-        }))
-      : [];
-  } finally {
-    loading.value = false;
-  }
-}
+// 表格数据加载函数
+const loadDataTable = async (params: any) => {
+  const res = await getApiList({
+    appId: route.params.id,
+    channel: props.channel,
+    ...params
+  });
+  // 处理后端返回的 R 对象
+  const data = res?.result || res || [];
+  return Array.isArray(data)
+    ? data.map(item => ({
+        ...item,
+        apiKeyDisplay: hideKey(item.apiKey)
+      }))
+    : [];
+};
 
 // 新增秘钥
-async function onSubmit() {
-  await createApi(route.params.id, props.channel);
-  ms.success('新增成功');
-  await fetchData();
+async function handleAdd() {
+  ElMessageBox.confirm(
+    '确定要创建新的API秘钥吗？创建后请妥善保管，避免泄露。',
+    '创建API秘钥',
+    {
+      confirmButtonText: '确定创建',
+      cancelButtonText: '取消',
+      type: 'info'
+    }
+  )
+    .then(async () => {
+      await createApi(route.params.id, props.channel);
+      ms.success('新增成功');
+      reloadTable();
+    })
+    .catch(() => {
+      // 用户取消创建
+    });
+}
+
+// 刷新表格
+function reloadTable() {
+  actionRef.value?.reload();
 }
 
 // 复制秘钥
@@ -75,100 +89,151 @@ function handleDelete(row: any) {
     .then(async () => {
       await del(row.id);
       ms.success('删除成功');
-      await fetchData();
+      reloadTable();
     })
     .catch(() => {});
 }
 
-onMounted(() => {
-  fetchData();
+// 操作列配置
+const actionColumn = reactive({
+  width: 160,
+  title: '操作',
+  key: 'action',
+  fixed: 'right',
+  align: 'center',
+  render(record: any) {
+    return h(TableAction as any, {
+      actionStyle: 'circle',
+      actions: [
+        {
+          type: 'success',
+          icon: 'ep:copy-document',
+          tooltip: '复制',
+          onClick: () => onCopy(record)
+        },
+        {
+          type: 'danger',
+          icon: Delete,
+          tooltip: '删除',
+          onClick: () => handleDelete(record)
+        }
+      ]
+    });
+  }
 });
+
 </script>
 
 <template>
-  <div class="main">
-    <PureTableBar title="API秘钥管理" :columns="columns" @refresh="fetchData">
-      <template #buttons>
-        <ElButton size="small" type="primary" @click="onSubmit">
-          <template #icon>
-            <SvgIcon icon="ic:round-plus" />
-          </template>
-          创建秘钥
-        </ElButton>
-      </template>
-
-      <template v-slot="{ size, dynamicColumns }">
-        <ElTable
-          v-loading="loading"
-          :data="dataList"
-          :size="size"
-          style="width: 100%"
-          :header-cell-style="{
-            background: 'var(--el-fill-color-light)',
-            color: 'var(--el-text-color-primary)'
-          }"
-        >
-          <template v-for="column in dynamicColumns" :key="column.prop">
-            <ElTableColumn
-              v-if="column.slot !== 'operation'"
-              :prop="column.prop"
-              :label="column.label"
-              :width="column.width"
-              :min-width="column.minWidth"
-              :align="column.align"
-              :fixed="column.fixed"
-              show-overflow-tooltip
+  <div class="api-table-container h-full flex flex-col">
+    <!-- 顶部配置区域 -->
+    <div
+      class="config-header border-b border-gray-200 dark:border-gray-700 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900"
+    >
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div
+            class="icon-box p-2.5 bg-white dark:bg-gray-700 rounded-lg shadow-sm"
+          >
+            <Icon
+              icon="ic:round-key"
+              class="text-xl text-blue-600 dark:text-blue-400"
             />
-            <ElTableColumn
-              v-else
-              :label="column.label"
-              :width="column.width"
-              :min-width="column.minWidth"
-              :align="column.align"
-              :fixed="column.fixed"
-            >
-              <template #default="{ row }">
-                <ElButton
-                  class="reset-margin"
-                  link
-                  type="success"
-                  size="small"
-                  @click="onCopy(row)"
-                >
-                  <template #icon>
-                    <SvgIcon icon="ep:copy-document" />
-                  </template>
-                  复制
-                </ElButton>
-                <ElButton
-                  class="reset-margin"
-                  link
-                  type="danger"
-                  size="small"
-                  @click="handleDelete(row)"
-                >
-                  <template #icon>
-                    <SvgIcon icon="ep:delete" />
-                  </template>
-                  删除
-                </ElButton>
-              </template>
-            </ElTableColumn>
-          </template>
-        </ElTable>
-      </template>
-    </PureTableBar>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+              API秘钥管理
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
+              管理您的API访问秘钥
+            </p>
+          </div>
+        </div>
+        <el-button type="primary" :icon="Plus" @click="handleAdd">
+          创建秘钥
+        </el-button>
+      </div>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="config-content flex-1 p-4 sm:p-6 min-h-0">
+      <!-- 表格区域 -->
+      <div class="table-section flex-1 min-w-0">
+        <BasicTable
+          ref="actionRef"
+          :actionColumn="actionColumn"
+          :columns="columns"
+          :pagination="false"
+          :request="loadDataTable"
+          :row-key="(row: any) => row.id"
+          :single-line="false"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-button) {
-  margin-left: 0;
-}
-
-.main {
-  height: 100%;
+.api-table-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+
+/* 头部配置区域 */
+.config-header {
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.config-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.08) 0%,
+    transparent 70%
+  );
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-box {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.icon-box:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* 内容区域 */
+.config-content {
+  overflow: hidden;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .config-header {
+    padding: 1rem;
+  }
+
+  .config-content {
+    padding: 1rem;
+  }
 }
 </style>

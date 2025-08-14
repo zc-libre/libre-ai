@@ -22,7 +22,7 @@
 <script lang="ts" setup>
 import { ElButton, ElTooltip } from 'element-plus';
 import { Icon } from '@iconify/vue';
-import { Edit, Delete, Plus } from '@element-plus/icons-vue';
+import { Edit, Delete, Plus, CopyDocument } from '@element-plus/icons-vue';
 
 interface ActionItem {
   type?: 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'default';
@@ -66,7 +66,8 @@ const getIconComponent = (icon: any) => {
     const iconMap: Record<string, any> = {
       'ep:edit': Edit,
       'ep:delete': Delete,
-      'ep:plus': Plus
+      'ep:plus': Plus,
+      'ep:copy-document': CopyDocument
     };
     return iconMap[icon] || Edit;
   }
