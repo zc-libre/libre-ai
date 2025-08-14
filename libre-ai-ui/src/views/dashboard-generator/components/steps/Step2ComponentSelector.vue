@@ -210,29 +210,12 @@
                         <el-option label="环比" value="chain" />
                         <el-option label="同比" value="year" />
                       </el-select>
-                      <el-input
-                        v-if="
-                          componentDataConfigs[componentId].comparisonType !==
-                          'none'
-                        "
-                        v-model="
-                          componentDataConfigs[componentId].comparisonField
-                        "
-                        placeholder="对比字段"
-                        style="margin-top: 8px"
-                      />
                     </el-form-item>
                     <el-form-item label="趋势显示">
                       <el-switch
                         v-model="componentDataConfigs[componentId].showTrend"
                         active-text="显示"
                         inactive-text="隐藏"
-                      />
-                      <el-input
-                        v-if="componentDataConfigs[componentId].showTrend"
-                        v-model="componentDataConfigs[componentId].trendField"
-                        placeholder="趋势字段"
-                        style="margin-top: 8px"
                       />
                     </el-form-item>
                   </div>
@@ -401,56 +384,19 @@
                   <div class="config-section">
                     <h4 class="section-header">阈值配置</h4>
                     <el-form-item label="警告阈值">
-                      <div class="threshold-group">
-                        <el-input-number
-                          v-model="
-                            componentDataConfigs[componentId].warningThreshold
-                          "
-                          placeholder="警告值"
-                        />
-                        <el-color-picker
-                          v-model="
-                            componentDataConfigs[componentId].warningColor
-                          "
-                        />
-                      </div>
+                      <el-input-number
+                        v-model="
+                          componentDataConfigs[componentId].warningThreshold
+                        "
+                        placeholder="警告值"
+                      />
                     </el-form-item>
                     <el-form-item label="危险阈值">
-                      <div class="threshold-group">
-                        <el-input-number
-                          v-model="
-                            componentDataConfigs[componentId].dangerThreshold
-                          "
-                          placeholder="危险值"
-                        />
-                        <el-color-picker
-                          v-model="
-                            componentDataConfigs[componentId].dangerColor
-                          "
-                        />
-                      </div>
-                    </el-form-item>
-                  </div>
-
-                  <div class="config-section">
-                    <h4 class="section-header">图标配置</h4>
-                    <el-form-item label="图标名称">
-                      <el-input
-                        v-model="componentDataConfigs[componentId].iconName"
-                        placeholder="如：TrendCharts、DataAnalysis"
-                      />
-                    </el-form-item>
-                    <el-form-item label="图标颜色">
-                      <el-color-picker
-                        v-model="componentDataConfigs[componentId].iconColor"
-                      />
-                    </el-form-item>
-                    <el-form-item label="图标大小">
                       <el-input-number
-                        v-model="componentDataConfigs[componentId].iconSize"
-                        :min="16"
-                        :max="48"
-                        placeholder="像素"
+                        v-model="
+                          componentDataConfigs[componentId].dangerThreshold
+                        "
+                        placeholder="危险值"
                       />
                     </el-form-item>
                   </div>
@@ -492,7 +438,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 import {
   Check,
   DataAnalysis,
@@ -564,16 +510,9 @@ const initComponentConfig = (componentId: string) => {
       componentDataConfigs[componentId].valueField = '';
       componentDataConfigs[componentId].unit = '';
       componentDataConfigs[componentId].comparisonType = 'none';
-      componentDataConfigs[componentId].comparisonField = '';
       componentDataConfigs[componentId].showTrend = true;
-      componentDataConfigs[componentId].trendField = '';
       componentDataConfigs[componentId].warningThreshold = 0;
       componentDataConfigs[componentId].dangerThreshold = 0;
-      componentDataConfigs[componentId].warningColor = '#F56C6C';
-      componentDataConfigs[componentId].dangerColor = '#F56C6C';
-      componentDataConfigs[componentId].iconName = 'DataAnalysis';
-      componentDataConfigs[componentId].iconColor = '#409EFF';
-      componentDataConfigs[componentId].iconSize = 24;
     } else if (componentId === 'data-table') {
       componentDataConfigs[componentId].columns = [];
       componentDataConfigs[componentId].pagination = true;
@@ -1004,17 +943,6 @@ const updateData = () => {
   color: #f56c6c;
   font-size: 12px;
   margin-top: 4px;
-}
-
-/* 阈值配置组 */
-.threshold-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.threshold-group .el-input-number {
-  flex: 1;
 }
 
 /* 响应式设计 */

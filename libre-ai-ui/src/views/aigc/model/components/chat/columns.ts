@@ -4,12 +4,12 @@ export const baseColumns = [
   {
     title: '模型别名',
     key: 'name',
-    width: '150'
+    width: '250'
   },
   {
     title: '模型版本',
     key: 'model',
-    width: '150'
+    width: '250'
   },
   {
     title: '回复上限',
@@ -31,8 +31,8 @@ export const baseColumns = [
 export const openaiColumns = [
   ...baseColumns,
   {
-    title: 'Api Key',
-    key: 'apiKey'
+    title: 'Base Url',
+    key: 'baseUrl'
   }
 ];
 

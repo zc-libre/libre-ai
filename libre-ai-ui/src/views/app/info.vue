@@ -70,7 +70,12 @@ async function loadAppInfo() {
 
     // 同步数据到 store，供子组件使用
     if (data) {
-      appStore.info = data;
+      // 确保关键字段有默认值，防止null值导致md-editor-v3错误
+      appStore.info = {
+        ...data,
+        systemPrompt: data.systemPrompt || '',
+        userPromptTemplate: data.userPromptTemplate || ''
+      };
       appStore.knowledgeIds = data.knowledgeIds || [];
       appStore.modelId = data.modelId || null;
       appStore.knowledges = data.knowledges || [];

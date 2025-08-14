@@ -410,7 +410,7 @@ function getAppColor(index: number) {
 // 主内容区域
 .main-content {
   background: #f5f7fa;
-  padding-top: 20px;
+  //padding-top: 20px;
 }
 
 // 网格布局
@@ -418,6 +418,7 @@ function getAppColor(index: number) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
+  padding-top: 20px;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;

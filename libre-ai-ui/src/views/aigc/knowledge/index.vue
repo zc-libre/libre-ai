@@ -143,7 +143,7 @@ function handleDelete(record: any) {
               type="primary"
               :icon="Plus"
               size="large"
-              class="shadow-lg hover:shadow-xl transition-all duration-300"
+              class="hover:shadow-xl transition-all duration-300"
               @click="handleAdd"
             >
               新建知识库
@@ -159,7 +159,7 @@ function handleDelete(record: any) {
     >
       <!-- 搜索区域 -->
       <div
-        class="search-container bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mb-4 border border-gray-200 dark:border-gray-700"
+        class="search-container bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6 mb-4 border border-gray-200 dark:border-gray-700"
       >
         <el-form :model="searchForm" class="knowledge-search-form">
           <el-row :gutter="16" align="middle">

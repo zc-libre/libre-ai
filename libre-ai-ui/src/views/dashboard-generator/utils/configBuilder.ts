@@ -47,19 +47,15 @@ export function buildKPISpecific(config: any): Record<string, any> {
 
   if (config.comparisonType && config.comparisonType !== 'none') {
     specific.comparisonType = config.comparisonType;
-    if (config.comparisonField)
-      specific.comparisonField = config.comparisonField;
   }
 
   if (config.showTrend) {
     specific.showTrend = true;
-    if (config.trendField) specific.trendField = config.trendField;
   }
 
   if (config.warningThreshold)
     specific.warningThreshold = config.warningThreshold;
   if (config.dangerThreshold) specific.dangerThreshold = config.dangerThreshold;
-  if (config.iconName) specific.iconName = config.iconName;
 
   return specific;
 }

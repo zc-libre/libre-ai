@@ -5,22 +5,24 @@ import { BasicForm, useForm } from '@/components/Form/index';
 import { del, page as getPage } from '@/api/aigc/message';
 import { columns, searchSchemas } from './columns';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { Delete } from '@element-plus/icons-vue';
 
 const actionRef = ref();
 
 const actionColumn = reactive({
-  width: 100,
+  width: 160,
   title: '操作',
   key: 'action',
   fixed: 'right',
   align: 'center',
   render(record: any) {
     return h(TableAction as any, {
-      actionStyle: 'text',
+      actionStyle: 'circle',
       actions: [
         {
           type: 'danger',
-          icon: 'ep:delete',
+          icon: Delete,
+          tooltip: '删除',
           onClick: handleDelete.bind(null, record)
         }
       ]

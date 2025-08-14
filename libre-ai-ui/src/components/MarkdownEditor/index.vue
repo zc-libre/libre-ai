@@ -110,8 +110,8 @@ const emit = defineEmits(['update:modelValue', 'change', 'save', 'upload-img']);
 // 获取暗色模式状态
 const { isDark } = useDark();
 
-// 编辑器内容
-const content = ref(props.modelValue);
+// 编辑器内容 - 确保始终为字符串，防止null值导致md-editor-v3内部错误
+const content = ref(props.modelValue || '');
 
 // 编辑器主题
 const theme = computed(() => (isDark.value ? 'dark' : 'light'));
@@ -125,20 +125,22 @@ const codeTheme = computed(() => (isDark.value ? 'atom' : 'a11y'));
 // 编辑器唯一ID
 const editorId = computed(() => `md-editor-${Math.random().toString(36).substr(2, 9)}`);
 
-// 监听外部值变化
+// 监听外部值变化 - 确保新值始终为字符串
 watch(
   () => props.modelValue,
   newVal => {
-    if (newVal !== content.value) {
-      content.value = newVal;
+    const safeNewVal = newVal || '';
+    if (safeNewVal !== content.value) {
+      content.value = safeNewVal;
     }
   }
 );
 
-// 监听内部值变化
+// 监听内部值变化 - 确保发出的值始终为字符串
 watch(content, newVal => {
-  emit('update:modelValue', newVal);
-  emit('change', newVal);
+  const safeVal = newVal || '';
+  emit('update:modelValue', safeVal);
+  emit('change', safeVal);
 });
 
 // 保存事件

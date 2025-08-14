@@ -54,4 +54,36 @@ public class AigcModel implements Serializable {
 
 	private Integer dimension;
 
+	@Override
+	public String toString() {
+		return "AigcModel{" +
+			"id='" + id + '\'' +
+			", type='" + type + '\'' +
+			", model='" + model + '\'' +
+			", provider='" + provider + '\'' +
+			", name='" + name + '\'' +
+			", responseLimit=" + responseLimit +
+			", temperature=" + temperature +
+			", topP=" + topP +
+			", apiKey='" + maskSensitiveData(apiKey) + '\'' +
+			", secretKey='" + maskSensitiveData(secretKey) + '\'' +
+			", baseUrl='" + baseUrl + '\'' +
+			", endpoint='" + endpoint + '\'' +
+			", geminiLocation='" + geminiLocation + '\'' +
+			", geminiProject='" + geminiProject + '\'' +
+			", azureDeploymentName='" + azureDeploymentName + '\'' +
+			", imageSize='" + imageSize + '\'' +
+			", imageQuality='" + imageQuality + '\'' +
+			", imageStyle='" + imageStyle + '\'' +
+			", dimension=" + dimension +
+			'}';
+	}
+
+	private String maskSensitiveData(String data) {
+		if (data == null || data.length() <= 8) {
+			return "****";
+		}
+		return data.substring(0, 4) + "****" + data.substring(data.length() - 4);
+	}
+
 }

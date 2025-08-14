@@ -14,6 +14,10 @@ export interface FormSchema {
   colProps?: Recordable;
   isHidden?: boolean;
   suffix?: string;
+  // 新增样式增强属性
+  section?: string; // 分组名称
+  icon?: string; // 字段图标
+  helpTooltip?: string; // 帮助提示内容
 }
 
 export interface FormProps {

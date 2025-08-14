@@ -32,7 +32,12 @@ async function fetchData() {
   });
   const data = res.result || res;
   form.value = data;
-  appStore.info = data;
+  // 确保关键字段有默认值，防止null值导致md-editor-v3错误
+  appStore.info = {
+    ...data,
+    systemPrompt: data.systemPrompt || '',
+    userPromptTemplate: data.userPromptTemplate || ''
+  };
   appStore.knowledgeIds = data.knowledgeIds == null ? [] : data.knowledgeIds;
   appStore.modelId = data.modelId == null ? null : data.modelId;
   appStore.model = data.model == null ? null : data.model;

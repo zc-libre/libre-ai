@@ -14,7 +14,7 @@ import {
   ElButton
 } from 'element-plus';
 import { Icon } from '@iconify/vue';
-import { Plus } from '@element-plus/icons-vue';
+import { Plus, Edit as EditIcon, Delete } from '@element-plus/icons-vue';
 import { ModelTypeEnum } from '@/api/models';
 
 const provider = ref(LLMProviders[0]?.model || '');
@@ -22,23 +22,25 @@ const actionRef = ref();
 const editRef = ref();
 
 const actionColumn = reactive({
-  width: 100,
+  width: 160,
   title: '操作',
   key: 'action',
   fixed: 'right',
   align: 'center',
   render(record: any) {
     return h(TableAction as any, {
-      actionStyle: 'text',
+      actionStyle: 'circle',
       actions: [
         {
-          type: 'info',
-          icon: 'ep:edit',
+          type: 'primary',
+          icon: EditIcon,
+          tooltip: '编辑配置',
           onClick: handleEdit.bind(null, record)
         },
         {
           type: 'danger',
-          icon: 'ep:delete',
+          icon: Delete,
+          tooltip: '删除',
           onClick: handleDel.bind(null, record)
         }
       ]
@@ -208,22 +210,18 @@ function handleDel(record: any) {
         </el-select>
       </div>
 
-      <!-- 右侧表格 -->
-      <div class="table-container flex-1 min-w-0">
-        <div
-          class="model-table-wrapper bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 h-full overflow-hidden"
-        >
-          <BasicTable
-            ref="actionRef"
-            :actionColumn="actionColumn"
-            :columns="columns"
-            :pagination="false"
-            :request="loadDataTable"
-            :row-key="(row: any) => row.model"
-            :single-line="false"
-            class="model-data-table"
-          />
-        </div>
+      <!-- 右侧表格 - 与embed-store保持一致的结构 -->
+      <div class="table-section flex-1 min-w-0">
+        <BasicTable
+          ref="actionRef"
+          :actionColumn="actionColumn"
+          :columns="columns"
+          :pagination="false"
+          :request="loadDataTable"
+          :row-key="(row: any) => row.model"
+          :single-line="false"
+          theme="model-management"
+        />
       </div>
     </div>
 
@@ -337,59 +335,7 @@ function handleDel(record: any) {
   flex-direction: column;
 }
 
-/* 表格样式覆盖 */
-.model-data-table {
-  :deep(.el-table) {
-    background: transparent;
-    font-size: 14px;
-
-    .el-table__header {
-      th {
-        background-color: #f8fafc;
-        color: #1e293b;
-        font-weight: 600;
-        border-bottom: 2px solid #e2e8f0;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-    }
-
-    .el-table__body {
-      tr {
-        transition: all 0.2s ease;
-        cursor: pointer;
-
-        &:hover {
-          background-color: #f8fafc !important;
-          transform: translateX(2px);
-        }
-      }
-
-      td {
-        padding: 14px 12px;
-        font-weight: 500;
-      }
-    }
-  }
-}
-
-/* 暗色模式适配 */
-html.dark {
-  .model-data-table {
-    :deep(.el-table) {
-      .el-table__header th {
-        background-color: #0f172a !important;
-        color: #e2e8f0 !important;
-        border-bottom-color: #475569 !important;
-      }
-
-      .el-table__body tr:hover {
-        background-color: #334155 !important;
-      }
-    }
-  }
-}
+/* 表格样式现在由 BasicTable 的 model-management 主题提供 */
 
 /* 响应式设计 */
 @media (max-width: 1024px) {

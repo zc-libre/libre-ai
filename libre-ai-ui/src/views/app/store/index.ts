@@ -1,9 +1,19 @@
 import { defineStore } from 'pinia';
 import { update } from '@/api/aigc/app';
 
+export interface AppInfo {
+  id?: string;
+  name?: string;
+  systemPrompt?: string;
+  userPromptTemplate?: string;
+  modelId?: string | null;
+  knowledgeIds?: string[];
+  [key: string]: any;
+}
+
 export interface AppState {
   activeMenu: string;
-  info: any;
+  info: AppInfo;
   modelId: string | null;
   model: any;
   knowledgeIds: any[];
@@ -14,7 +24,10 @@ export const useAppStore = defineStore('app-store', {
   state: (): AppState =>
     <AppState>{
       activeMenu: 'setting',
-      info: {},
+      info: {
+        systemPrompt: '',
+        userPromptTemplate: ''
+      },
       modelId: '',
       model: null,
       knowledgeIds: [],
