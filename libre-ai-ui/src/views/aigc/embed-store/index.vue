@@ -14,7 +14,8 @@ import {
   ElSelect,
   ElOption,
   ElTag,
-  ElTooltip
+  ElTooltip,
+  ElPagination
 } from 'element-plus';
 import { Icon } from '@iconify/vue';
 import {
@@ -47,14 +48,30 @@ const tableData = ref([]);
 const loading = ref(false);
 const searchForm = ref({});
 
+// 分页相关数据
+const pagination = ref({
+  current: 1,
+  pageSize: 10,
+  total: 0
+});
+
 const loadDataTable = async () => {
   loading.value = true;
   try {
-    const response = await getPage({ ...searchForm.value });
+    const params = {
+      ...searchForm.value,
+      current: pagination.value.current,
+      size: pagination.value.pageSize
+    };
+    const response = await getPage(params);
     console.log('API响应数据:', response);
     // 根据后端返回的数据结构：{code, message, result: {rows, total}}
-    tableData.value = response.result?.rows || [];
+    if (response.result) {
+      tableData.value = response.result.rows || [];
+      pagination.value.total = response.result.total || 0;
+    }
     console.log('表格数据:', tableData.value);
+    console.log('分页信息:', pagination.value);
   } catch (error) {
     ElMessage.error('加载数据失败');
     console.error('数据加载失败:', error);
@@ -95,11 +112,25 @@ function handleDelete(record: any) {
 
 function handleReset() {
   searchForm.value = {};
+  pagination.value.current = 1; // 重置搜索时回到第一页
   reloadTable();
 }
 
 function handleSearch() {
+  pagination.value.current = 1; // 搜索时回到第一页
   reloadTable();
+}
+
+// 分页处理函数
+function handleCurrentChange(val: number) {
+  pagination.value.current = val;
+  loadDataTable();
+}
+
+function handleSizeChange(val: number) {
+  pagination.value.pageSize = val;
+  pagination.value.current = 1; // 改变页大小时回到第一页
+  loadDataTable();
 }
 
 function getProviderIcon(provider: string) {
@@ -456,6 +487,21 @@ onMounted(() => {
             </el-table>
           </div>
         </div>
+
+        <!-- 分页区域 -->
+        <div v-if="!loading && tableData.length > 0" class="pagination-wrapper">
+          <el-pagination
+            v-model:current-page="pagination.current"
+            v-model:page-size="pagination.pageSize"
+            :total="pagination.total"
+            :page-sizes="[10, 20, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            background
+            class="justify-center sm:justify-end"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </div>
     </div>
 
@@ -465,14 +511,54 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-/* 整体布局样式 */
+
+
+/* 响应式设计 */
+@media (width <= 990px) {
+  .header-section {
+    .page-title {
+      font-size: 20px;
+    }
+
+    .page-subtitle {
+      font-size: 12px;
+    }
+  }
+}
+
+@media (width <= 760px) {
+  .header-section {
+    padding: 12px 16px;
+
+    .title-container {
+      text-align: center;
+    }
+
+    .action-buttons {
+      justify-content: center;
+    }
+  }
+
+  .search-section {
+    .section-title {
+      font-size: 16px;
+    }
+  }
+
+  .data-table {
+    :deep(.el-table) {
+      font-size: 12px;
+    }
+  }
+}
+
 .embed-store-app {
+  position: relative;
   box-sizing: border-box;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100%;
-  position: relative;
+  overflow: hidden;
 }
 
 /* 头部区域样式 */
@@ -481,16 +567,16 @@ onMounted(() => {
   border-bottom: 1px solid #e2e8f0;
 
   .page-title {
+    margin-bottom: 4px;
     font-size: 24px;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 4px;
   }
 
   .page-subtitle {
+    margin: 0;
     font-size: 14px;
     color: #64748b;
-    margin: 0;
   }
 }
 
@@ -508,8 +594,8 @@ onMounted(() => {
   background: white;
 
   .section-title {
-    color: #1e293b;
     font-weight: 600;
+    color: #1e293b;
   }
 
   .filter-form {
@@ -517,7 +603,7 @@ onMounted(() => {
     transition: all 0.3s ease;
 
     &:hover {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
     }
   }
 
@@ -534,7 +620,7 @@ onMounted(() => {
     transition: all 0.3s ease;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
     }
   }
 }
@@ -565,26 +651,26 @@ onMounted(() => {
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: rgba(99, 102, 241, 0.1);
+    background: rgb(99 102 241 / 10%);
     border-radius: 8px;
   }
 
   /* 状态点样式 */
   .status-dot {
+    display: inline-block;
     width: 8px;
     height: 8px;
-    border-radius: 50%;
     margin-right: 6px;
-    display: inline-block;
+    border-radius: 50%;
 
     &.active {
       background: #10b981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 0 0 3px rgb(16 185 129 / 20%);
     }
 
     &.inactive {
       background: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+      box-shadow: 0 0 0 3px rgb(239 68 68 / 20%);
     }
   }
 }
@@ -594,8 +680,8 @@ onMounted(() => {
   transition: all 0.3s ease;
 
   &:hover {
+    box-shadow: 0 4px 12px rgb(99 102 241 / 15%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
   }
 
   &.is-circle:hover {
@@ -608,8 +694,8 @@ onMounted(() => {
   transition: all 0.2s ease;
 
   &:hover {
-    background: linear-gradient(to right, #eff6ff, #dbeafe);
     padding-left: 20px;
+    background: linear-gradient(to right, #eff6ff, #dbeafe);
   }
 }
 
@@ -617,46 +703,14 @@ onMounted(() => {
 :deep(.el-tag) {
   font-weight: 500;
   border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
 }
 
-/* 响应式设计 */
-@media (max-width: 990px) {
-  .header-section {
-    .page-title {
-      font-size: 20px;
-    }
-
-    .page-subtitle {
-      font-size: 12px;
-    }
-  }
-}
-
-@media (max-width: 760px) {
-  .header-section {
-    padding: 12px 16px;
-
-    .title-container {
-      text-align: center;
-    }
-
-    .action-buttons {
-      justify-content: center;
-    }
-  }
-
-  .search-section {
-    .section-title {
-      font-size: 16px;
-    }
-  }
-
-  .data-table {
-    :deep(.el-table) {
-      font-size: 12px;
-    }
-  }
+// 分页组件样式
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
 }
 
 /* 暗色主题适配 */
@@ -703,11 +757,13 @@ html.dark {
       }
 
       .el-table__header-wrapper th {
-        background-color: #0f172a !important;
         color: #e2e8f0 !important;
+        background-color: #0f172a !important;
         border-bottom-color: #475569 !important;
       }
     }
   }
 }
+
+/* 整体布局样式 */
 </style>

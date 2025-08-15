@@ -587,17 +587,17 @@ onUnmounted(() => {
 
 /* 全屏样式 */
 .preview-panel:fullscreen {
-  background: white;
-  padding: 0;
+  z-index: 9999;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
+  padding: 0;
+  background: white;
 }
 
 .preview-panel:fullscreen .fullscreen-card {
-  border-radius: 0;
   height: 100vh;
   max-height: 100vh;
+  border-radius: 0;
 }
 
 .preview-panel:fullscreen .el-card__header {
@@ -627,41 +627,41 @@ onUnmounted(() => {
 }
 
 /* Webkit 浏览器全屏样式 */
-.preview-panel:-webkit-full-screen {
-  background: white;
-  padding: 0;
+.preview-panel:full-screen {
   width: 100vw;
   height: 100vh;
+  padding: 0;
+  background: white;
 }
 
-.preview-panel:-webkit-full-screen .fullscreen-card {
-  border-radius: 0;
+.preview-panel:full-screen .fullscreen-card {
   height: 100vh;
+  border-radius: 0;
 }
 
 /* Mozilla 浏览器全屏样式 */
-.preview-panel:-moz-full-screen {
-  background: white;
-  padding: 0;
+.preview-panel:full-screen {
   width: 100vw;
   height: 100vh;
+  padding: 0;
+  background: white;
 }
 
-.preview-panel:-moz-full-screen .fullscreen-card {
-  border-radius: 0;
+.preview-panel:full-screen .fullscreen-card {
   height: 100vh;
+  border-radius: 0;
 }
 
 /* IE/Edge 浏览器全屏样式 */
-.preview-panel:-ms-fullscreen {
-  background: white;
-  padding: 0;
+.preview-panel:fullscreen {
   width: 100vw;
   height: 100vh;
+  padding: 0;
+  background: white;
 }
 
-.preview-panel:-ms-fullscreen .fullscreen-card {
-  border-radius: 0;
+.preview-panel:fullscreen .fullscreen-card {
   height: 100vh;
+  border-radius: 0;
 }
 </style>

@@ -419,6 +419,25 @@ function handleSearch() {
 </template>
 
 <style lang="scss" scoped>
+
+
+// 响应式优化
+@media (width <= 640px) {
+  .header-section {
+    .header-actions {
+      width: 100%;
+
+      .search-wrapper {
+        flex: 1;
+
+        .search-input {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
 .app-management {
   display: flex;
   flex-direction: column;
@@ -430,28 +449,28 @@ function handleSearch() {
 .header-section {
   background: white;
   border-bottom: 1px solid #e4e7ed;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
 }
 
 .header-info {
   .page-title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0 0 8px;
     font-size: 24px;
     font-weight: 600;
     color: #303133;
-    margin: 0 0 8px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 
     .title-icon {
-      filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.2));
+      filter: drop-shadow(0 2px 4px rgb(99 102 241 / 20%));
     }
   }
 
   .page-subtitle {
+    margin: 0;
     font-size: 14px;
     color: #909399;
-    margin: 0;
   }
 }
 
@@ -482,24 +501,24 @@ function handleSearch() {
   gap: 20px;
   padding-top: 20px;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     grid-template-columns: 1fr;
   }
 }
 
 // 应用卡片
 .app-card {
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
   background: white;
   border-radius: 12px;
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  overflow: hidden;
 
   &.card-hover:hover {
+    box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 
     .card-actions {
       opacity: 1;
@@ -508,14 +527,14 @@ function handleSearch() {
 
   .card-icon-wrapper {
     position: relative;
-    padding: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 120px;
+    padding: 24px;
 
     .card-main-icon {
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      filter: drop-shadow(0 4px 8px rgb(0 0 0 / 10%));
     }
 
     .card-actions {
@@ -529,7 +548,7 @@ function handleSearch() {
 
       .action-btn {
         background: white;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
         &:hover {
           transform: scale(1.1);
@@ -547,23 +566,23 @@ function handleSearch() {
     padding: 20px;
 
     .card-title {
+      margin: 0 0 8px;
+      overflow: hidden;
       font-size: 18px;
       font-weight: 600;
       color: #303133;
-      margin: 0 0 8px 0;
-      overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     .card-description {
-      font-size: 14px;
-      color: #909399;
-      line-height: 1.6;
-      margin: 0 0 16px 0;
-      height: 44px;
-      overflow: hidden;
       display: -webkit-box;
+      height: 44px;
+      margin: 0 0 16px;
+      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #909399;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
@@ -573,8 +592,8 @@ function handleSearch() {
 
       .model-tag {
         display: inline-flex;
-        align-items: center;
         gap: 4px;
+        align-items: center;
         border-radius: 6px;
 
         .tag-icon {
@@ -597,16 +616,16 @@ function handleSearch() {
 
 // 骨架屏卡片
 .skeleton-card {
+  overflow: hidden;
   background: white;
   border-radius: 12px;
-  overflow: hidden;
 
   .skeleton-header {
-    padding: 24px;
-    background: linear-gradient(135deg, #f5f7fa, #fafbfc);
     display: flex;
     justify-content: center;
     min-height: 120px;
+    padding: 24px;
+    background: linear-gradient(135deg, #f5f7fa, #fafbfc);
 
     .skeleton-icon {
       width: 48px;
@@ -626,29 +645,29 @@ function handleSearch() {
   gap: 12px;
 
   .list-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
     background: white;
     border-radius: 12px;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    cursor: pointer;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
     transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
     &:hover {
+      box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
       transform: translateX(4px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     }
 
     .list-item-icon {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
     }
 
     .list-item-content {
@@ -657,23 +676,23 @@ function handleSearch() {
 
       .list-item-header {
         display: flex;
-        align-items: center;
         gap: 12px;
+        align-items: center;
         margin-bottom: 4px;
       }
 
       .list-item-title {
+        margin: 0;
         font-size: 16px;
         font-weight: 600;
         color: #303133;
-        margin: 0;
       }
 
       .list-item-description {
-        font-size: 14px;
-        color: #909399;
         margin: 0;
         overflow: hidden;
+        font-size: 14px;
+        color: #909399;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -698,32 +717,32 @@ function handleSearch() {
   min-height: 400px;
 
   .empty-content {
-    text-align: center;
     max-width: 400px;
+    text-align: center;
 
     .empty-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 120px;
       height: 120px;
       margin: 0 auto 24px;
       background: linear-gradient(135deg, #f5f7fa, #fafbfc);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .empty-title {
+      margin: 0 0 8px;
       font-size: 18px;
       font-weight: 600;
       color: #303133;
-      margin: 0 0 8px 0;
     }
 
     .empty-description {
+      margin: 0 0 24px;
       font-size: 14px;
-      color: #909399;
-      margin: 0 0 24px 0;
       line-height: 1.6;
+      color: #909399;
     }
 
     .empty-action-btn {
@@ -737,25 +756,8 @@ function handleSearch() {
   display: flex;
   justify-content: center;
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     justify-content: flex-end;
-  }
-}
-
-// 响应式优化
-@media (max-width: 640px) {
-  .header-section {
-    .header-actions {
-      width: 100%;
-
-      .search-wrapper {
-        flex: 1;
-
-        .search-input {
-          width: 100%;
-        }
-      }
-    }
   }
 }
 </style>

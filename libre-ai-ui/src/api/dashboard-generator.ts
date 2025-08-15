@@ -235,15 +235,6 @@ export async function generateDashboardStream(
 }
 
 /**
- * 后处理函数：修复 SVG path 属性中的换行符问题
- */
-function postProcessSvgPaths(content: string): string {
-  // 修复 SVG path 属性中的换行符问题
-  // 使用更精确的正则表达式来处理 d 属性内的换行符
-  return content.replace(/(<path[^>]*\bd\s*=\s*"[^"]*?)(\n)([^"]*?")/g, '$1$3');
-}
-
-/**
  * 获取所有模板配置
  */
 export function getTemplates() {

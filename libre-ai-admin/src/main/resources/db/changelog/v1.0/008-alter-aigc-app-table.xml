@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <changeSet id="008-alter-aigc-app-add-prompt-fields" author="system">
+        <preConditions onFail="MARK_RAN" onError="CONTINUE">
+            <not>
+                <columnExists tableName="aigc_app" columnName="system_prompt"/>
+            </not>
+        </preConditions>
+        <comment>为 aigc_app 表添加系统提示词和用户提示词模板字段</comment>
+        
+        <addColumn tableName="aigc_app">
+            <column name="system_prompt" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <addColumn tableName="aigc_app">
+            <column name="user_prompt_template" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <setColumnRemarks tableName="aigc_app" columnName="system_prompt" remarks="系统提示词（定义AI的角色和行为）"/>
+        <setColumnRemarks tableName="aigc_app" columnName="user_prompt_template" remarks="用户提示词模板（可包含占位符如 {{question}}）"/>
+    </changeSet>
+
+</databaseChangeLog>

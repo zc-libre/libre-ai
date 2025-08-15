@@ -85,9 +85,9 @@ const getIconComponent = (icon: any) => {
 .table-action {
   /* 使用与 embed-store 相同的 Tailwind 类效果 */
   display: flex;
+  gap: 8px; /* 对应 gap-2 */
   align-items: center;
   justify-content: center;
-  gap: 8px; /* 对应 gap-2 */
 }
 
 /* 与 embed-store 保持一致的按钮样式 */
@@ -95,8 +95,8 @@ const getIconComponent = (icon: any) => {
   transition: all 0.3s ease;
 
   &:hover {
+    box-shadow: 0 4px 12px rgb(99 102 241 / 15%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
   }
 
   &.is-circle {

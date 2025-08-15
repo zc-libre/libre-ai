@@ -288,9 +288,9 @@ function highlightContent(content: string, keyword?: string) {
 
 <style lang="scss" scoped>
 .docs-slice-container {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .search-section {
@@ -298,8 +298,8 @@ function highlightContent(content: string, keyword?: string) {
 }
 
 .slice-content {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-height: 0;
 }
@@ -317,8 +317,8 @@ function highlightContent(content: string, keyword?: string) {
     .dark & {
       background: linear-gradient(
         to right,
-        rgba(59, 130, 246, 0.1),
-        rgba(99, 102, 241, 0.1)
+        rgb(59 130 246 / 10%),
+        rgb(99 102 241 / 10%)
       );
     }
   }
@@ -328,8 +328,8 @@ function highlightContent(content: string, keyword?: string) {
   }
 
   &:hover {
-    transform: translateY(-2px);
     border-color: var(--el-color-primary-light-3);
+    transform: translateY(-2px);
   }
 }
 
@@ -338,24 +338,24 @@ function highlightContent(content: string, keyword?: string) {
 
   :deep(mark) {
     padding: 2px 4px;
-    border-radius: 2px;
     font-weight: 500;
+    border-radius: 2px;
   }
 }
 
 .line-clamp-4 {
   display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 .slice-footer {
   :deep(.el-pagination) {
     justify-content: center;
 
-    @media (min-width: 640px) {
+    @media (width >= 640px) {
       justify-content: flex-end;
     }
   }

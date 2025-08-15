@@ -17,25 +17,25 @@
 
 <style scoped>
 .timeline-preview {
-  width: 100%;
-  height: 100%;
-  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
 }
 
 .timeline-container {
+  position: relative;
   width: 100%;
   height: 60%;
-  position: relative;
 }
 
 .timeline-line {
   position: absolute;
   top: 50%;
-  left: 5%;
   right: 5%;
+  left: 5%;
   height: 2px;
   background: #dcdfe6;
   transform: translateY(-50%);
@@ -44,43 +44,43 @@
 .timeline-item {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 4px;
+  align-items: center;
+  transform: translateY(-50%);
 }
 
 .timeline-point {
+  z-index: 2;
   width: 10px;
   height: 10px;
   background: #409eff;
-  border-radius: 50%;
   border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 2;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .timeline-content {
+  position: relative;
   width: 30px;
   height: 20px;
+  margin-top: 8px;
   background: #f0f2f5;
   border-radius: 4px;
-  position: relative;
-  margin-top: 8px;
 }
 
 .timeline-content::after {
-  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   width: 60%;
   height: 4px;
+  content: '';
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   border-radius: 2px;
   opacity: 0.5;
+  transform: translate(-50%, -50%);
 }
 
 .timeline-item:nth-child(even) .timeline-content {

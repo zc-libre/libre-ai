@@ -499,6 +499,7 @@ defineExpose({ show });
               inline-prompt
               :active-icon="CircleCheck"
               style="
+
                 --el-switch-on-color: #10b981;
                 --el-switch-off-color: #ef4444;
               "
@@ -527,52 +528,78 @@ defineExpose({ show });
 </template>
 
 <style lang="scss" scoped>
-// 弹窗样式
+
+
+// 响应式设计
+@media (width <= 768px) {
+  .dialog-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .form-container {
+    padding: 16px;
+  }
+
+  .form-section {
+    .section-header {
+      font-size: 14px;
+    }
+  }
+
+  :deep(.el-form) {
+    .el-form-item__label {
+      width: 100px !important;
+    }
+  }
+}
+
 :deep(.fixed-dialog) {
   .el-dialog {
-    margin: 5vh auto !important;
-    max-height: 90vh;
     display: flex;
     flex-direction: column;
+    max-height: 90vh;
+    margin: 5vh auto !important;
     overflow: hidden;
   }
 
   .el-dialog__header {
+    flex-shrink: 0;
     padding: 0;
     margin: 0;
-    flex-shrink: 0;
   }
 
   .el-dialog__body {
-    padding: 0;
-    flex: 1;
-    overflow: hidden;
-    min-height: 0;
     display: flex;
+    flex: 1;
     flex-direction: column;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
   }
 
   .el-dialog__footer {
-    padding: 16px 24px;
-    border-top: 1px solid #e2e8f0;
-    background: #f8fafc;
     flex-shrink: 0;
+    padding: 16px 24px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
   }
 }
 
 // 头部样式
 .dialog-header {
-  padding: 20px 24px;
-  color: #1f2937;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 20px 24px;
+  color: #1f2937;
   border-bottom: 1px solid #e5e7eb;
 
   .header-content {
     display: flex;
-    align-items: center;
     gap: 12px;
+    align-items: center;
   }
 
   .provider-icon {
@@ -590,27 +617,27 @@ defineExpose({ show });
   padding: 16px 24px 0;
 
   .config-alert {
-    border-radius: 8px;
     background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
     border: 1px solid #fbbf24;
+    border-radius: 8px;
 
     .alert-title {
       display: flex;
-      align-items: center;
       gap: 8px;
+      align-items: center;
       font-weight: 600;
       color: #92400e;
     }
 
     .alert-content {
       margin-top: 8px;
-      color: #78350f;
       font-size: 13px;
+      color: #78350f;
     }
 
     .alert-list {
-      margin: 0;
       padding-left: 20px;
+      margin: 0;
       line-height: 1.8;
 
       li {
@@ -622,11 +649,10 @@ defineExpose({ show });
 
 // 表单容器
 .form-container {
-  padding: 24px;
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
   min-height: 0;
+  padding: 24px;
+  overflow: hidden auto;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -657,12 +683,12 @@ defineExpose({ show });
 
   .section-header {
     display: flex;
-    align-items: center;
     gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
     font-size: 16px;
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: 12px;
   }
 
   :deep(.el-divider) {
@@ -679,14 +705,14 @@ defineExpose({ show });
 
   .label-container {
     display: flex;
-    align-items: center;
     gap: 6px;
+    align-items: center;
     font-size: 14px;
 
     .help-icon {
+      font-size: 14px;
       color: #94a3b8;
       cursor: help;
-      font-size: 14px;
 
       &:hover {
         color: #6366f1;
@@ -719,8 +745,8 @@ defineExpose({ show });
 // 底部按钮
 .dialog-footer {
   display: flex;
-  justify-content: flex-end;
   gap: 12px;
+  justify-content: flex-end;
 
   :deep(.el-button) {
     min-width: 100px;
@@ -728,33 +754,8 @@ defineExpose({ show });
     transition: all 0.3s ease;
 
     &:hover {
+      box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-  }
-}
-
-// 响应式设计
-@media (max-width: 768px) {
-  .dialog-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .form-container {
-    padding: 16px;
-  }
-
-  .form-section {
-    .section-header {
-      font-size: 14px;
-    }
-  }
-
-  :deep(.el-form) {
-    .el-form-item__label {
-      width: 100px !important;
     }
   }
 }
@@ -809,5 +810,5 @@ html.dark {
     background: #1e293b;
     border-top-color: #334155;
   }
-}
+}// 弹窗样式
 </style>

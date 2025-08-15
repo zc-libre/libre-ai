@@ -25,29 +25,29 @@
 
 <style scoped>
 .dashboard-preview {
-  width: 100%;
-  height: 100%;
-  padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
 }
 
 .gauge-container {
-  flex: 1;
   display: flex;
+  flex: 1;
+  gap: 8px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
 }
 
 .gauge {
-  background: #f0f2f5;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 8px;
+  background: #f0f2f5;
+  border-radius: 8px;
 }
 
 .gauge-large {
@@ -61,25 +61,22 @@
 }
 
 .gauge-circle {
+  position: relative;
   width: 100%;
   aspect-ratio: 1;
   background: white;
   border-radius: 50%;
-  position: relative;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .gauge-circle::before {
-  content: '';
   position: absolute;
-  top: 10%;
-  left: 10%;
-  right: 10%;
-  bottom: 10%;
+  inset: 10%;
+  content: '';
   border: 3px solid #409eff;
-  border-radius: 50%;
-  border-bottom-color: transparent;
   border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
   transform: rotate(-45deg);
 }
 
@@ -90,51 +87,51 @@
   width: 2px;
   height: 35%;
   background: #e6a23c;
-  transform-origin: bottom center;
-  transform: translate(-50%, -100%) rotate(30deg);
   border-radius: 1px;
+  transform: translate(-50%, -100%) rotate(30deg);
+  transform-origin: bottom center;
 }
 
 .gauge-pointer::after {
-  content: '';
   position: absolute;
   bottom: -4px;
   left: 50%;
-  transform: translateX(-50%);
   width: 6px;
   height: 6px;
+  content: '';
   background: #303133;
   border-radius: 50%;
+  transform: translateX(-50%);
 }
 
 .status-bar {
-  height: 25px;
   display: flex;
   gap: 4px;
+  height: 25px;
 }
 
 .status-item {
+  position: relative;
   flex: 1;
   background: #f0f2f5;
   border-radius: 4px;
-  position: relative;
 }
 
 .status-item::after {
-  content: '';
   position: absolute;
   top: 50%;
   left: 10px;
-  transform: translateY(-50%);
   width: 8px;
   height: 8px;
+  content: '';
   background: #67c23a;
   border-radius: 50%;
-  box-shadow: 0 0 4px rgba(103, 194, 58, 0.5);
+  box-shadow: 0 0 4px rgb(103 194 58 / 50%);
+  transform: translateY(-50%);
 }
 
 .status-item:nth-child(3)::after {
   background: #e6a23c;
-  box-shadow: 0 0 4px rgba(230, 162, 60, 0.5);
+  box-shadow: 0 0 4px rgb(230 162 60 / 50%);
 }
 </style>

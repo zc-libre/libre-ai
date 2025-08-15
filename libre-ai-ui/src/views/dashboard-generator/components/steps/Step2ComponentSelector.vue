@@ -693,31 +693,55 @@ const updateData = () => {
 </script>
 
 <style scoped>
+
+
+/* 响应式设计 */
+@media (width <= 990px) {
+  .component-card {
+    flex: 0 0 calc(25% - 12px);
+  }
+}
+
+@media (width <= 760px) {
+  .component-grid {
+    justify-content: center;
+  }
+
+  .component-card {
+    flex: 0 0 calc(50% - 8px);
+    min-width: 120px;
+  }
+
+  .step-title {
+    font-size: 20px;
+  }
+}
+
 .step2-component-selector {
   margin: 0 auto;
 }
 
 .step-header {
-  text-align: center;
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .step-title {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  margin-bottom: 12px;
   font-size: 24px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 12px;
 }
 
 .step-description {
-  font-size: 16px;
-  color: #606266;
-  line-height: 1.6;
   margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #606266;
 }
 
 .section {
@@ -725,16 +749,16 @@ const updateData = () => {
 }
 
 .section-title {
+  margin-bottom: 16px;
   font-size: 18px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 16px;
 }
 
 .section-subtitle {
+  margin-bottom: 20px;
   font-size: 14px;
   color: #606266;
-  margin-bottom: 20px;
 }
 
 .component-grid {
@@ -745,27 +769,27 @@ const updateData = () => {
 }
 
 .component-card {
+  position: relative;
   flex: 0 0 calc(20% - 13px);
   min-width: 140px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  background: white;
   border: 2px solid #ebeef5;
   border-radius: 8px;
-  padding: 16px;
-  cursor: pointer;
   transition: all 0.3s ease;
-  background: white;
-  text-align: center;
-  position: relative;
 }
 
 .component-card:hover {
   border-color: #409eff;
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
+  box-shadow: 0 2px 8px rgb(64 158 255 / 15%);
 }
 
 .component-card.selected {
-  border-color: #409eff;
-  background: linear-gradient(135deg, #409eff, #6366f1);
   color: white;
+  background: linear-gradient(135deg, #409eff, #6366f1);
+  border-color: #409eff;
 }
 
 .component-icon {
@@ -773,9 +797,9 @@ const updateData = () => {
 }
 
 .component-name {
+  margin-bottom: 4px;
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
 }
 
 .component-description {
@@ -831,17 +855,17 @@ const updateData = () => {
 }
 
 .component-config-card {
+  overflow: hidden;
+  background: #fff;
   border: 1px solid #e4e7ed;
   border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  overflow: hidden;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
 }
 
 .config-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 16px 20px;
   background: #f8f9fa;
   border-bottom: 1px solid #e4e7ed;
@@ -850,14 +874,14 @@ const updateData = () => {
 .config-title {
   display: flex;
   align-items: center;
-  font-weight: 600;
   font-size: 16px;
+  font-weight: 600;
   color: #303133;
 }
 
 .config-tabs {
-  border: none;
   background: transparent;
+  border: none;
 }
 
 .config-tabs :deep(.el-tabs__header) {
@@ -876,8 +900,8 @@ const updateData = () => {
 
 .form-hint {
   margin-left: 8px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .refresh-input {
@@ -890,11 +914,11 @@ const updateData = () => {
 }
 
 .section-header {
+  padding-bottom: 8px;
+  margin-bottom: 16px;
   font-size: 14px;
   font-weight: 600;
   color: #606266;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -908,16 +932,16 @@ const updateData = () => {
   grid-template-columns: 1fr 1fr 120px 100px auto;
   gap: 12px;
   align-items: center;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
   background: #f8f9fa;
   border-radius: 6px;
 }
 
 .column-options {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .add-column-btn {
@@ -940,30 +964,8 @@ const updateData = () => {
 }
 
 .error-hint {
-  color: #f56c6c;
-  font-size: 12px;
   margin-top: 4px;
-}
-
-/* 响应式设计 */
-@media (max-width: 990px) {
-  .component-card {
-    flex: 0 0 calc(25% - 12px);
-  }
-}
-
-@media (max-width: 760px) {
-  .component-grid {
-    justify-content: center;
-  }
-
-  .component-card {
-    flex: 0 0 calc(50% - 8px);
-    min-width: 120px;
-  }
-
-  .step-title {
-    font-size: 20px;
-  }
+  font-size: 12px;
+  color: #f56c6c;
 }
 </style>

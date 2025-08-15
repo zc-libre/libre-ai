@@ -50,6 +50,19 @@ import { Icon } from '@iconify/vue';
 </template>
 
 <style lang="scss" scoped>
+
+
+// 响应式设计
+@media (width <= 768px) {
+  .order-chart-card,
+  .order-list-card {
+    margin: 0 -8px;
+    border-top: 1px solid var(--pure-border-color);
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
 .order-chart-card,
 .order-list-card {
   background: var(--el-bg-color);
@@ -58,27 +71,16 @@ import { Icon } from '@iconify/vue';
 
   :deep(.el-card__header) {
     padding: 16px 20px;
-    border-bottom: 1px solid var(--pure-border-color);
     background: var(--el-bg-color);
+    border-bottom: 1px solid var(--pure-border-color);
   }
 
   :deep(.el-card__body) {
     padding: 20px;
 
-    @media (max-width: 640px) {
+    @media (width <= 640px) {
       padding: 16px;
     }
-  }
-}
-
-// 响应式设计
-@media (max-width: 768px) {
-  .order-chart-card,
-  .order-list-card {
-    margin: 0 -8px;
-    border-radius: 0;
-    box-shadow: none;
-    border-top: 1px solid var(--pure-border-color);
   }
 }
 

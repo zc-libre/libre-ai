@@ -15,8 +15,8 @@ defineProps<Props>();
 
 <style lang="scss" scoped>
 .import-container {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 </style>

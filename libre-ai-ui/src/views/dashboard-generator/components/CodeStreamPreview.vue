@@ -248,19 +248,49 @@ watch(
 </script>
 
 <style scoped>
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 响应式设计 */
+@media (width <= 768px) {
+  .preview-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .code-content {
+    font-size: 12px;
+  }
+}
+
 .code-stream-preview {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow: hidden;
   background: #1e1e1e;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .preview-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 12px 16px;
   background: #2d2d30;
   border-bottom: 1px solid #3e3e42;
@@ -268,32 +298,23 @@ watch(
 
 .header-left {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .streaming-icon {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .preview-title {
   font-size: 14px;
   font-weight: 500;
-  color: #cccccc;
+  color: #ccc;
 }
 
 .code-size {
+  color: #ccc;
   background: #3e3e42;
-  color: #cccccc;
   border-color: #565656;
 }
 
@@ -303,11 +324,11 @@ watch(
 }
 
 .code-container {
+  position: relative;
   flex: 1;
+  padding: 0;
   overflow: hidden;
   background: #1e1e1e;
-  position: relative;
-  padding: 0;
 }
 
 .empty-state {
@@ -316,8 +337,8 @@ watch(
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #808080;
   padding: 16px;
+  color: #808080;
 }
 
 .empty-state p {
@@ -333,12 +354,12 @@ watch(
 
 /* 进度条 */
 .streaming-progress {
+  display: flex;
+  gap: 12px;
+  align-items: center;
   padding: 8px 16px;
   background: #2d2d30;
   border-top: 1px solid #3e3e42;
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 .streaming-progress :deep(.el-progress) {
@@ -368,23 +389,5 @@ watch(
 
 .code-container::-webkit-scrollbar-thumb:hover {
   background: #707070;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .preview-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-
-  .header-actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-
-  .code-content {
-    font-size: 12px;
-  }
 }
 </style>

@@ -18,12 +18,12 @@
 
 <style scoped>
 .header-main-preview {
-  width: 100%;
-  height: 100%;
-  padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
 }
 
 .header-section {
@@ -33,15 +33,15 @@
 }
 
 .kpi-card {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
   background: #f0f2f5;
   border-radius: 4px;
-  padding: 4px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2px;
 }
 
 .kpi-value {
@@ -59,18 +59,18 @@
 }
 
 .main-section {
-  flex: 1;
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  flex: 1;
   grid-template-rows: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 4px;
 }
 
 .chart-card {
-  background: #f0f2f5;
-  border-radius: 4px;
   position: relative;
   overflow: hidden;
+  background: #f0f2f5;
+  border-radius: 4px;
 }
 
 .chart-card.large {
@@ -78,12 +78,12 @@
 }
 
 .chart-card::after {
-  content: '';
   position: absolute;
+  right: 10%;
   bottom: 10%;
   left: 10%;
-  right: 10%;
   height: 40%;
+  content: '';
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 4px;
   opacity: 0.3;

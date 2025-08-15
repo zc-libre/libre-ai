@@ -140,10 +140,10 @@ const getCompleteHtml = () => {
 
 <style scoped>
 .dashboard-preview {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
   background: #f5f7fa;
 }
 
@@ -156,8 +156,8 @@ const getCompleteHtml = () => {
 }
 
 .placeholder-content {
-  text-align: center;
   color: #909399;
+  text-align: center;
 }
 
 .placeholder-content h3 {
@@ -180,7 +180,7 @@ const getCompleteHtml = () => {
 .preview-iframe {
   width: 100%;
   height: 100%;
-  border: none;
   background: white;
+  border: none;
 }
 </style>

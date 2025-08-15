@@ -289,8 +289,8 @@ defineExpose({ show });
 .knowledge-edit-dialog {
   :deep(.el-dialog__header) {
     padding: 20px 24px;
-    border-bottom: 1px solid var(--el-border-color-lighter);
     margin-bottom: 0;
+    border-bottom: 1px solid var(--el-border-color-lighter);
   }
 
   :deep(.el-dialog__body) {
@@ -304,8 +304,8 @@ defineExpose({ show });
 }
 
 .dialog-content {
-  padding: 24px;
   max-height: 60vh;
+  padding: 24px;
   overflow-y: auto;
 }
 
@@ -320,10 +320,10 @@ defineExpose({ show });
 
   .section-header {
     display: flex;
-    align-items: center;
     gap: 8px;
-    margin-bottom: 16px;
+    align-items: center;
     padding-bottom: 8px;
+    margin-bottom: 16px;
     border-bottom: 1px solid var(--el-border-color-lighter);
   }
 
@@ -339,9 +339,9 @@ defineExpose({ show });
   }
 
   :deep(.el-form-item__label) {
+    margin-bottom: 8px;
     font-weight: 500;
     color: var(--el-text-color-regular);
-    margin-bottom: 8px;
   }
 
   :deep(.el-select) {
@@ -355,7 +355,7 @@ defineExpose({ show });
 
 .dialog-footer {
   display: flex;
-  justify-content: flex-end;
   gap: 12px;
+  justify-content: flex-end;
 }
 </style>

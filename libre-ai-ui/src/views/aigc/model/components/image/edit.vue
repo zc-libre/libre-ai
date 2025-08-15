@@ -105,8 +105,8 @@ defineExpose({ show });
 <style lang="scss" scoped>
 :deep(.el-drawer) {
   .el-drawer__header {
-    margin-bottom: 20px;
     padding: 16px 20px;
+    margin-bottom: 20px;
     border-bottom: 1px solid var(--el-border-color-lighter);
   }
 
@@ -127,14 +127,14 @@ defineExpose({ show });
 
       &__label {
         font-weight: 500;
-        color: var(--el-text-color-regular);
         line-height: 32px;
+        color: var(--el-text-color-regular);
       }
 
       &__content {
-        min-height: 32px;
         display: flex;
         align-items: center;
+        min-height: 32px;
       }
     }
 
@@ -143,10 +143,10 @@ defineExpose({ show });
       font-size: 14px;
 
       .el-input__wrapper {
-        width: 100%;
-        min-height: 32px;
         display: flex;
         align-items: center;
+        width: 100%;
+        min-height: 32px;
         background-color: var(--el-fill-color-blank);
         border: 1px solid var(--el-border-color);
         border-radius: var(--el-border-radius-base);
@@ -163,14 +163,14 @@ defineExpose({ show });
       }
 
       .el-input__inner {
+        width: 100%;
         height: 30px;
-        line-height: 30px;
         padding: 0 12px;
+        line-height: 30px;
         color: var(--el-text-color-regular);
         background: transparent;
         border: none;
         outline: none;
-        width: 100%;
 
         &::placeholder {
           color: var(--el-text-color-placeholder);
@@ -182,10 +182,10 @@ defineExpose({ show });
       width: 100%;
 
       .el-select__wrapper {
-        width: 100%;
-        min-height: 32px;
         display: flex;
         align-items: center;
+        width: 100%;
+        min-height: 32px;
         background-color: var(--el-fill-color-blank);
         border: 1px solid var(--el-border-color);
         border-radius: var(--el-border-radius-base);
@@ -203,8 +203,8 @@ defineExpose({ show });
 
       .el-select__selection {
         display: flex;
-        align-items: center;
         flex-wrap: wrap;
+        align-items: center;
         width: 100%;
         min-height: 30px;
         padding: 0 12px;
@@ -216,8 +216,8 @@ defineExpose({ show });
       }
 
       .el-select__placeholder {
-        color: var(--el-text-color-placeholder);
         line-height: 30px;
+        color: var(--el-text-color-placeholder);
       }
     }
 
@@ -226,11 +226,11 @@ defineExpose({ show });
       padding: 0 12px;
 
       &__runway {
-        margin: 16px 0;
+        position: relative;
         height: 6px;
+        margin: 16px 0;
         background-color: var(--el-border-color-lighter);
         border-radius: 3px;
-        position: relative;
       }
 
       &__bar {
@@ -240,12 +240,12 @@ defineExpose({ show });
       }
 
       &__button-wrapper {
-        height: 20px;
         width: 20px;
+        height: 20px;
         background-color: var(--el-color-primary);
         border: 2px solid #fff;
         border-radius: 50%;
-        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12);
+        box-shadow: 0 2px 6px 0 rgb(0 0 0 / 12%);
 
         &:hover {
           transform: scale(1.2);
@@ -256,14 +256,14 @@ defineExpose({ show });
 
   .el-button--primary {
     width: 100%;
-    margin-top: 30px;
     height: 40px;
+    margin-top: 30px;
     font-size: 16px;
     border-radius: var(--el-border-radius-base);
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   :deep(.el-drawer) {
     width: 90% !important;
 

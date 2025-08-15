@@ -410,9 +410,9 @@ function getStatusText(status: number) {
 
 <style lang="scss" scoped>
 .docs-list-container {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .search-section {
@@ -422,22 +422,22 @@ function getStatusText(status: number) {
 .search-input {
   :deep(.el-input__wrapper) {
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
     transition: all 0.3s ease;
 
     &:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
     }
 
     &.is-focus {
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+      box-shadow: 0 4px 20px rgb(59 130 246 / 15%);
     }
   }
 }
 
 .table-section {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-height: 0;
 }
@@ -453,7 +453,7 @@ function getStatusText(status: number) {
   :deep(.el-pagination) {
     justify-content: center;
 
-    @media (min-width: 640px) {
+    @media (width >= 640px) {
       justify-content: flex-end;
     }
   }
@@ -462,8 +462,8 @@ function getStatusText(status: number) {
 :deep(.el-table) {
   .el-table__header {
     th {
-      background-color: var(--el-bg-color-page);
       font-weight: 600;
+      background-color: var(--el-bg-color-page);
     }
   }
 

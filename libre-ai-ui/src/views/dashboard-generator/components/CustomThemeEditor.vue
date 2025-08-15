@@ -329,10 +329,10 @@ const handleClose = () => {
 
 .section-label {
   display: block;
-  font-weight: 600;
-  color: #303133;
   margin-bottom: 12px;
   font-size: 14px;
+  font-weight: 600;
+  color: #303133;
 }
 
 .color-grid {
@@ -343,17 +343,17 @@ const handleClose = () => {
 
 .color-item {
   padding: 16px;
+  background: #fafafa;
   border: 1px solid #e4e7ed;
   border-radius: 8px;
-  background: #fafafa;
 }
 
 .color-label {
   display: block;
-  font-weight: 500;
-  color: #606266;
   margin-bottom: 8px;
   font-size: 13px;
+  font-weight: 500;
+  color: #606266;
 }
 
 .color-input-group {
@@ -369,37 +369,37 @@ const handleClose = () => {
 }
 
 .color-description {
-  font-size: 12px;
-  color: #909399;
   margin: 0;
+  font-size: 12px;
   line-height: 1.4;
+  color: #909399;
 }
 
 .theme-preview-container {
+  overflow: hidden;
   border: 1px solid #e4e7ed;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .preview-card {
-  background: var(--preview-surface);
-  color: var(--preview-text);
   padding: 20px;
+  color: var(--preview-text);
+  background: var(--preview-surface);
 }
 
 .preview-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  justify-content: space-between;
   padding-bottom: 12px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--preview-accent);
 }
 
 .preview-title {
   margin: 0;
-  color: var(--preview-text);
   font-size: 18px;
+  color: var(--preview-text);
 }
 
 .preview-actions {
@@ -409,19 +409,19 @@ const handleClose = () => {
 
 .preview-button {
   padding: 6px 12px;
-  border-radius: 4px;
   font-size: 12px;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .preview-button.primary {
-  background: var(--preview-primary);
   color: white;
+  background: var(--preview-primary);
 }
 
 .preview-button.secondary {
-  background: var(--preview-secondary);
   color: white;
+  background: var(--preview-secondary);
 }
 
 .preview-content {
@@ -461,16 +461,16 @@ const handleClose = () => {
 }
 
 .text-primary {
-  color: var(--preview-text);
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-weight: 500;
+  color: var(--preview-text);
 }
 
 .text-secondary {
-  color: var(--preview-text);
-  opacity: 0.7;
   margin: 0;
   font-size: 14px;
+  color: var(--preview-text);
+  opacity: 0.7;
 }
 
 .template-grid {
@@ -484,15 +484,15 @@ const handleClose = () => {
   flex-direction: column;
   align-items: center;
   padding: 12px;
+  cursor: pointer;
   border: 1px solid #e4e7ed;
   border-radius: 6px;
-  cursor: pointer;
   transition: all 0.2s;
 }
 
 .template-item:hover {
-  border-color: #409eff;
   background: #f0f8ff;
+  border-color: #409eff;
 }
 
 .template-preview {
@@ -503,8 +503,8 @@ const handleClose = () => {
 .template-color {
   width: 16px;
   height: 16px;
-  border-radius: 2px;
   margin-right: 2px;
+  border-radius: 2px;
 }
 
 .template-name {
@@ -515,7 +515,7 @@ const handleClose = () => {
 
 .dialog-footer {
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
+  justify-content: flex-end;
 }
 </style>

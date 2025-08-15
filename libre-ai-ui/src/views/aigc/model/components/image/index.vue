@@ -230,6 +230,41 @@ function handleDel(record: any) {
 </template>
 
 <style lang="scss" scoped>
+
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 表格样式现在由 BasicTable 的 model-management 主题提供 */
+
+/* 响应式设计 */
+@media (width <= 1024px) {
+  .config-content {
+    flex-direction: column;
+  }
+
+  .provider-mobile-selector {
+    display: block;
+  }
+}
+
+@media (width <= 768px) {
+  .config-header {
+    padding: 1rem;
+  }
+
+  .config-content {
+    padding: 1rem;
+  }
+}
+
 .image-provider-container {
   display: flex;
   flex-direction: column;
@@ -238,33 +273,24 @@ function handleDel(record: any) {
 
 /* 头部配置区域 */
 .config-header {
-  flex-shrink: 0;
   position: relative;
+  flex-shrink: 0;
   overflow: hidden;
 }
 
 .config-header::before {
-  content: '';
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
+  content: '';
   background: radial-gradient(
     circle,
-    rgba(147, 51, 234, 0.08) 0%,
+    rgb(147 51 234 / 8%) 0%,
     transparent 70%
   );
   animation: rotate 20s linear infinite;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .icon-box {
@@ -279,9 +305,9 @@ function handleDel(record: any) {
 
 /* 自定义提示框 */
 .custom-alert {
-  background: rgba(239, 246, 255, 0.6);
-  border: 1px solid rgba(147, 197, 253, 0.3);
+  background: rgb(239 246 255 / 60%);
   backdrop-filter: blur(8px);
+  border: 1px solid rgb(147 197 253 / 30%);
 }
 
 :deep(.custom-alert) {
@@ -301,7 +327,7 @@ function handleDel(record: any) {
 }
 
 .provider-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
 .provider-item {
@@ -310,16 +336,16 @@ function handleDel(record: any) {
 }
 
 .provider-item::before {
-  content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
+  content: '';
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(147, 51, 234, 0.1),
+    rgb(147 51 234 / 10%),
     transparent
   );
   transition: left 0.5s ease;
@@ -333,28 +359,5 @@ function handleDel(record: any) {
 .model-table-wrapper {
   display: flex;
   flex-direction: column;
-}
-
-/* 表格样式现在由 BasicTable 的 model-management 主题提供 */
-
-/* 响应式设计 */
-@media (max-width: 1024px) {
-  .config-content {
-    flex-direction: column;
-  }
-
-  .provider-mobile-selector {
-    display: block;
-  }
-}
-
-@media (max-width: 768px) {
-  .config-header {
-    padding: 1rem;
-  }
-
-  .config-content {
-    padding: 1rem;
-  }
 }
 </style>

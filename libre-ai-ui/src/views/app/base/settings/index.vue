@@ -27,6 +27,9 @@ function onRemove(item) {
 function onModelChange(model: any) {
   appStore.modelId = model.id;
   appStore.model = model;
+}
+
+function onSave() {
   emit('update');
 }
 </script>
@@ -93,6 +96,10 @@ function onModelChange(model: any) {
         </div>
       </ElCollapseItem>
     </ElCollapse>
+
+    <div class="flex justify-end mt-4">
+      <ElButton type="primary" @click="onSave">保存配置</ElButton>
+    </div>
 
     <KnowledgeList ref="knowledgeRef" />
   </div>

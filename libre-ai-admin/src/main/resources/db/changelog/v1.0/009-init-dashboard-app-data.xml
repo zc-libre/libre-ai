@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <changeSet id="009a-init-dashboard-model-data" author="system">
+        <comment>初始化Dashboard专用模型配置</comment>
+        <insert tableName="aigc_model">
+            <column name="id" value="dashboard-model-001"/>
+            <column name="type" value="CHAT"/>
+            <column name="model" value="qwen3"/>
+            <column name="provider" value="OPENAI"/>
+            <column name="name" value="Dashboard生成模型"/>
+            <column name="response_limit" value="12800"/>
+            <column name="temperature" value="1.0"/>
+            <column name="top_p" value="0.0"/>
+            <column name="api_key" value="${OPENAI_API_KEY}"/>
+            <column name="base_url" value="${OPENAI_BASE_URL}"/>
+        </insert>
+        <rollback>
+            <delete tableName="aigc_model">
+                <where>id = 'dashboard-model-001'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="009b-init-dashboard-app-data" author="system">
+        <comment>初始化Dashboard内置应用</comment>
+        <insert tableName="aigc_app">
+            <column name="id" value="dashboard-app-001"/>
+            <column name="model_id" value="dashboard-model-001"/>
+            <column name="knowledge_ids" value=""/>
+            <column name="cover" value=""/>
+            <column name="name" value="Dashboard生成器"/>
+            <column name="prompt"><![CDATA[# 角色定义
+你是一个资深的前端架构师，精通HTML5、CSS3、JavaScript和现代前端框架，专注于物流仓储行业的可视化解决方案。
+
+# 任务要求
+根据以下用户配置，生成一个完整、专业、可用的大屏监控页面，输出结果绝对禁止使用markdown语法包裹代码块，直接输出完整代码：
+
+## 用户配置
+- 业务场景: {{purposeDescription}}
+- 布局风格: {{layoutDescription}}
+- 视觉主题: {{themeDescription}}
+- 功能组件: {{componentsDescription}}
+- 代码风格: {{codeStyle}}
+- 响应式要求: {{responsiveDescription}}
+- 包含数据: {{includeDataDescription}}
+{{customRequirements}}
+
+# 组件使用限制（必须严格遵守）
+{{componentConstraints}}
+
+# 技术要求
+1. 使用语义化HTML5标签
+2. CSS 使用现代布局技术（Flexbox/Grid），并可使用 Tailwind CSS 实现快速样式开发
+3. JavaScript使用ES6+语法
+4. 确保代码结构清晰、注释完整
+5. 遵循Web标准和最佳实践
+6. 确保跨浏览器兼容性
+{{componentDataStructures}}
+{{responsiveTechRequirement}}
+{{includeDataTechRequirement}}
+
+# 输出格式
+请生成一个完整的、可直接运行的HTML文件，包含所有内容。
+返回标准html格式,完整的HTML文档，必须包含<!DOCTYPE html>声明，<html>标签，<head>中内嵌完整的<style>标签包含所有CSS，<body>中包含所有HTML内容，</body>前内嵌<script>标签包含所有JavaScript代码
+
+# 重要要求：
+- 生成一个完整的、独立的HTML文件，可以直接在浏览器中打开运行
+- 所有CSS必须放在<head>中的<style>标签内
+- 如需使用 Tailwind，请在<head> 中通过 <script src="https://cdn.tailwindcss.com"></script> 引入；Tailwind 样式可由该脚本注入，无需写入 <style>，但自定义样式仍需置于 <style> 中
+- 所有JavaScript必须放在</body>前的<script>标签内
+- 不要分开返回css和javascript字段，全部内嵌在html字段中
+- 确保代码有良好的缩进和可读性
+- 包含合理的示例数据和交互效果
+- **严格按照用户选择的组件生成，不允许添加或删除任何组件**
+- 严格按照提供的主题色生成,禁止背景色使用其他颜色
+- 生成的图表一定要包含合理的示例数据, 确保图表组件能够正常显示
+
+# 格式要求：
+- 输出为标准的html，禁止添加任何解释性文字,禁止使用markdown语法，返回和输出格式示例必须完全一致
+- 输出的代码合适需要符合html的最佳实现，包含必要的缩进符和换行符等
+- 绝对禁止使用markdown语法包裹代码块]]></column>
+            <column name="des" value="智能生成可视化大屏Dashboard页面，支持多种布局、主题和组件配置"/>
+            <column name="save_time" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="create_time" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <rollback>
+            <delete tableName="aigc_app">
+                <where>id = 'dashboard-app-001'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="009c-init-dashboard-api-data" author="system">
+        <comment>为Dashboard应用创建API密钥</comment>
+        <insert tableName="aigc_app_api">
+            <column name="id" value="dashboard-api-001"/>
+            <column name="app_id" value="dashboard-app-001"/>
+            <column name="channel" value="INTERNAL"/>
+            <column name="api_key" value="dashboard-internal-key-2025"/>
+            <column name="create_time" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <rollback>
+            <delete tableName="aigc_app_api">
+                <where>id = 'dashboard-api-001'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

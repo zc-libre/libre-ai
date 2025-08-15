@@ -364,236 +364,10 @@ defineExpose({
 </script>
 
 <style scoped>
-.step5-dashboard-generator {
-  margin: 0 auto;
-}
 
-.step-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.step-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  font-size: 24px;
-  font-weight: 600;
-  color: #303133;
-  margin-bottom: 12px;
-}
-
-.step-description {
-  font-size: 16px;
-  color: #606266;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.config-summary {
-  margin-bottom: 30px;
-}
-
-.summary-title {
-  font-weight: 600;
-  color: #303133;
-}
-
-.summary-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: flex-start;
-}
-
-.summary-item {
-  flex: 0 0 calc(25% - 12px);
-  min-width: 180px;
-  padding: 12px;
-  background: #f5f7fa;
-  border-radius: 6px;
-}
-
-.item-label {
-  font-size: 12px;
-  color: #909399;
-  margin-bottom: 4px;
-}
-
-.item-value {
-  font-size: 14px;
-  color: #303133;
-  font-weight: 500;
-}
-
-.component-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.generation-controls {
-  margin-bottom: 30px;
-}
-
-.control-section {
-  margin-bottom: 20px;
-}
-
-.control-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #303133;
-  margin-bottom: 16px;
-}
-
-.control-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 16px;
-  justify-content: flex-start;
-}
-
-.control-item {
-  flex: 0 0 calc(33.333% - 11px);
-  min-width: 180px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.control-label {
-  font-size: 14px;
-  color: #606266;
-  font-weight: 500;
-}
-
-.generation-action {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.generate-btn {
-  padding: 12px 32px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.btn-icon {
-  margin-right: 8px;
-}
-
-.generation-progress {
-  margin-bottom: 30px;
-}
-
-.progress-content {
-  text-align: center;
-}
-
-.progress-text {
-  font-size: 16px;
-  color: #303133;
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-
-.progress-steps {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.progress-step {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-}
-
-.progress-step.completed {
-  background: #f0f9ff;
-  color: #67c23a;
-}
-
-.progress-step.active {
-  background: #e6f7ff;
-  color: #409eff;
-}
-
-.generation-result {
-  margin-top: 30px;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.result-title {
-  font-weight: 600;
-  color: #303133;
-}
-
-.result-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.result-stats {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 600;
-  color: #409eff;
-  margin-bottom: 4px;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: #909399;
-}
-
-.result-description {
-  padding: 16px;
-  background: #f5f7fa;
-  border-radius: 6px;
-  color: #606266;
-  line-height: 1.6;
-}
-
-/* 流式代码预览样式 */
-.code-stream-section {
-  margin-top: 30px;
-}
-
-.code-stream-section :deep(.el-card) {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-.code-stream-section :deep(.el-card__body) {
-  padding: 0;
-  height: 500px;
-}
 
 /* 响应式设计 - 与项目整体断点保持一致 */
-@media (max-width: 990px) {
+@media (width <= 990px) {
   .summary-item {
     flex: 0 0 calc(50% - 8px);
   }
@@ -603,7 +377,7 @@ defineExpose({
   }
 }
 
-@media (max-width: 760px) {
+@media (width <= 760px) {
   .summary-grid {
     flex-direction: column;
     gap: 12px;
@@ -642,5 +416,233 @@ defineExpose({
   .step-title {
     font-size: 20px;
   }
+}
+
+.step5-dashboard-generator {
+  margin: 0 auto;
+}
+
+.step-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.step-title {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.step-description {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #606266;
+}
+
+.config-summary {
+  margin-bottom: 30px;
+}
+
+.summary-title {
+  font-weight: 600;
+  color: #303133;
+}
+
+.summary-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+.summary-item {
+  flex: 0 0 calc(25% - 12px);
+  min-width: 180px;
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 6px;
+}
+
+.item-label {
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #909399;
+}
+
+.item-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #303133;
+}
+
+.component-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.generation-controls {
+  margin-bottom: 30px;
+}
+
+.control-section {
+  margin-bottom: 20px;
+}
+
+.control-title {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.control-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+
+.control-item {
+  display: flex;
+  flex: 0 0 calc(33.333% - 11px);
+  flex-direction: column;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.control-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #606266;
+}
+
+.generation-action {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.generate-btn {
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-icon {
+  margin-right: 8px;
+}
+
+.generation-progress {
+  margin-bottom: 30px;
+}
+
+.progress-content {
+  text-align: center;
+}
+
+.progress-text {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #303133;
+}
+
+.progress-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.progress-step {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.progress-step.completed {
+  color: #67c23a;
+  background: #f0f9ff;
+}
+
+.progress-step.active {
+  color: #409eff;
+  background: #e6f7ff;
+}
+
+.generation-result {
+  margin-top: 30px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.result-title {
+  font-weight: 600;
+  color: #303133;
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.result-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  margin-bottom: 4px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #409eff;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #909399;
+}
+
+.result-description {
+  padding: 16px;
+  line-height: 1.6;
+  color: #606266;
+  background: #f5f7fa;
+  border-radius: 6px;
+}
+
+/* 流式代码预览样式 */
+.code-stream-section {
+  margin-top: 30px;
+}
+
+.code-stream-section :deep(.el-card) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.code-stream-section :deep(.el-card__body) {
+  height: 500px;
+  padding: 0;
 }
 </style>

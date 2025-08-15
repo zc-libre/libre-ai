@@ -46,24 +46,24 @@
 }
 
 .fullscreen-container {
-  width: 100%;
-  height: 100%;
-  background: #f0f2f5;
-  border-radius: 4px;
   display: flex;
   flex-direction: column;
-  padding: 4px;
   gap: 3px;
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  background: #f0f2f5;
+  border-radius: 4px;
 }
 
 .header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 12%;
+  padding: 0 6px;
   background: white;
   border-radius: 2px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 6px;
 }
 
 .title-placeholder {
@@ -81,29 +81,29 @@
 }
 
 .main-content {
-  flex: 1;
   display: flex;
+  flex: 1;
   gap: 3px;
 }
 
 .left-section {
   flex: 2;
+  padding: 4px;
   background: white;
   border-radius: 2px;
-  padding: 4px;
 }
 
 .large-chart {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
+  height: 100%;
 }
 
 .chart-title {
-  height: 8px;
   width: 40%;
+  height: 8px;
   background: #c0c4cc;
   border-radius: 2px;
 }
@@ -116,21 +116,21 @@
 }
 
 .right-section {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 3px;
 }
 
 .metric-card {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
   background: white;
   border-radius: 2px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
 }
 
 .metric-value {
@@ -156,14 +156,14 @@
 }
 
 .footer-bar {
-  height: 10%;
-  background: white;
-  border-radius: 2px;
   display: flex;
-  align-items: center;
   gap: 3px;
+  align-items: center;
+  height: 10%;
   padding: 0 4px;
   overflow: hidden;
+  background: white;
+  border-radius: 2px;
 }
 
 .scroll-item {

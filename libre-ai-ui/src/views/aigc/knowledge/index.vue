@@ -502,6 +502,25 @@ function handleDelete(record: any) {
 </template>
 
 <style lang="scss" scoped>
+
+
+// 响应式优化
+@media (width <= 640px) {
+  .header-section {
+    .header-actions {
+      width: 100%;
+
+      .search-wrapper {
+        flex: 1;
+
+        .search-input {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
 .view-container {
   height: 100%;
   overflow: hidden;
@@ -518,28 +537,28 @@ function handleDelete(record: any) {
 .header-section {
   background: white;
   border-bottom: 1px solid #e4e7ed;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
 }
 
 .header-info {
   .page-title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0 0 8px;
     font-size: 24px;
     font-weight: 600;
     color: #303133;
-    margin: 0 0 8px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 
     .title-icon {
-      filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.2));
+      filter: drop-shadow(0 2px 4px rgb(99 102 241 / 20%));
     }
   }
 
   .page-subtitle {
+    margin: 0;
     font-size: 14px;
     color: #909399;
-    margin: 0;
   }
 }
 
@@ -559,8 +578,8 @@ function handleDelete(record: any) {
 
 // 主内容区域
 .main-content {
-  background: #f5f7fa;
   box-sizing: border-box;
+  background: #f5f7fa;
 }
 
 // 知识库卡片
@@ -575,25 +594,8 @@ function handleDelete(record: any) {
   display: flex;
   justify-content: center;
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     justify-content: flex-end;
-  }
-}
-
-// 响应式优化
-@media (max-width: 640px) {
-  .header-section {
-    .header-actions {
-      width: 100%;
-
-      .search-wrapper {
-        flex: 1;
-
-        .search-input {
-          width: 100%;
-        }
-      }
-    }
   }
 }
 </style>

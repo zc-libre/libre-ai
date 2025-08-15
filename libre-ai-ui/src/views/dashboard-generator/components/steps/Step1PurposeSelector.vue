@@ -300,64 +300,90 @@ const getExampleTips = () => {
 </script>
 
 <style scoped>
+
+
+/* 响应式设计 - 与项目整体断点保持一致 */
+@media (width <= 990px) {
+  .purpose-card {
+    flex: 0 0 calc(50% - 8px);
+  }
+}
+
+@media (width <= 760px) {
+  .purpose-grid {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .purpose-card {
+    flex: 1 1 auto;
+    min-width: unset;
+    padding: 16px;
+  }
+
+  .step-title {
+    font-size: 20px;
+  }
+}
+
 .step1-purpose-selector {
   margin: 0 auto;
 }
 
 .step-header {
-  text-align: center;
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .step-title {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  margin-bottom: 12px;
   font-size: 24px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 12px;
 }
 
 .step-description {
-  font-size: 16px;
-  color: #606266;
-  line-height: 1.6;
   margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #606266;
 }
 
 .purpose-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 30px;
   justify-content: flex-start;
+  margin-bottom: 30px;
 }
 
 .purpose-card {
   flex: 0 0 calc(20% - 13px);
   min-width: 180px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  background: white;
   border: 2px solid #ebeef5;
   border-radius: 12px;
-  padding: 20px;
-  cursor: pointer;
   transition: all 0.3s ease;
-  background: white;
-  text-align: center;
 }
 
 .purpose-card:hover {
   border-color: #409eff;
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15);
+  box-shadow: 0 4px 12px rgb(64 158 255 / 15%);
   transform: translateY(-2px);
 }
 
 .purpose-card.selected {
-  border-color: #409eff;
-  background: linear-gradient(135deg, #409eff, #6366f1);
   color: white;
-  box-shadow: 0 8px 25px rgba(64, 158, 255, 0.3);
+  background: linear-gradient(135deg, #409eff, #6366f1);
+  border-color: #409eff;
+  box-shadow: 0 8px 25px rgb(64 158 255 / 30%);
 }
 
 .card-icon {
@@ -365,16 +391,16 @@ const getExampleTips = () => {
 }
 
 .card-title {
+  margin-bottom: 8px;
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 8px;
   color: inherit;
 }
 
 .card-description {
+  margin-bottom: 16px;
   font-size: 14px;
   line-height: 1.5;
-  margin-bottom: 16px;
   opacity: 0.9;
 }
 
@@ -386,19 +412,19 @@ const getExampleTips = () => {
 }
 
 .purpose-detail-config {
-  margin-top: 40px;
   padding: 20px;
+  margin-top: 40px;
   background: #f5f7fa;
   border-radius: 12px;
 }
 
 .divider-text {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
   font-size: 16px;
-  color: #606266;
   font-weight: 500;
+  color: #606266;
 }
 
 .config-grid {
@@ -420,17 +446,17 @@ const getExampleTips = () => {
 
 .config-label {
   display: flex;
-  align-items: center;
   gap: 6px;
+  align-items: center;
   font-size: 14px;
-  color: #606266;
   font-weight: 500;
+  color: #606266;
 }
 
 .help-icon {
+  font-size: 14px;
   color: #909399;
   cursor: help;
-  font-size: 14px;
 }
 
 .example-tips {
@@ -439,32 +465,8 @@ const getExampleTips = () => {
 
 .tips-title {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
   font-size: 14px;
-}
-
-/* 响应式设计 - 与项目整体断点保持一致 */
-@media (max-width: 990px) {
-  .purpose-card {
-    flex: 0 0 calc(50% - 8px);
-  }
-}
-
-@media (max-width: 760px) {
-  .purpose-grid {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .purpose-card {
-    flex: 1 1 auto;
-    min-width: unset;
-    padding: 16px;
-  }
-
-  .step-title {
-    font-size: 20px;
-  }
 }
 </style>

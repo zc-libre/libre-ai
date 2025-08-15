@@ -99,10 +99,10 @@ const previewConfig = {
 </template>
 
 <script setup>
-import PreviewPanel from './components/PreviewPanel.vue'
+import PreviewPanel from './components/PreviewPanel.vue';
 
-const codeType = ref('vue') // 'html' | 'vue'
-const generatedCode = ref('') // Vue组件代码
+const codeType = ref('vue'); // 'html' | 'vue'
+const generatedCode = ref(''); // Vue组件代码
 </script>
 ```
 
@@ -112,53 +112,54 @@ const generatedCode = ref('') // Vue组件代码
 
 #### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `vueCode` | `string` | `''` | Vue单文件组件代码 |
-| `config` | `object` | `{}` | 预览配置 |
+| 属性      | 类型     | 默认值 | 说明              |
+| --------- | -------- | ------ | ----------------- |
+| `vueCode` | `string` | `''`   | Vue单文件组件代码 |
+| `config`  | `object` | `{}`   | 预览配置          |
 
 #### Config配置
 
 ```typescript
 interface PreviewConfig {
-  theme?: 'light' | 'dark'           // 主题模式
-  dependencies?: string[]            // 依赖库列表
-  customConfig?: Record<string, any> // 自定义配置
+  theme?: 'light' | 'dark'; // 主题模式
+  dependencies?: string[]; // 依赖库列表
+  customConfig?: Record<string, any>; // 自定义配置
 }
 ```
 
 #### Events
 
-| 事件 | 参数 | 说明 |
-|------|------|------|
-| `compilation-success` | `(html: string)` | 编译成功 |
-| `compilation-error` | `(error: string)` | 编译失败 |
-| `runtime-error` | `(error: string)` | 运行时错误 |
+| 事件                  | 参数              | 说明       |
+| --------------------- | ----------------- | ---------- |
+| `compilation-success` | `(html: string)`  | 编译成功   |
+| `compilation-error`   | `(error: string)` | 编译失败   |
+| `runtime-error`       | `(error: string)` | 运行时错误 |
 
 ### DashboardPreview
 
 #### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `config` | `object` | `{}` | Dashboard配置 |
-| `generatedCode` | `string` | `''` | 生成的代码 |
-| `codeType` | `'html' \| 'vue'` | `'html'` | 代码类型 |
+| 属性            | 类型              | 默认值   | 说明          |
+| --------------- | ----------------- | -------- | ------------- |
+| `config`        | `object`          | `{}`     | Dashboard配置 |
+| `generatedCode` | `string`          | `''`     | 生成的代码    |
+| `codeType`      | `'html' \| 'vue'` | `'html'` | 代码类型      |
 
 ### PreviewPanel
 
 #### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `dashboardConfig` | `object` | `{}` | Dashboard配置 |
-| `generatedCode` | `string` | `''` | 生成的代码 |
-| `defaultCodeType` | `'html' \| 'vue'` | `'html'` | 默认代码类型 |
-| `isStreaming` | `boolean` | `false` | 是否流式生成 |
+| 属性              | 类型              | 默认值   | 说明          |
+| ----------------- | ----------------- | -------- | ------------- |
+| `dashboardConfig` | `object`          | `{}`     | Dashboard配置 |
+| `generatedCode`   | `string`          | `''`     | 生成的代码    |
+| `defaultCodeType` | `'html' \| 'vue'` | `'html'` | 默认代码类型  |
+| `isStreaming`     | `boolean`         | `false`  | 是否流式生成  |
 
 ## 💡 支持的技术栈
 
 ### ✅ Vue 3 特性
+
 - ✅ Composition API (`<script setup>`)
 - ✅ 响应式系统 (`ref`, `reactive`, `computed`)
 - ✅ 生命周期钩子 (`onMounted`, `onUnmounted` 等)
@@ -166,6 +167,7 @@ interface PreviewConfig {
 - ✅ 模板语法 (`v-if`, `v-for`, `v-model` 等)
 
 ### ✅ Element Plus 组件
+
 - ✅ 所有基础组件 (`el-button`, `el-input` 等)
 - ✅ 表格组件 (`el-table`)
 - ✅ 表单组件 (`el-form`)
@@ -174,6 +176,7 @@ interface PreviewConfig {
 - ✅ 图标库 (`@element-plus/icons-vue`)
 
 ### ✅ TailwindCSS 样式
+
 - ✅ 所有工具类 (40000+ 类)
 - ✅ 响应式断点 (`sm:`, `md:`, `lg:` 等)
 - ✅ 状态变体 (`hover:`, `focus:`, `active:` 等)
@@ -181,6 +184,7 @@ interface PreviewConfig {
 - ✅ 自定义主题集成
 
 ### ✅ ECharts 图表
+
 - ✅ 基础图表 (柱状图、折线图、饼图等)
 - ✅ Vue-ECharts 组件集成
 - ✅ 主题配置
@@ -202,7 +206,7 @@ const config = {
       danger: '#F56C6C'
     }
   }
-}
+};
 ```
 
 ### 与Element Plus集成
@@ -212,10 +216,10 @@ const config = {
 ```css
 /* 自动注入的CSS变量 */
 :root {
-  --el-color-primary: #409EFF;
-  --el-color-success: #67C23A;
-  --el-color-warning: #E6A23C;
-  --el-color-danger: #F56C6C;
+  --el-color-primary: #409eff;
+  --el-color-success: #67c23a;
+  --el-color-warning: #e6a23c;
+  --el-color-danger: #f56c6c;
 }
 ```
 
@@ -225,17 +229,14 @@ const config = {
 
 ```vue
 <template>
-  <VueComponentPreview
-    :vue-code="vueCode"
-    @compilation-error="handleError"
-  />
+  <VueComponentPreview :vue-code="vueCode" @compilation-error="handleError" />
 </template>
 
 <script setup>
-const handleError = (error) => {
-  console.error('Vue编译错误:', error)
+const handleError = error => {
+  console.error('Vue编译错误:', error);
   // 显示错误信息给用户
-}
+};
 </script>
 ```
 
@@ -250,10 +251,10 @@ const handleError = (error) => {
 </template>
 
 <script setup>
-const handleRuntimeError = (error) => {
-  console.error('Vue运行时错误:', error)
+const handleRuntimeError = error => {
+  console.error('Vue运行时错误:', error);
   // 处理运行时错误
-}
+};
 </script>
 ```
 
@@ -267,23 +268,26 @@ const handleRuntimeError = (error) => {
 ## 📊 性能优化
 
 ### 编译性能
+
 - ✅ 增量编译：只编译变更的代码
 - ✅ 缓存机制：编译结果缓存
 - ✅ 异步加载：依赖库按需加载
 
 ### 内存管理
+
 - ✅ iframe隔离：预览组件在独立环境运行
 - ✅ 自动清理：组件销毁时清理资源
 - ✅ 错误边界：编译错误不影响主应用
 
 ### 文件大小
-| 依赖库 | 大小 | 说明 |
-|--------|------|------|
-| Vue 3 | ~1.4MB | 包含编译器和运行时 |
-| Element Plus | ~2.1MB | 完整UI组件库 |
-| TailwindCSS | ~400KB | Play版本（JIT） |
-| ECharts | ~900KB | 图表库 |
-| **总计** | **~4.8MB** | 一次下载，永久离线 |
+
+| 依赖库       | 大小       | 说明               |
+| ------------ | ---------- | ------------------ |
+| Vue 3        | ~1.4MB     | 包含编译器和运行时 |
+| Element Plus | ~2.1MB     | 完整UI组件库       |
+| TailwindCSS  | ~400KB     | Play版本（JIT）    |
+| ECharts      | ~900KB     | 图表库             |
+| **总计**     | **~4.8MB** | 一次下载，永久离线 |
 
 ## 🧪 测试
 
@@ -327,12 +331,13 @@ const dependencies = {
       }
     ]
   }
-}
+};
 ```
 
 ## 📄 许可证
 
 本功能基于以下开源项目：
+
 - Vue 3: MIT License
 - Element Plus: MIT License
 - TailwindCSS: MIT License
@@ -343,6 +348,7 @@ const dependencies = {
 欢迎提交Issue和Pull Request来改进此功能！
 
 ### 开发规范
+
 - 遵循现有的代码风格
 - 添加必要的类型注解
 - 编写单元测试

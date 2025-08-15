@@ -59,7 +59,6 @@ const tabs = [
 
 onMounted(() => {
   loadAppInfo();
-  updateSaveTime();
 });
 
 async function loadAppInfo() {
@@ -227,9 +226,11 @@ async function onTabClick(tabKey: string) {
                 <div class="app-meta">
                   <span class="meta-item">
                     <el-icon :size="12"><Check /></el-icon>
-                    自动保存
+                    手动保存
                   </span>
-                  <span class="meta-time">{{ lastSaveTime }}</span>
+                  <span v-if="lastSaveTime" class="meta-time"
+                    >上次保存: {{ lastSaveTime }}</span
+                  >
                   <span v-if="isSaving" class="saving-indicator">
                     <el-icon class="animate-spin" :size="12">
                       <Refresh />
@@ -248,6 +249,9 @@ async function onTabClick(tabKey: string) {
               circle
               @click="handleRefresh"
             />
+            <el-button :loading="isSaving" @click="handleSave">
+              保存
+            </el-button>
             <el-button
               type="primary"
               :icon="ChatLineRound"
@@ -353,19 +357,73 @@ async function onTabClick(tabKey: string) {
 </template>
 
 <style lang="scss" scoped>
+
+
+// 动画
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 响应式
+@media (width <= 1024px) {
+  .main-content {
+    padding: 16px;
+  }
+}
+
+@media (width <= 768px) {
+  .header-section {
+    .header-content {
+      padding: 0 16px;
+    }
+
+    .nav-row {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+
+      .nav-right {
+        justify-content: flex-end;
+        width: 100%;
+      }
+    }
+
+    .tab-row {
+      .tabs-container {
+        overflow-x: auto;
+
+        .tab-item {
+          padding: 12px 16px;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .main-content {
+    padding: 12px;
+  }
+}
+
 .app-detail-page {
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
 // 头部样式
 .header-section {
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   border-bottom: 1px solid #e4e7ed;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
 
   .header-content {
     width: 100%;
@@ -374,26 +432,26 @@ async function onTabClick(tabKey: string) {
 
   .nav-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding: 16px 0;
     border-bottom: 1px solid #f0f2f5;
 
     .nav-left {
       display: flex;
-      align-items: center;
       gap: 16px;
+      align-items: center;
 
       .back-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        border: 1px solid #e4e7ed;
-        background: white;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 36px;
+        height: 36px;
         cursor: pointer;
+        background: white;
+        border: 1px solid #e4e7ed;
+        border-radius: 8px;
         transition: all 0.3s;
 
         &:hover {
@@ -404,44 +462,44 @@ async function onTabClick(tabKey: string) {
 
       .app-info {
         display: flex;
-        align-items: center;
         gap: 12px;
+        align-items: center;
 
         .app-icon-wrapper {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
         }
 
         .app-details {
           .app-name {
+            margin: 0 0 4px;
             font-size: 18px;
             font-weight: 600;
             color: #303133;
-            margin: 0 0 4px 0;
           }
 
           .app-meta {
             display: flex;
-            align-items: center;
             gap: 12px;
+            align-items: center;
             font-size: 12px;
             color: #909399;
 
             .meta-item {
               display: flex;
-              align-items: center;
               gap: 4px;
+              align-items: center;
             }
 
             .saving-indicator {
               display: flex;
-              align-items: center;
               gap: 4px;
+              align-items: center;
               color: #409eff;
             }
           }
@@ -451,8 +509,8 @@ async function onTabClick(tabKey: string) {
 
     .nav-right {
       display: flex;
-      align-items: center;
       gap: 12px;
+      align-items: center;
     }
   }
 
@@ -466,9 +524,9 @@ async function onTabClick(tabKey: string) {
       .tab-item {
         position: relative;
         padding: 12px 24px;
+        cursor: pointer;
         background: transparent;
         border: none;
-        cursor: pointer;
         transition: all 0.3s;
 
         &:hover:not(:disabled) {
@@ -485,33 +543,33 @@ async function onTabClick(tabKey: string) {
 
           .tab-content {
             .tab-label {
-              color: #303133;
               font-weight: 600;
+              color: #303133;
             }
           }
         }
 
         .tab-content {
           display: flex;
-          align-items: center;
           gap: 8px;
+          align-items: center;
 
           .tab-icon {
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            filter: drop-shadow(0 2px 4px rgb(0 0 0 / 10%));
           }
 
           .tab-label {
             font-size: 14px;
-            color: #606266;
             font-weight: 500;
+            color: #606266;
           }
         }
 
         .tab-indicator {
           position: absolute;
+          right: 0;
           bottom: 0;
           left: 0;
-          right: 0;
           height: 2px;
           transition: all 0.3s;
         }
@@ -522,9 +580,9 @@ async function onTabClick(tabKey: string) {
 
 // 主内容区域 - 修复宽度问题
 .main-content {
-  background: #f5f7fa;
   width: 100%;
   padding: 24px;
+  background: #f5f7fa;
 
   .loading-state {
     display: flex;
@@ -545,23 +603,23 @@ async function onTabClick(tabKey: string) {
   }
 
   .content-panel {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
+    height: 100%;
 
     .tab-description-card {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 20px;
       background: white;
       border-radius: 12px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
 
       .desc-icon {
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        filter: drop-shadow(0 2px 4px rgb(0 0 0 / 10%));
       }
 
       .desc-text {
@@ -571,13 +629,13 @@ async function onTabClick(tabKey: string) {
     }
 
     .tab-content-area {
-      background: white;
-      border-radius: 12px;
       flex: 1;
       min-height: 600px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-      overflow: hidden;
       padding: 0;
+      overflow: hidden;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
 
       .config-container,
       .prompt-container,
@@ -599,84 +657,33 @@ async function onTabClick(tabKey: string) {
       text-align: center;
 
       .error-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100px;
         height: 100px;
         margin: 0 auto 20px;
         background: linear-gradient(135deg, #fee, #fff);
         border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
 
       .error-title {
+        margin: 0 0 8px;
         font-size: 18px;
         font-weight: 600;
         color: #303133;
-        margin: 0 0 8px 0;
       }
 
       .error-description {
+        margin: 0 0 20px;
         font-size: 14px;
         color: #909399;
-        margin: 0 0 20px 0;
       }
     }
-  }
-}
-
-// 动画
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
 
 .animate-spin {
   animation: spin 1s linear infinite;
-}
-
-// 响应式
-@media (max-width: 1024px) {
-  .main-content {
-    padding: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-section {
-    .header-content {
-      padding: 0 16px;
-    }
-
-    .nav-row {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 12px;
-
-      .nav-right {
-        width: 100%;
-        justify-content: flex-end;
-      }
-    }
-
-    .tab-row {
-      .tabs-container {
-        overflow-x: auto;
-
-        .tab-item {
-          padding: 12px 16px;
-          white-space: nowrap;
-        }
-      }
-    }
-  }
-
-  .main-content {
-    padding: 12px;
-  }
 }
 </style>

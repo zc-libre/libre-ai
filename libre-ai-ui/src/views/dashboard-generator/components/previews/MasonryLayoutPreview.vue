@@ -58,54 +58,54 @@
 }
 
 .masonry-column {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
 }
 
 .masonry-item {
-  background: #f0f2f5;
-  border-radius: 4px;
-  padding: 3px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding: 3px;
+  background: #f0f2f5;
+  border-radius: 4px;
 }
 
 .item-header {
+  position: relative;
   height: 6px;
   background: white;
   border-radius: 2px;
-  position: relative;
 }
 
 .item-header::after {
-  content: '';
   position: absolute;
   top: 50%;
   left: 4px;
-  transform: translateY(-50%);
   width: 35%;
   height: 3px;
+  content: '';
   background: #409eff;
   border-radius: 1px;
+  transform: translateY(-50%);
 }
 
 .item-content {
-  background: white;
-  border-radius: 2px;
   position: relative;
   overflow: hidden;
+  background: white;
+  border-radius: 2px;
 }
 
 .item-content::after {
-  content: '';
   position: absolute;
+  right: 10%;
   bottom: 15%;
   left: 10%;
-  right: 10%;
   height: 40%;
+  content: '';
   border-radius: 2px;
   opacity: 0.3;
 }

@@ -26,4 +26,10 @@
     <!-- 系统角色-菜单关联初始化数据 -->
     <include file="db/changelog/v1.0/007-init-sys-role-menu-data.xml"/>
 
+    <!-- AIGC应用表结构更新 -->
+    <include file="db/changelog/v1.0/008-alter-aigc-app-table.xml"/>
+
+    <!-- Dashboard应用初始化数据 -->
+    <include file="db/changelog/v1.0/009-init-dashboard-app-data.xml"/>
+
 </databaseChangeLog>

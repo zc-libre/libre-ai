@@ -173,6 +173,29 @@ const actionColumn = reactive({
 </template>
 
 <style lang="scss" scoped>
+
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 响应式设计 */
+@media (width <= 768px) {
+  .config-header {
+    padding: 1rem;
+  }
+
+  .config-content {
+    padding: 1rem;
+  }
+}
+
 .api-table-container {
   display: flex;
   flex-direction: column;
@@ -181,33 +204,24 @@ const actionColumn = reactive({
 
 /* 头部配置区域 */
 .config-header {
-  flex-shrink: 0;
   position: relative;
+  flex-shrink: 0;
   overflow: hidden;
 }
 
 .config-header::before {
-  content: '';
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
+  content: '';
   background: radial-gradient(
     circle,
-    rgba(59, 130, 246, 0.08) 0%,
+    rgb(59 130 246 / 8%) 0%,
     transparent 70%
   );
   animation: rotate 20s linear infinite;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .icon-box {
@@ -223,16 +237,5 @@ const actionColumn = reactive({
 /* 内容区域 */
 .config-content {
   overflow: hidden;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .config-header {
-    padding: 1rem;
-  }
-
-  .config-content {
-    padding: 1rem;
-  }
 }
 </style>

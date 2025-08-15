@@ -442,147 +442,10 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-// 表单整体样式
-.enhanced-form {
-  :deep(.el-form-item__label) {
-    font-weight: 500;
-    color: #374151;
-  }
-}
 
-// 表单分组样式
-.form-section {
-  margin-bottom: 32px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 12px;
-  }
-
-  :deep(.el-divider) {
-    margin: 12px 0 20px;
-  }
-}
-
-// 表单项增强样式
-.form-item-enhanced {
-  :deep(.el-form-item__label) {
-    height: auto;
-    line-height: 32px;
-  }
-
-  .label-container {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-
-    .help-icon {
-      color: #94a3b8;
-      cursor: help;
-      font-size: 14px;
-
-      &:hover {
-        color: #6366f1;
-      }
-    }
-  }
-
-  // 输入框样式增强
-  :deep(.el-input) {
-    .el-input__wrapper {
-      box-shadow: 0 0 0 1px #e2e8f0 inset;
-      transition: all 0.3s ease;
-      border-radius: 6px;
-
-      &:hover {
-        box-shadow: 0 0 0 1px #cbd5e1 inset;
-      }
-
-      &.is-focus {
-        box-shadow: 0 0 0 2px #6366f1 inset;
-      }
-    }
-  }
-
-  :deep(.el-input-number) {
-    .el-input__wrapper {
-      box-shadow: 0 0 0 1px #e2e8f0 inset;
-      transition: all 0.3s ease;
-      border-radius: 6px;
-
-      &:hover {
-        box-shadow: 0 0 0 1px #cbd5e1 inset;
-      }
-
-      &.is-focus {
-        box-shadow: 0 0 0 2px #6366f1 inset;
-      }
-    }
-  }
-
-  :deep(.el-select) {
-    .el-input__wrapper {
-      box-shadow: 0 0 0 1px #e2e8f0 inset;
-      transition: all 0.3s ease;
-      border-radius: 6px;
-
-      &:hover {
-        box-shadow: 0 0 0 1px #cbd5e1 inset;
-      }
-
-      &.is-focus {
-        box-shadow: 0 0 0 2px #6366f1 inset;
-      }
-    }
-  }
-
-  :deep(.el-textarea) {
-    .el-textarea__inner {
-      box-shadow: 0 0 0 1px #e2e8f0 inset;
-      transition: all 0.3s ease;
-      border-radius: 6px;
-      border: none;
-
-      &:hover {
-        box-shadow: 0 0 0 1px #cbd5e1 inset;
-      }
-
-      &:focus {
-        box-shadow: 0 0 0 2px #6366f1 inset;
-      }
-    }
-  }
-}
-
-// 操作按钮样式
-.action-buttons {
-  display: flex;
-  gap: 12px;
-
-  :deep(.el-button) {
-    min-width: 100px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-  }
-}
 
 // 响应式设计
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .form-section {
     .section-header {
       font-size: 14px;
@@ -607,7 +470,7 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .form-section {
     margin-bottom: 24px;
 
@@ -622,6 +485,144 @@ onMounted(() => {
         width: 80px !important;
         font-size: 12px;
       }
+    }
+  }
+}
+
+.enhanced-form {
+  :deep(.el-form-item__label) {
+    font-weight: 500;
+    color: #374151;
+  }
+}
+
+// 表单分组样式
+.form-section {
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-header {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  :deep(.el-divider) {
+    margin: 12px 0 20px;
+  }
+}
+
+// 表单项增强样式
+.form-item-enhanced {
+  :deep(.el-form-item__label) {
+    height: auto;
+    line-height: 32px;
+  }
+
+  .label-container {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 14px;
+
+    .help-icon {
+      font-size: 14px;
+      color: #94a3b8;
+      cursor: help;
+
+      &:hover {
+        color: #6366f1;
+      }
+    }
+  }
+
+  // 输入框样式增强
+  :deep(.el-input) {
+    .el-input__wrapper {
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px #e2e8f0 inset;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 0 0 1px #cbd5e1 inset;
+      }
+
+      &.is-focus {
+        box-shadow: 0 0 0 2px #6366f1 inset;
+      }
+    }
+  }
+
+  :deep(.el-input-number) {
+    .el-input__wrapper {
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px #e2e8f0 inset;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 0 0 1px #cbd5e1 inset;
+      }
+
+      &.is-focus {
+        box-shadow: 0 0 0 2px #6366f1 inset;
+      }
+    }
+  }
+
+  :deep(.el-select) {
+    .el-input__wrapper {
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px #e2e8f0 inset;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 0 0 1px #cbd5e1 inset;
+      }
+
+      &.is-focus {
+        box-shadow: 0 0 0 2px #6366f1 inset;
+      }
+    }
+  }
+
+  :deep(.el-textarea) {
+    .el-textarea__inner {
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px #e2e8f0 inset;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 0 0 1px #cbd5e1 inset;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 2px #6366f1 inset;
+      }
+    }
+  }
+}
+
+// 操作按钮样式
+.action-buttons {
+  display: flex;
+  gap: 12px;
+
+  :deep(.el-button) {
+    min-width: 100px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+      transform: translateY(-2px);
     }
   }
 }
@@ -654,8 +655,8 @@ html.dark {
     // 暗色主题下的输入框样式
     :deep(.el-input) {
       .el-input__wrapper {
-        box-shadow: 0 0 0 1px #475569 inset;
         background-color: #1e293b;
+        box-shadow: 0 0 0 1px #475569 inset;
 
         &:hover {
           box-shadow: 0 0 0 1px #64748b inset;
@@ -669,8 +670,8 @@ html.dark {
 
     :deep(.el-input-number) {
       .el-input__wrapper {
-        box-shadow: 0 0 0 1px #475569 inset;
         background-color: #1e293b;
+        box-shadow: 0 0 0 1px #475569 inset;
 
         &:hover {
           box-shadow: 0 0 0 1px #64748b inset;
@@ -684,8 +685,8 @@ html.dark {
 
     :deep(.el-select) {
       .el-input__wrapper {
-        box-shadow: 0 0 0 1px #475569 inset;
         background-color: #1e293b;
+        box-shadow: 0 0 0 1px #475569 inset;
 
         &:hover {
           box-shadow: 0 0 0 1px #64748b inset;
@@ -699,9 +700,9 @@ html.dark {
 
     :deep(.el-textarea) {
       .el-textarea__inner {
-        box-shadow: 0 0 0 1px #475569 inset;
-        background-color: #1e293b;
         color: #e2e8f0;
+        background-color: #1e293b;
+        box-shadow: 0 0 0 1px #475569 inset;
 
         &:hover {
           box-shadow: 0 0 0 1px #64748b inset;
@@ -713,5 +714,5 @@ html.dark {
       }
     }
   }
-}
+}// 表单整体样式
 </style>

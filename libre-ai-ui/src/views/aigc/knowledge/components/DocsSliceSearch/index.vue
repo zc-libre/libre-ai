@@ -292,8 +292,8 @@ function getScoreText(score: number) {
 }
 
 .results-section {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-height: 0;
 }
@@ -312,31 +312,31 @@ function getScoreText(score: number) {
     .dark & {
       background: linear-gradient(
         to right,
-        rgba(59, 130, 246, 0.1),
-        rgba(99, 102, 241, 0.1)
+        rgb(59 130 246 / 10%),
+        rgb(99 102 241 / 10%)
       );
     }
   }
 
   &:hover {
-    transform: translateY(-2px);
     border-color: var(--el-color-primary-light-3);
+    transform: translateY(-2px);
   }
 }
 
 .line-clamp-5 {
   display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
 }
 
 .history-section {
   :deep(.el-tag) {
     &:hover {
-      background-color: var(--el-color-primary-light-9);
       color: var(--el-color-primary);
+      background-color: var(--el-color-primary-light-9);
       border-color: var(--el-color-primary-light-5);
     }
   }

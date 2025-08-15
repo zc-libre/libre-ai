@@ -326,14 +326,14 @@ defineExpose({
 
 <style scoped>
 .monaco-editor-container {
+  position: relative;
   width: 100%;
   height: 100%;
   min-height: 200px;
+  overflow: hidden;
+  background-color: #1e1e1e;
   border: 1px solid #3e3e42;
   border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-  background-color: #1e1e1e;
   transition: border-color 0.3s ease;
 }
 
@@ -343,6 +343,6 @@ defineExpose({
 
 .monaco-editor-container:focus-within {
   border-color: #007acc;
-  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+  box-shadow: 0 0 0 2px rgb(0 122 204 / 20%);
 }
 </style>

@@ -287,13 +287,13 @@ defineExpose({ togglePageFullscreen, toggleFullscreen });
 
       .md-editor-content {
         .md-editor-input-wrapper {
-          background-color: #1e1e20;
           color: #cfd3dc;
+          background-color: #1e1e20;
         }
 
         .md-editor-preview-wrapper {
-          background-color: #1e1e20;
           color: #cfd3dc;
+          background-color: #1e1e20;
         }
       }
     }
@@ -315,12 +315,12 @@ defineExpose({ togglePageFullscreen, toggleFullscreen });
   // 预览组件样式
   :deep(.md-editor-preview) {
     &.md-editor-preview-dark {
-      background-color: #1e1e20;
       color: #cfd3dc;
+      background-color: #1e1e20;
     }
 
     &.md-editor-preview-light {
-      background-color: #ffffff;
+      background-color: #fff;
     }
   }
 
@@ -328,16 +328,15 @@ defineExpose({ togglePageFullscreen, toggleFullscreen });
   .preview-only-container {
     position: relative;
     width: 100%;
+    overflow: hidden;
+    background-color: #fff;
     border: 1px solid var(--el-border-color);
     border-radius: 4px;
-    background-color: #ffffff;
-    overflow: hidden;
 
     .preview-content-wrapper {
       width: 100%;
       height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow: hidden auto;
 
       // 让MdPreview内容自然流动
       :deep(.md-editor-preview) {
@@ -346,10 +345,10 @@ defineExpose({ togglePageFullscreen, toggleFullscreen });
         border: none !important;
 
         .md-editor-preview-wrapper {
-          padding: 16px;
+          box-sizing: border-box;
           height: auto !important;
           min-height: 100%;
-          box-sizing: border-box;
+          padding: 16px;
         }
       }
 
@@ -383,14 +382,14 @@ defineExpose({ togglePageFullscreen, toggleFullscreen });
       .preview-content-wrapper {
         // 暗色模式滚动条
         &::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
+          background: rgb(255 255 255 / 5%);
         }
 
         &::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.2);
+          background: rgb(255 255 255 / 20%);
 
           &:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgb(255 255 255 / 30%);
           }
         }
       }

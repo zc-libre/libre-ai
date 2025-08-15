@@ -250,71 +250,110 @@ const selectLayout = (layout: any) => {
 </script>
 
 <style scoped>
+
+
+/* 响应式设计 */
+@media (width <= 1200px) {
+  .layout-card {
+    flex: 0 0 calc(33.333% - 14px);
+  }
+}
+
+@media (width <= 990px) {
+  .layout-card {
+    flex: 0 0 calc(50% - 10px);
+  }
+}
+
+@media (width <= 760px) {
+  .layout-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .layout-card {
+    flex: 1 1 auto;
+    min-width: unset;
+  }
+
+  .layout-preview {
+    height: 150px;
+  }
+
+  .layout-info {
+    padding: 16px;
+  }
+
+  .step-title {
+    font-size: 20px;
+  }
+}
+
 .step4-layout-selector {
   margin: 0 auto;
 }
 
 .step-header {
-  text-align: center;
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .step-title {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  margin-bottom: 12px;
   font-size: 24px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 12px;
 }
 
 .step-description {
-  font-size: 16px;
-  color: #606266;
-  line-height: 1.6;
   margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #606266;
 }
 
 .layout-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  margin-bottom: 30px;
   justify-content: flex-start;
+  margin-bottom: 30px;
 }
 
 .layout-card {
   flex: 0 0 calc(25% - 15px);
   min-width: 260px;
-  border: 2px solid #ebeef5;
-  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
   background: white;
+  border: 2px solid #ebeef5;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .layout-card:hover {
   border-color: #409eff;
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15);
+  box-shadow: 0 4px 12px rgb(64 158 255 / 15%);
   transform: translateY(-2px);
 }
 
 .layout-card.selected {
   border-color: #409eff;
-  box-shadow: 0 8px 25px rgba(64, 158, 255, 0.3);
+  box-shadow: 0 8px 25px rgb(64 158 255 / 30%);
 }
 
 .layout-preview {
-  height: 180px;
-  background: #f5f7fa;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  height: 180px;
   overflow: hidden;
+  background: #f5f7fa;
 }
 
 .preview-container {
@@ -322,7 +361,7 @@ const selectLayout = (layout: any) => {
   height: 90%;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .layout-info {
@@ -330,17 +369,17 @@ const selectLayout = (layout: any) => {
 }
 
 .layout-title {
+  margin-bottom: 8px;
   font-size: 18px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 8px;
 }
 
 .layout-description {
-  font-size: 14px;
-  color: #606266;
-  line-height: 1.5;
   margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #606266;
 }
 
 .layout-features {
@@ -351,8 +390,8 @@ const selectLayout = (layout: any) => {
 
 .feature-item {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
   font-size: 13px;
   color: #606266;
 }
@@ -377,42 +416,5 @@ const selectLayout = (layout: any) => {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
-}
-
-/* 响应式设计 */
-@media (max-width: 1200px) {
-  .layout-card {
-    flex: 0 0 calc(33.333% - 14px);
-  }
-}
-
-@media (max-width: 990px) {
-  .layout-card {
-    flex: 0 0 calc(50% - 10px);
-  }
-}
-
-@media (max-width: 760px) {
-  .layout-grid {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .layout-card {
-    flex: 1 1 auto;
-    min-width: unset;
-  }
-
-  .layout-preview {
-    height: 150px;
-  }
-
-  .layout-info {
-    padding: 16px;
-  }
-
-  .step-title {
-    font-size: 20px;
-  }
 }
 </style>

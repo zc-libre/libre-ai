@@ -406,8 +406,8 @@ watch(userPromptMode, (newMode, oldMode) => {
 
   .section-header {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
+    justify-content: space-between;
     margin-bottom: 12px;
 
     .header-left {
@@ -421,8 +421,8 @@ watch(userPromptMode, (newMode, oldMode) => {
 }
 
 .editor-wrapper {
-  border-radius: 4px;
   overflow: hidden;
+  border-radius: 4px;
 
   :deep(.markdown-editor-wrapper) {
     .md-editor {
@@ -434,41 +434,41 @@ watch(userPromptMode, (newMode, oldMode) => {
 
 .example-section {
   .example-card {
+    padding: 12px;
+    font-size: 13px;
     background: #f0f9ff;
     border: 1px solid #b3d8ff;
     border-radius: 6px;
-    padding: 12px;
-    font-size: 13px;
 
     .example-item {
       margin-bottom: 8px;
 
       strong {
-        color: #303133;
         margin-right: 4px;
+        color: #303133;
       }
 
       .example-text {
-        color: #606266;
-        font-family: 'Monaco', 'Menlo', monospace;
-        background: rgba(255, 255, 255, 0.6);
         padding: 2px 6px;
+        font-family: Monaco, Menlo, monospace;
+        color: #606266;
+        background: rgb(255 255 255 / 60%);
         border-radius: 3px;
       }
     }
 
     .example-result {
-      margin-top: 12px;
       padding-top: 12px;
+      margin-top: 12px;
       border-top: 1px dashed #b3d8ff;
 
       .result-content {
-        margin-top: 6px;
         padding-left: 16px;
-        color: #606266;
-        line-height: 1.8;
-        font-family: 'Monaco', 'Menlo', monospace;
+        margin-top: 6px;
+        font-family: Monaco, Menlo, monospace;
         font-size: 12px;
+        line-height: 1.8;
+        color: #606266;
       }
     }
   }
@@ -481,7 +481,7 @@ watch(userPromptMode, (newMode, oldMode) => {
     border-color: #4c4d4f;
 
     .example-text {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgb(0 0 0 / 30%);
     }
 
     .example-result {
@@ -500,7 +500,7 @@ watch(userPromptMode, (newMode, oldMode) => {
 }
 
 code {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
   font-size: 12px;
 }
 </style>

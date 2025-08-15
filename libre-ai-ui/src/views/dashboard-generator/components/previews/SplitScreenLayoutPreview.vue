@@ -18,17 +18,17 @@
 
 <style scoped>
 .split-screen-preview {
+  display: flex;
+  gap: 4px;
   width: 100%;
   height: 100%;
   padding: 8px;
-  display: flex;
-  gap: 4px;
 }
 
 .left-panel,
 .right-panel {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
 }
@@ -40,45 +40,45 @@
 }
 
 .panel-header {
+  position: relative;
   height: 20px;
   background: #f0f2f5;
   border-radius: 4px;
-  position: relative;
 }
 
 .panel-header::after {
-  content: '';
   position: absolute;
   top: 50%;
   left: 10px;
-  transform: translateY(-50%);
   width: 40%;
   height: 6px;
+  content: '';
   background: #409eff;
   border-radius: 2px;
+  transform: translateY(-50%);
 }
 
 .panel-content {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
 }
 
 .chart-item {
+  position: relative;
   flex: 1;
   background: #f0f2f5;
   border-radius: 4px;
-  position: relative;
 }
 
 .chart-item::before {
-  content: '';
   position: absolute;
+  right: 15%;
   bottom: 20%;
   left: 15%;
-  right: 15%;
   height: 30%;
+  content: '';
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   border-radius: 2px;
   opacity: 0.3;

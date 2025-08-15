@@ -496,49 +496,49 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.vue-component-preview {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
 
-.loading-overlay,
-.error-display {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.9);
-  z-index: 10;
-}
-
-.loading-content,
-.error-content {
-  text-align: center;
-  padding: 2rem;
-}
-
-.loading-content .spinning {
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-  font-size: 2rem;
-  color: #409eff;
-}
 
 @keyframes spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.vue-component-preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.loading-overlay,
+.error-display {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(255 255 255 / 90%);
+}
+
+.loading-content,
+.error-content {
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-content .spinning {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #409eff;
+  animation: spin 1s linear infinite;
 }
 
 .error-content h3 {
@@ -547,23 +547,23 @@ onMounted(() => {
 }
 
 .error-message {
+  max-width: 500px;
+  max-height: 200px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow: auto;
+  text-align: left;
   background: #fef0f0;
   border: 1px solid #fbc4c4;
   border-radius: 4px;
-  padding: 1rem;
-  margin: 1rem 0;
-  text-align: left;
-  max-width: 500px;
-  max-height: 200px;
-  overflow: auto;
 }
 
 .error-message pre {
   margin: 0;
-  white-space: pre-wrap;
-  word-break: break-word;
   font-size: 12px;
   color: #f56c6c;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .repl-container {

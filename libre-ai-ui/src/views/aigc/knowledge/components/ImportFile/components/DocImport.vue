@@ -281,41 +281,41 @@ const uploadingCount = computed(() => uploadingFiles.value.size);
     width: 100%;
 
     .el-upload-dragger {
+      background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
       border: 2px dashed var(--el-border-color-lighter);
       border-radius: 12px;
-      background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
       transition: all 0.3s;
 
       .dark & {
         background: linear-gradient(
           to bottom,
-          rgba(30, 41, 59, 0.5),
-          rgba(15, 23, 42, 0.5)
+          rgb(30 41 59 / 50%),
+          rgb(15 23 42 / 50%)
         );
       }
 
       &:hover {
-        border-color: var(--el-color-primary);
         background: linear-gradient(to bottom, #eff6ff, #dbeafe);
+        border-color: var(--el-color-primary);
 
         .dark & {
           background: linear-gradient(
             to bottom,
-            rgba(59, 130, 246, 0.1),
-            rgba(37, 99, 235, 0.1)
+            rgb(59 130 246 / 10%),
+            rgb(37 99 235 / 10%)
           );
         }
       }
 
       &.is-dragover {
-        border-color: var(--el-color-primary);
         background: linear-gradient(to bottom, #dbeafe, #bfdbfe);
+        border-color: var(--el-color-primary);
 
         .dark & {
           background: linear-gradient(
             to bottom,
-            rgba(59, 130, 246, 0.2),
-            rgba(37, 99, 235, 0.2)
+            rgb(59 130 246 / 20%),
+            rgb(37 99 235 / 20%)
           );
         }
       }
@@ -324,10 +324,10 @@ const uploadingCount = computed(() => uploadingFiles.value.size);
 }
 
 .upload-content {
-  padding: 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 40px 20px;
 }
 
 .file-card {
@@ -336,17 +336,17 @@ const uploadingCount = computed(() => uploadingFiles.value.size);
   }
 
   &:hover {
-    transform: translateY(-2px);
     border-color: var(--el-color-primary-light-3);
+    transform: translateY(-2px);
   }
 }
 
 .file-icon {
-  width: 48px;
-  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 48px;
+  height: 48px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   background: var(--el-fill-color-light);
   border-radius: 8px;

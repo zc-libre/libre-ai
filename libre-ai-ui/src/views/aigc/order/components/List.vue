@@ -117,9 +117,9 @@ function handleReset(values: Recordable) {
     }
 
     :deep(.el-table th) {
-      background-color: var(--el-bg-color);
-      color: var(--el-text-color-primary);
       font-weight: 600;
+      color: var(--el-text-color-primary);
+      background-color: var(--el-bg-color);
     }
   }
 }

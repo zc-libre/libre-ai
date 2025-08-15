@@ -102,12 +102,12 @@ function highlightCode(code: string, language: string = 'javascript') {
 <style lang="scss" scoped>
 pre {
   margin: 0;
-  white-space: pre-wrap;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 code {
-  font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   font-size: 14px;
   line-height: 1.5;
 }

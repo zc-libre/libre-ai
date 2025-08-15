@@ -405,31 +405,60 @@ const updateData = () => {
 </script>
 
 <style scoped>
+
+
+/* 响应式设计 */
+@media (width <= 990px) {
+  .color-pickers {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .theme-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (width <= 760px) {
+  .theme-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .demo-stats {
+    flex-direction: column;
+  }
+
+  .step-title {
+    font-size: 20px;
+  }
+}
+
 .step3-theme-selector {
   margin: 0 auto;
 }
 
 .step-header {
-  text-align: center;
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .step-title {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  margin-bottom: 12px;
   font-size: 24px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 12px;
 }
 
 .step-description {
-  font-size: 16px;
-  color: #606266;
-  line-height: 1.6;
   margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #606266;
 }
 
 .section {
@@ -437,16 +466,16 @@ const updateData = () => {
 }
 
 .section-title {
+  margin-bottom: 16px;
   font-size: 18px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 16px;
 }
 
 .section-subtitle {
+  margin-bottom: 20px;
   font-size: 14px;
   color: #606266;
-  margin-bottom: 20px;
 }
 
 .theme-grid {
@@ -456,24 +485,24 @@ const updateData = () => {
 }
 
 .theme-card {
-  border: 2px solid #ebeef5;
-  border-radius: 8px;
+  position: relative;
   padding: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
   background: white;
-  position: relative;
+  border: 2px solid #ebeef5;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .theme-card:hover {
   border-color: #409eff;
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
+  box-shadow: 0 2px 8px rgb(64 158 255 / 15%);
   transform: translateY(-2px);
 }
 
 .theme-card.selected {
   border-color: #409eff;
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+  box-shadow: 0 4px 12px rgb(64 158 255 / 30%);
 }
 
 .custom-indicator,
@@ -486,9 +515,9 @@ const updateData = () => {
 .theme-preview {
   display: flex;
   height: 40px;
-  border-radius: 4px;
-  overflow: hidden;
   margin-bottom: 12px;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
 .color-bar {
@@ -500,10 +529,10 @@ const updateData = () => {
 }
 
 .theme-name {
+  margin-bottom: 4px;
   font-size: 16px;
   font-weight: 600;
   color: #303133;
-  margin-bottom: 4px;
 }
 
 .theme-description {
@@ -540,8 +569,8 @@ const updateData = () => {
 
 .color-input-group {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .color-input-group .el-input {
@@ -550,15 +579,15 @@ const updateData = () => {
 }
 
 .color-preview {
-  border-top: 1px solid #ebeef5;
   padding-top: 16px;
+  border-top: 1px solid #ebeef5;
 }
 
 .preview-title {
+  margin-bottom: 12px;
   font-size: 14px;
   font-weight: 500;
   color: #606266;
-  margin-bottom: 12px;
 }
 
 .preview-content {
@@ -568,15 +597,15 @@ const updateData = () => {
 }
 
 .preview-bar {
-  flex: 1;
-  border-radius: 4px;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  color: white;
   font-size: 12px;
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: white;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+  border-radius: 4px;
 }
 
 /* 配色预览部分 */
@@ -606,14 +635,14 @@ const updateData = () => {
   flex: 1;
   padding: 12px;
   background: #f5f7fa;
-  border-radius: 4px;
   border-left: 3px solid;
+  border-radius: 4px;
 }
 
 .stat-value {
+  margin-bottom: 4px;
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 4px;
 }
 
 .stat-label {
@@ -659,32 +688,5 @@ const updateData = () => {
   display: flex;
   gap: 8px;
   margin-top: 8px;
-}
-
-/* 响应式设计 */
-@media (max-width: 990px) {
-  .color-pickers {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .theme-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-}
-
-@media (max-width: 760px) {
-  .theme-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .demo-stats {
-    flex-direction: column;
-  }
-
-  .step-title {
-    font-size: 20px;
-  }
 }
 </style>

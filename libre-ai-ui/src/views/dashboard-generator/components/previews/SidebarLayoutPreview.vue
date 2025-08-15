@@ -27,30 +27,30 @@
 
 .preview-sidebar-container {
   display: flex;
+  gap: 4px;
   width: 100%;
   height: 100%;
-  gap: 4px;
 }
 
 .preview-sidebar {
-  width: 30%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 4px;
-  padding: 4px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  width: 30%;
+  padding: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
 }
 
 .preview-nav-item {
   height: 20%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgb(255 255 255 / 30%);
   border-radius: 2px;
 }
 
 .preview-main-content {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
 }

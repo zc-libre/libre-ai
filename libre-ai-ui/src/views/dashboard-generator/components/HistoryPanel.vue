@@ -185,51 +185,51 @@ const createSampleHistory = () => {
 
 <style scoped>
 .history-panel {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .empty-state {
-  flex: 1;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
 }
 
 .history-list {
   flex: 1;
-  overflow-y: auto;
   padding: 0 4px;
+  overflow-y: auto;
 }
 
 .history-item {
-  border: 1px solid #ebeef5;
-  border-radius: 8px;
   padding: 16px;
   margin-bottom: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
   background: white;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .history-item:hover {
   border-color: #409eff;
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
+  box-shadow: 0 2px 8px rgb(64 158 255 / 15%);
 }
 
 .history-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 12px;
 }
 
 .history-title {
+  margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #303133;
-  margin: 0;
 }
 
 .history-time {
@@ -253,8 +253,8 @@ const createSampleHistory = () => {
 }
 
 .detail-value {
-  color: #303133;
   font-weight: 500;
+  color: #303133;
 }
 
 .history-actions {
@@ -265,8 +265,8 @@ const createSampleHistory = () => {
 
 .history-footer {
   padding: 16px 0;
-  border-top: 1px solid #ebeef5;
   text-align: center;
+  border-top: 1px solid #ebeef5;
 }
 
 /* 滚动条样式 */

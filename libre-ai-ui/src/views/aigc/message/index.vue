@@ -223,6 +223,44 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+
+
+// 响应式设计
+@media (width <= 768px) {
+  .message-management-card {
+    margin: 0 -8px;
+    border-top: 1px solid var(--pure-border-color);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .message-tabs {
+    :deep(.el-tabs__header) {
+      padding: 0 16px;
+    }
+
+    :deep(.el-tabs__item) {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+  }
+}
+
+@media (width <= 640px) {
+  .message-tabs {
+    :deep(.el-tabs__nav-scroll) {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    :deep(.el-tabs__item) {
+      flex: 1;
+      padding: 8px 4px;
+      text-align: center;
+    }
+  }
+}
+
 .message-management-card {
   background: var(--el-bg-color);
   border-radius: 12px;
@@ -237,23 +275,23 @@ onMounted(() => {
   height: 100%;
 
   :deep(.el-tabs__header) {
+    flex-shrink: 0;
+    padding: 0 20px;
     margin: 0;
     border-bottom: 1px solid var(--pure-border-color);
-    padding: 0 20px;
-    flex-shrink: 0;
   }
 
   :deep(.el-tabs__content) {
-    flex: 1;
-    min-height: 0;
     display: flex;
+    flex: 1;
     flex-direction: column;
+    min-height: 0;
   }
 
   :deep(.el-tab-pane) {
-    height: 100%;
     display: flex;
     flex-direction: column;
+    height: 100%;
   }
 
   :deep(.el-tabs__nav-wrap) {
@@ -274,8 +312,8 @@ onMounted(() => {
 
     &.is-active {
       color: var(--el-color-primary);
-      border-bottom-color: var(--el-color-primary);
       background-color: var(--el-color-primary-light-9);
+      border-bottom-color: var(--el-color-primary);
     }
   }
 
@@ -295,8 +333,8 @@ onMounted(() => {
   height: 100%;
 
   :deep(.el-table) {
-    border: none;
     height: 100%;
+    border: none;
   }
 
   :deep(.el-table__header-wrapper) {
@@ -304,44 +342,8 @@ onMounted(() => {
   }
 
   :deep(.el-table__body-wrapper) {
-    border-radius: 0 0 8px 8px;
     flex: 1;
-  }
-}
-
-// 响应式设计
-@media (max-width: 768px) {
-  .message-management-card {
-    margin: 0 -8px;
-    border-radius: 0;
-    box-shadow: none;
-    border-top: 1px solid var(--pure-border-color);
-  }
-
-  .message-tabs {
-    :deep(.el-tabs__header) {
-      padding: 0 16px;
-    }
-
-    :deep(.el-tabs__item) {
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-  }
-}
-
-@media (max-width: 640px) {
-  .message-tabs {
-    :deep(.el-tabs__nav-scroll) {
-      display: flex;
-      justify-content: space-around;
-    }
-
-    :deep(.el-tabs__item) {
-      flex: 1;
-      text-align: center;
-      padding: 8px 4px;
-    }
+    border-radius: 0 0 8px 8px;
   }
 }
 </style>

@@ -130,7 +130,7 @@
           </el-table-column>
           <el-table-column prop="date" label="创建时间" />
           <el-table-column label="操作" width="150">
-            <template #default="scope">
+            <template #default>
               <el-button size="small" type="primary" link> 查看 </el-button>
               <el-button size="small" type="warning" link> 编辑 </el-button>
             </template>
@@ -252,6 +252,15 @@ const refreshData = () => {
 </script>
 
 <style scoped>
+
+
+/* 响应式调整 */
+@media (width <= 768px) {
+  .chart-container {
+    height: 200px;
+  }
+}
+
 .chart-card {
   height: 100%;
 }
@@ -266,8 +275,8 @@ const refreshData = () => {
 
 /* 自定义表格样式 */
 :deep(.el-table) {
-  border-radius: 8px;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 :deep(.el-table__header) {
@@ -277,20 +286,13 @@ const refreshData = () => {
 /* 卡片悬停效果 */
 .shadow-card {
   box-shadow:
-    0 2px 4px 0 rgba(0, 0, 0, 0.12),
-    0 0 6px 0 rgba(0, 0, 0, 0.04);
+    0 2px 4px 0 rgb(0 0 0 / 12%),
+    0 0 6px 0 rgb(0 0 0 / 4%);
 }
 
 .shadow-card-hover {
   box-shadow:
-    0 4px 8px 0 rgba(0, 0, 0, 0.12),
-    0 2px 4px 0 rgba(0, 0, 0, 0.08);
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .chart-container {
-    height: 200px;
-  }
+    0 4px 8px 0 rgb(0 0 0 / 12%),
+    0 2px 4px 0 rgb(0 0 0 / 8%);
 }
 </style>

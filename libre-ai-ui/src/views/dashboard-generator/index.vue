@@ -253,7 +253,16 @@ watch(
 </script>
 
 <style scoped>
-/* 确保没有额外的margin和padding导致高度溢出 */
+
+
+/* 响应式高度调整 */
+@media (width <= 760px) {
+  .dashboard-generator-app {
+    /* 移动端可能有不同的header高度 */
+    height: calc(100vh - 48px - 48px); /* 减去较小的header高度 */
+  }
+}
+
 .dashboard-generator-app {
   box-sizing: border-box;
   overflow: hidden;
@@ -267,19 +276,11 @@ watch(
   box-sizing: border-box;
 }
 
-/* 响应式高度调整 */
-@media (max-width: 760px) {
-  .dashboard-generator-app {
-    /* 移动端可能有不同的header高度 */
-    height: calc(100vh - 48px - 48px); /* 减去较小的header高度 */
-  }
-}
-
 /* 保留帮助对话框样式 */
 
 .help-content h3 {
-  color: #303133;
   margin-bottom: 16px;
+  color: #303133;
 }
 
 .help-content ol {
@@ -295,6 +296,8 @@ watch(
 .help-content strong {
   color: #409eff;
 }
+
+/* 确保没有额外的margin和padding导致高度溢出 */
 
 /* 响应式设计已通过Tailwind CSS类名实现 */
 </style>

@@ -304,8 +304,8 @@ defineExpose({ open });
   }
 
   .el-dialog__body {
-    padding: 0;
     max-height: 60vh;
+    padding: 0;
     overflow-y: auto;
   }
 
@@ -327,33 +327,33 @@ defineExpose({ open });
 
 // 表单卡片样式
 .form-card {
+  overflow: hidden;
   background: white;
   border: 1px solid #e4e7ed;
   border-radius: 12px;
-  overflow: hidden;
   transition: all 0.3s;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
   }
 
   .card-header {
+    display: flex;
+    gap: 8px;
+    align-items: center;
     padding: 16px 20px;
     background: linear-gradient(135deg, #f5f7fa, #fafbfc);
     border-bottom: 1px solid #e4e7ed;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 
     .card-icon {
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      filter: drop-shadow(0 2px 4px rgb(0 0 0 / 10%));
     }
 
     .card-title {
+      margin: 0;
       font-size: 16px;
       font-weight: 600;
       color: #303133;
-      margin: 0;
     }
   }
 
@@ -378,9 +378,9 @@ defineExpose({ open });
     color: #606266;
 
     &.required::after {
-      content: '*';
-      color: #f56c6c;
       margin-left: 4px;
+      color: #f56c6c;
+      content: '*';
     }
   }
 
@@ -392,8 +392,8 @@ defineExpose({ open });
     display: block;
     margin-top: 6px;
     font-size: 12px;
-    color: #909399;
     line-height: 1.4;
+    color: #909399;
   }
 }
 
@@ -403,22 +403,22 @@ defineExpose({ open });
     position: relative;
     width: 100%;
     height: 160px;
+    cursor: pointer;
     border: 2px dashed #dcdfe6;
     border-radius: 8px;
-    cursor: pointer;
     transition: all 0.3s;
 
     &:hover {
-      border-color: #409eff;
       background: #f5f7fa;
+      border-color: #409eff;
     }
 
     .file-input {
       position: absolute;
       width: 100%;
       height: 100%;
-      opacity: 0;
       cursor: pointer;
+      opacity: 0;
     }
 
     .upload-placeholder {
@@ -434,15 +434,15 @@ defineExpose({ open });
       }
 
       .upload-text {
+        margin: 0 0 4px;
         font-size: 14px;
         color: #606266;
-        margin: 0 0 4px 0;
       }
 
       .upload-tips {
+        margin: 0;
         font-size: 12px;
         color: #909399;
-        margin: 0;
       }
     }
   }
@@ -451,8 +451,8 @@ defineExpose({ open });
     position: relative;
     width: 100%;
     height: 200px;
-    border-radius: 8px;
     overflow: hidden;
+    border-radius: 8px;
 
     .preview-image {
       width: 100%;
@@ -462,14 +462,11 @@ defineExpose({ open });
 
     .preview-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: rgb(0 0 0 / 50%);
       opacity: 0;
       transition: opacity 0.3s;
 
@@ -482,7 +479,7 @@ defineExpose({ open });
 
 .dialog-footer {
   display: flex;
-  justify-content: flex-end;
   gap: 12px;
+  justify-content: flex-end;
 }
 </style>

@@ -223,29 +223,58 @@ function handleReturn() {
 </template>
 
 <style lang="scss" scoped>
+
+
+// 响应式优化
+@media (width <= 1024px) {
+  .k-main-content {
+    flex-direction: column;
+  }
+
+  .k-sidebar-container {
+    width: 100%;
+  }
+}
+
+@media (width <= 640px) {
+  .knowledge-detail-app {
+    height: calc(100vh - 120px);
+    max-height: calc(100vh - 120px);
+  }
+
+  .header-section {
+    padding: 16px;
+  }
+
+  .k-main-content {
+    gap: 16px;
+    padding: 0 16px 16px;
+  }
+}
+
 .knowledge-detail-app {
   box-sizing: border-box;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 60px);
   max-height: calc(100vh - 60px);
+  overflow: hidden;
 }
 
 .header-section {
   background: linear-gradient(
     135deg,
-    rgba(59, 130, 246, 0.08),
-    rgba(99, 102, 241, 0.08),
-    rgba(168, 85, 247, 0.06)
+    rgb(59 130 246 / 8%),
+    rgb(99 102 241 / 8%),
+    rgb(168 85 247 / 6%)
   );
 
   :global(.dark) & {
     background: linear-gradient(
       135deg,
-      rgba(59, 130, 246, 0.15),
-      rgba(99, 102, 241, 0.15),
-      rgba(168, 85, 247, 0.1)
+      rgb(59 130 246 / 15%),
+      rgb(99 102 241 / 15%),
+      rgb(168 85 247 / 10%)
     );
   }
 }
@@ -256,8 +285,8 @@ function handleReturn() {
 
 .section-header {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--el-border-color-lighter);
 }
@@ -283,10 +312,10 @@ function handleReturn() {
 
 .info-label {
   display: block;
+  margin-bottom: 8px;
   font-size: 12px;
   font-weight: 500;
   color: var(--el-text-color-regular);
-  margin-bottom: 8px;
 }
 
 .info-value {
@@ -296,15 +325,15 @@ function handleReturn() {
 }
 
 .config-card {
+  padding: 12px;
   background: var(--el-bg-color-page);
   border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
-  padding: 12px;
   transition: all 0.3s ease;
 
   &:hover {
     border-color: var(--el-color-primary-light-7);
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 2px 8px rgb(59 130 246 / 10%);
   }
 }
 
@@ -314,10 +343,10 @@ function handleReturn() {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  text-align: center;
   background: var(--el-bg-color-page);
   border: 1px dashed var(--el-border-color-light);
   border-radius: 8px;
-  text-align: center;
 }
 
 .knowledge-tabs {
@@ -332,9 +361,9 @@ function handleReturn() {
   }
 
   :deep(.el-tabs__item) {
-    font-weight: 500;
-    padding: 0 20px;
     height: 44px;
+    padding: 0 20px;
+    font-weight: 500;
     line-height: 44px;
 
     &.is-active {
@@ -343,35 +372,8 @@ function handleReturn() {
   }
 
   :deep(.el-tabs__active-bar) {
-    background-color: var(--el-color-primary);
     height: 3px;
-  }
-}
-
-// 响应式优化
-@media (max-width: 1024px) {
-  .k-main-content {
-    flex-direction: column;
-  }
-
-  .k-sidebar-container {
-    width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  .knowledge-detail-app {
-    height: calc(100vh - 120px);
-    max-height: calc(100vh - 120px);
-  }
-
-  .header-section {
-    padding: 16px;
-  }
-
-  .k-main-content {
-    gap: 16px;
-    padding: 0 16px 16px;
+    background-color: var(--el-color-primary);
   }
 }
 </style>

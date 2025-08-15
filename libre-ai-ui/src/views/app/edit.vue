@@ -181,4 +181,3 @@ defineExpose({ show });
   </ElDialog>
 </template>
 
-<style lang="scss" scoped></style>

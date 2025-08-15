@@ -223,6 +223,38 @@ function handleDel(record: any) {
 </template>
 
 <style lang="scss" scoped>
+
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(180deg);
+  }
+}
+
+/* 响应式设计 */
+@media (width <= 1024px) {
+  .config-content {
+    flex-direction: column;
+  }
+}
+
+@media (width <= 768px) {
+  .config-header {
+    padding: 1rem;
+  }
+
+  .config-content {
+    padding: 1rem;
+  }
+}
+
 .embedding-provider-container {
   display: flex;
   flex-direction: column;
@@ -231,56 +263,44 @@ function handleDel(record: any) {
 
 /* 头部配置区域 */
 .config-header {
-  flex-shrink: 0;
   position: relative;
+  flex-shrink: 0;
   overflow: hidden;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .config-header::before {
-  content: '';
   position: absolute;
   top: -50%;
   right: -50%;
   width: 200%;
   height: 200%;
+  content: '';
   background: radial-gradient(
     circle,
-    rgba(100, 116, 139, 0.05) 0%,
+    rgb(100 116 139 / 5%) 0%,
     transparent 70%
   );
   animation: pulse 20s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.1) rotate(180deg);
-    opacity: 0.8;
-  }
-}
-
 .icon-box {
   position: relative;
   z-index: 1;
+  background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
 }
 
 .icon-box:hover {
+  box-shadow: 0 4px 12px rgb(100 116 139 / 15%);
   transform: scale(1.1) rotate(-5deg);
-  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
 }
 
 /* 自定义提示框 */
 .custom-alert {
-  background: rgba(239, 246, 255, 0.6);
-  border: 1px solid rgba(147, 197, 253, 0.3);
+  background: rgb(239 246 255 / 60%);
   backdrop-filter: blur(8px);
+  border: 1px solid rgb(147 197 253 / 30%);
 }
 
 :deep(.custom-alert) {
@@ -292,17 +312,17 @@ function handleDel(record: any) {
 /* 内容区域 */
 .config-content {
   overflow: hidden;
-  background: linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
+  background: linear-gradient(145deg, #fff 0%, #fafbfc 100%);
 }
 
 /* 供应商卡片 */
 .provider-card {
+  background: linear-gradient(145deg, #fff 0%, #f9fafb 100%);
   transition: all 0.3s ease;
-  background: linear-gradient(145deg, #ffffff 0%, #f9fafb 100%);
 }
 
 .provider-card:hover {
-  box-shadow: 0 8px 16px rgba(100, 116, 139, 0.1);
+  box-shadow: 0 8px 16px rgb(100 116 139 / 10%);
   transform: translateY(-2px);
 }
 
@@ -312,16 +332,16 @@ function handleDel(record: any) {
 }
 
 .provider-item::before {
-  content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
+  content: '';
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(100, 116, 139, 0.1),
+    rgb(100 116 139 / 10%),
     transparent
   );
   transition: left 0.5s ease;
@@ -335,7 +355,7 @@ function handleDel(record: any) {
 .model-table-wrapper {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(145deg, #fff 0%, #f8fafc 100%);
 }
 
 /* 表格样式现在由 BasicTable 的 model-management 主题提供 */
@@ -344,23 +364,6 @@ function handleDel(record: any) {
 html.dark {
   .config-header {
     background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-  }
-}
-
-/* 响应式设计 */
-@media (max-width: 1024px) {
-  .config-content {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 768px) {
-  .config-header {
-    padding: 1rem;
-  }
-
-  .config-content {
-    padding: 1rem;
   }
 }
 </style>

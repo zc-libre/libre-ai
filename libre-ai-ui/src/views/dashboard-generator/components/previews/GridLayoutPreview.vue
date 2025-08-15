@@ -24,58 +24,58 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 4px;
   width: 100%;
   height: 100%;
 }
 
 .grid-item {
-  background: #f0f2f5;
-  border-radius: 4px;
-  padding: 4px;
   display: flex;
   flex-direction: column;
   gap: 3px;
+  padding: 4px;
+  background: #f0f2f5;
+  border-radius: 4px;
 }
 
 .item-header {
+  position: relative;
   height: 15%;
   background: white;
   border-radius: 2px;
-  position: relative;
 }
 
 .item-header::after {
-  content: '';
   position: absolute;
   top: 50%;
   left: 8px;
-  transform: translateY(-50%);
   width: 30%;
   height: 4px;
+  content: '';
   background: #409eff;
   border-radius: 2px;
+  transform: translateY(-50%);
 }
 
 .item-content {
-  flex: 1;
-  background: white;
-  border-radius: 2px;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   padding: 4px;
+  background: white;
+  border-radius: 2px;
 }
 
 .chart-placeholder {
+  position: relative;
   width: 80%;
   height: 60%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 2px;
   opacity: 0.3;
-  position: relative;
 }
 
 .grid-item:nth-child(2) .chart-placeholder {

@@ -15,8 +15,8 @@
 
 // 向导步骤样式
 .wizard-step {
-  transition: var(--dashboard-transition-normal);
   padding: 2rem;
+  transition: var(--dashboard-transition-normal);
 
   &.hidden {
     display: none;
@@ -25,41 +25,41 @@
 
 // 卡片样式
 .dashboard-card {
+  padding: 1.5rem;
+  cursor: pointer;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 1rem;
   box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.05),
-    0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    0 4px 6px rgb(0 0 0 / 5%),
+    0 10px 15px -3px rgb(0 0 0 / 10%);
   transition: var(--dashboard-transition-normal);
-  padding: 1.5rem;
-  cursor: pointer;
 
   &:hover {
     box-shadow:
-      0 10px 25px -5px rgba(0, 0, 0, 0.1),
-      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      0 10px 25px -5px rgb(0 0 0 / 10%),
+      0 10px 10px -5px rgb(0 0 0 / 4%);
     transform: translateY(-2px);
   }
 
   &.selected {
-    border-color: var(--dashboard-primary-color);
     background-color: var(--dashboard-primary-light);
+    border-color: var(--dashboard-primary-color);
   }
 }
 
 // 按钮样式
 .btn-dashboard-primary {
-  background-color: var(--dashboard-primary-color);
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  overflow: hidden;
+  font-weight: 500;
   color: white;
+  cursor: pointer;
+  background-color: var(--dashboard-primary-color);
   border: none;
   border-radius: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
   transition: var(--dashboard-transition-bounce);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
 
   &:hover:not(:disabled) {
     background-color: var(--dashboard-primary-dark);
@@ -71,9 +71,9 @@
   }
 
   &:disabled {
-    background-color: #a5b4fc;
     color: #e0e7ff;
     cursor: not-allowed;
+    background-color: #a5b4fc;
     transform: translateY(0);
   }
 }
@@ -82,9 +82,9 @@
 .progress-indicator {
   position: relative;
   height: 4px;
+  overflow: hidden;
   background-color: var(--bg-tertiary);
   border-radius: 2px;
-  overflow: hidden;
 
   .progress-bar {
     height: 100%;
@@ -96,29 +96,29 @@
   .progress-step {
     position: absolute;
     top: -10px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: var(--bg-secondary);
-    border: 2px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 24px;
+    height: 24px;
     font-size: 12px;
     font-weight: 600;
-    transform: translateX(-50%);
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
     transition: var(--dashboard-transition-normal);
+    transform: translateX(-50%);
 
     &.active {
+      color: white;
       background-color: var(--dashboard-primary-color);
       border-color: var(--dashboard-primary-color);
-      color: white;
     }
 
     &.completed {
+      color: white;
       background-color: var(--dashboard-accent-color);
       border-color: var(--dashboard-accent-color);
-      color: white;
     }
   }
 }
@@ -129,27 +129,27 @@
   top: 20px;
   right: 20px;
   z-index: 1000;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 48px;
+  height: 48px;
   cursor: pointer;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
   transition: var(--dashboard-transition-normal);
 
   &:hover {
-    background-color: var(--dashboard-primary-color);
     color: white;
+    background-color: var(--dashboard-primary-color);
     transform: scale(1.1);
   }
 }
 
 // 响应式样式 - 与项目整体断点保持一致
 // 项目使用断点: 760px (移动端), 990px (平板端)
-@media (max-width: 760px) {
+@media (width <= 760px) {
   .wizard-step {
     padding: 1rem;
   }
@@ -159,14 +159,14 @@
   }
 
   .theme-toggle {
-    width: 40px;
-    height: 40px;
     top: 15px;
     right: 15px;
+    width: 40px;
+    height: 40px;
   }
 }
 
-@media (min-width: 761px) and (max-width: 990px) {
+@media (width >= 761px) and (width <= 990px) {
   .wizard-step {
     padding: 1.5rem;
   }

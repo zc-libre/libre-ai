@@ -16,24 +16,24 @@
 
 <style scoped>
 .radial-preview {
-  width: 100%;
-  height: 100%;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .center-circle {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 40%;
   height: 40%;
   background: #f0f2f5;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .center-content {
@@ -46,19 +46,19 @@
 
 .satellite {
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 18%;
   height: 18%;
   background: #f0f2f5;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .satellite::after {
-  content: '';
   width: 50%;
   height: 6px;
+  content: '';
   background: #409eff;
   border-radius: 2px;
   opacity: 0.6;
@@ -96,8 +96,8 @@
 }
 
 .satellite-bottom-right {
-  bottom: 15%;
   right: 15%;
+  bottom: 15%;
   width: 15%;
   height: 15%;
 }

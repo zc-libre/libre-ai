@@ -49,7 +49,10 @@ const hasUnsavedChanges = ref(false);
 const initLocalData = () => {
   localSystemPrompt.value = appStore.info.systemPrompt || '';
   localUserPromptTemplate.value = appStore.info.userPromptTemplate || '';
-  hasUnsavedChanges.value = false;
+  // 延迟重置状态，确保 MarkdownEditor 初始化完成后再重置
+  setTimeout(() => {
+    hasUnsavedChanges.value = false;
+  }, 0);
 };
 
 // 监听内容变化
@@ -398,6 +401,60 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+
+
+// 动画
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 响应式设计
+@media (width <= 768px) {
+  .page-container {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+
+    .header-actions {
+      justify-content: flex-end;
+    }
+  }
+
+  .prompt-config-panels {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+
+    .header-right {
+      align-self: flex-end;
+    }
+  }
+
+  .example-item {
+    flex-direction: column;
+    gap: 6px;
+
+    .example-label {
+      min-width: auto;
+    }
+  }
+}
+
 .prompt-config-page {
   height: 100%;
   overflow-y: auto;
@@ -405,48 +462,48 @@ defineExpose({
 }
 
 .page-container {
-  width: 100%;
-  margin: 0 auto;
-  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
+  padding: 24px;
+  margin: 0 auto;
 }
 
 .page-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
+  justify-content: space-between;
   margin-bottom: 8px;
 
   .header-left {
     flex: 1;
 
     .page-title {
+      margin: 0 0 8px;
       font-size: 24px;
       font-weight: 600;
       color: #303133;
-      margin: 0 0 8px 0;
     }
 
     .page-description {
-      font-size: 14px;
-      color: #606266;
       margin: 0;
+      font-size: 14px;
       line-height: 1.6;
+      color: #606266;
     }
   }
 
   .header-actions {
     display: flex;
-    align-items: center;
-    gap: 16px;
     flex-shrink: 0;
+    gap: 16px;
+    align-items: center;
 
     .save-status {
       display: flex;
-      align-items: center;
       gap: 6px;
+      align-items: center;
       font-size: 14px;
       color: #666;
       white-space: nowrap;
@@ -455,14 +512,14 @@ defineExpose({
 }
 
 .config-card {
+  overflow: hidden;
   border: 1px solid #e4e7ed;
   border-radius: 12px;
-  overflow: hidden;
 
   :deep(.el-card__header) {
+    padding: 20px 24px;
     background: #fafbfc;
     border-bottom: 1px solid #e4e7ed;
-    padding: 20px 24px;
   }
 
   :deep(.el-card__body) {
@@ -483,33 +540,33 @@ defineExpose({
 
 .card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
 
   .header-left {
     flex: 1;
 
     .card-title {
+      margin: 0 0 6px;
       font-size: 16px;
       font-weight: 600;
       color: #303133;
-      margin: 0 0 6px 0;
     }
 
     .card-subtitle {
-      font-size: 13px;
-      color: #606266;
       margin: 0;
+      font-size: 13px;
       line-height: 1.6;
+      color: #606266;
 
       .inline-code {
-        background: #f0f2f5;
-        color: #e6a23c;
         padding: 2px 6px;
-        border-radius: 3px;
-        font-family: 'Monaco', 'Menlo', monospace;
+        font-family: Monaco, Menlo, monospace;
         font-size: 12px;
+        color: #e6a23c;
+        background: #f0f2f5;
+        border-radius: 3px;
       }
     }
   }
@@ -531,50 +588,50 @@ defineExpose({
 .example-content {
   .example-item {
     display: flex;
+    gap: 12px;
     align-items: flex-start;
     margin-bottom: 12px;
-    gap: 12px;
 
     .example-label {
+      flex-shrink: 0;
+      min-width: 140px;
       font-weight: 600;
       color: #303133;
-      min-width: 140px;
-      flex-shrink: 0;
     }
 
     .example-value {
-      color: #606266;
-      font-family: 'Monaco', 'Menlo', monospace;
-      background: #f0f9ff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid #b3d8ff;
       flex: 1;
+      padding: 6px 12px;
+      font-family: Monaco, Menlo, monospace;
+      color: #606266;
+      background: #f0f9ff;
+      border: 1px solid #b3d8ff;
+      border-radius: 6px;
     }
   }
 
   .example-result {
-    margin-top: 20px;
     padding-top: 20px;
+    margin-top: 20px;
     border-top: 1px dashed #e4e7ed;
 
     .result-label {
+      margin-bottom: 12px;
       font-weight: 600;
       color: #303133;
-      margin-bottom: 12px;
     }
 
     .result-content {
+      padding: 16px;
       background: #f8f9fa;
       border: 1px solid #e9ecef;
       border-radius: 8px;
-      padding: 16px;
 
       .result-message {
-        font-family: 'Monaco', 'Menlo', monospace;
+        margin-bottom: 8px;
+        font-family: Monaco, Menlo, monospace;
         font-size: 13px;
         line-height: 1.6;
-        margin-bottom: 8px;
 
         &:last-child {
           margin-bottom: 0;
@@ -588,57 +645,6 @@ defineExpose({
           color: #409eff;
         }
       }
-    }
-  }
-}
-
-// 动画
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// 响应式设计
-@media (max-width: 768px) {
-  .page-container {
-    padding: 16px;
-  }
-
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-
-    .header-actions {
-      justify-content: flex-end;
-    }
-  }
-
-  .prompt-config-panels {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .card-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-
-    .header-right {
-      align-self: flex-end;
-    }
-  }
-
-  .example-item {
-    flex-direction: column;
-    gap: 6px;
-
-    .example-label {
-      min-width: auto;
     }
   }
 }

@@ -6,21 +6,61 @@
     <title>响应式边距测试</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 模拟修改后的样式 */
-        .test-container {
-            padding: 1rem;
-        }
+
         
-        @media (min-width: 768px) {
+        @media (width >= 768px) {
             .test-container {
                 padding: 1.5rem;
             }
         }
         
-        @media (min-width: 1024px) {
+        @media (width >= 1024px) {
             .test-container {
                 padding: 2rem;
             }
+        }
+        
+        @media (width >= 640px) {
+            .test-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.25rem;
+            }
+        }
+        
+        @media (width >= 768px) {
+            .test-grid {
+                gap: 1.25rem;
+            }
+        }
+        
+        @media (width >= 1024px) {
+            .test-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (width >= 1280px) {
+            .test-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (width >= 768px) {
+            .test-card {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (width >= 1024px) {
+            .test-card {
+                padding: 1.75rem;
+            }
+        }
+
+        /* 模拟修改后的样式 */
+        .test-container {
+            padding: 1rem;
         }
         
         .test-grid {
@@ -29,51 +69,13 @@
             gap: 1rem;
         }
         
-        @media (min-width: 640px) {
-            .test-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.25rem;
-            }
-        }
-        
-        @media (min-width: 768px) {
-            .test-grid {
-                gap: 1.25rem;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .test-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1.5rem;
-            }
-        }
-        
-        @media (min-width: 1280px) {
-            .test-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
         .test-card {
+            min-height: 200px;
+            padding: 1.25rem;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 0.75rem;
-            padding: 1.25rem;
-            min-height: 200px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        }
-        
-        @media (min-width: 768px) {
-            .test-card {
-                padding: 1.5rem;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .test-card {
-                padding: 1.75rem;
-            }
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%);
         }
     </style>
 </head>

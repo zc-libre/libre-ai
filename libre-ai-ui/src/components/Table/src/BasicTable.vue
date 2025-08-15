@@ -141,7 +141,43 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-/* 基础表格样式 */
+
+
+/* 响应式设计 - 简化版本 */
+@media (width <= 990px) {
+  .basic-table .data-table :deep(.el-table) {
+    font-size: 13px;
+
+    .el-table__header th {
+      padding: 12px 8px;
+      font-size: 12px;
+    }
+
+    .el-table__body td {
+      padding: 12px 8px;
+    }
+  }
+}
+
+@media (width <= 760px) {
+  .basic-table .data-table :deep(.el-table) {
+    font-size: 12px;
+
+    .el-table__header th {
+      padding: 10px 6px;
+      font-size: 11px;
+    }
+
+    .el-table__body td {
+      padding: 10px 6px;
+    }
+
+    .el-table__row:hover {
+      transform: none; /* 移动端禁用平移效果 */
+    }
+  }
+}
+
 .basic-table {
   .table-title {
     display: flex;
@@ -154,7 +190,7 @@ defineExpose({
     transition: all 0.3s ease;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
     }
   }
 }
@@ -165,7 +201,7 @@ defineExpose({
     transition: all 0.3s ease;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
     }
   }
 }
@@ -186,10 +222,10 @@ defineExpose({
     }
 
     .el-table__header th {
+      padding: 16px 12px;
       font-size: 13px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      padding: 16px 12px;
     }
 
     .el-table__body td {
@@ -217,8 +253,8 @@ html.dark {
       }
 
       .el-table__header-wrapper th {
-        background-color: #0f172a !important;
         color: #e2e8f0 !important;
+        background-color: #0f172a !important;
         border-bottom-color: #475569 !important;
       }
 
@@ -229,48 +265,13 @@ html.dark {
   }
 }
 
-/* 响应式设计 - 简化版本 */
-@media (max-width: 990px) {
-  .basic-table .data-table :deep(.el-table) {
-    font-size: 13px;
-
-    .el-table__header th {
-      font-size: 12px;
-      padding: 12px 8px;
-    }
-
-    .el-table__body td {
-      padding: 12px 8px;
-    }
-  }
-}
-
-@media (max-width: 760px) {
-  .basic-table .data-table :deep(.el-table) {
-    font-size: 12px;
-
-    .el-table__header th {
-      font-size: 11px;
-      padding: 10px 6px;
-    }
-
-    .el-table__body td {
-      padding: 10px 6px;
-    }
-
-    .el-table__row:hover {
-      transform: none; /* 移动端禁用平移效果 */
-    }
-  }
-}
-
 /* 通用交互效果 */
 :deep(.el-button) {
   transition: all 0.3s ease;
 
   &:hover {
+    box-shadow: 0 4px 12px rgb(99 102 241 / 15%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
   }
 
   &.is-circle:hover {
@@ -281,6 +282,8 @@ html.dark {
 :deep(.el-tag) {
   font-weight: 500;
   border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
 }
+
+/* 基础表格样式 */
 </style>

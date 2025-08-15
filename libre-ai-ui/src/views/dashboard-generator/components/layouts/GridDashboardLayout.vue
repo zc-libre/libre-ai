@@ -144,6 +144,20 @@ const displayComponents = computed(() => {
 </script>
 
 <style scoped>
+
+
+/* 响应式设计 */
+@media (width <= 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card-content {
+    padding: 16px;
+  }
+}
+
 .grid-dashboard-layout {
   width: 100%;
   height: 100%;
@@ -162,37 +176,37 @@ const displayComponents = computed(() => {
 
 .component-card {
   height: 100%;
+  overflow: hidden;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   transition: all 0.3s ease;
 }
 
 .component-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
   transform: translateY(-2px);
 }
 
 .card-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #ebeef5;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
   background: #fafafa;
+  border-bottom: 1px solid #ebeef5;
 }
 
 .card-title {
+  margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #303133;
-  margin: 0;
 }
 
 .card-content {
-  padding: 20px;
   height: calc(100% - 60px);
+  padding: 20px;
 }
 
 /* 组件类型样式 */
@@ -214,33 +228,21 @@ const displayComponents = computed(() => {
 
 /* 占位符组件样式 */
 .placeholder-component {
-  width: 100%;
-  height: 100%;
-  min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
   background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
-  border-radius: 8px;
   border: 2px dashed #d0d0d0;
+  border-radius: 8px;
 }
 
 .placeholder-content {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
   padding: 20px;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .card-content {
-    padding: 16px;
-  }
+  font-size: 14px;
+  color: #666;
+  text-align: center;
 }
 </style>
