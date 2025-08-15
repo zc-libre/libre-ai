@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+
+    <changeSet id="010-alter-aigc-conversation-add-chat-settings" author="system">
+        <comment>为对话表添加聊天室配置字段</comment>
+        
+        <addColumn tableName="aigc_conversation">
+            <column name="chat_model" type="VARCHAR(100)" defaultValue="claude-sonnet-4-20250514">
+                <constraints nullable="true"/>
+            </column>
+            <column name="using_context" type="BOOLEAN" defaultValue="true">
+                <constraints nullable="true"/>
+            </column>
+            <column name="max_context_count" type="INT" defaultValue="10">
+                <constraints nullable="true"/>
+            </column>
+            <column name="search_enabled" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="true"/>
+            </column>
+            <column name="think_enabled" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="true"/>
+            </column>
+            <column name="system_prompt" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="temperature" type="DOUBLE PRECISION" defaultValue="1.0">
+                <constraints nullable="true"/>
+            </column>
+            <column name="max_tokens" type="INT" defaultValue="12800">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <setColumnRemarks tableName="aigc_conversation" columnName="chat_model" remarks="聊天模型"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="using_context" remarks="是否使用上下文"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="max_context_count" remarks="最大上下文数量"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="search_enabled" remarks="是否启用搜索"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="think_enabled" remarks="是否启用思考模式"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="system_prompt" remarks="系统提示词"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="temperature" remarks="温度参数"/>
+        <setColumnRemarks tableName="aigc_conversation" columnName="max_tokens" remarks="最大Token数"/>
+    </changeSet>
+
+</databaseChangeLog>

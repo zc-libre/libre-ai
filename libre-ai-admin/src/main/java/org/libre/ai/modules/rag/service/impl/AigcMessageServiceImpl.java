@@ -84,8 +84,7 @@ public class AigcMessageServiceImpl extends ServiceImpl<AigcMessageMapper, AigcM
 	@Override
 	@Transactional
 	public void updateConversation(AigcConversation conversation) {
-		aigcConversationMapper
-			.updateById(new AigcConversation().setId(conversation.getId()).setTitle(conversation.getTitle()));
+		aigcConversationMapper.updateById(conversation);
 	}
 
 	@Override
@@ -93,6 +92,11 @@ public class AigcMessageServiceImpl extends ServiceImpl<AigcMessageMapper, AigcM
 	public void delConversation(String conversationId) {
 		aigcConversationMapper.deleteById(conversationId);
 		baseMapper.delete(Wrappers.<AigcMessage>lambdaQuery().eq(AigcMessage::getConversationId, conversationId));
+	}
+
+	@Override
+	public AigcConversation getConversation(String conversationId) {
+		return aigcConversationMapper.selectById(conversationId);
 	}
 
 	@Override

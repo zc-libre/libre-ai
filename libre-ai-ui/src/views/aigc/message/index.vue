@@ -223,8 +223,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-
-
 // 响应式设计
 @media (width <= 768px) {
   .message-management-card {

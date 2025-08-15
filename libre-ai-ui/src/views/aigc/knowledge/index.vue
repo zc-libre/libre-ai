@@ -502,8 +502,6 @@ function handleDelete(record: any) {
 </template>
 
 <style lang="scss" scoped>
-
-
 // 响应式优化
 @media (width <= 640px) {
   .header-section {

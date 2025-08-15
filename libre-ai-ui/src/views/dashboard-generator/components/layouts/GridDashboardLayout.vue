@@ -144,8 +144,6 @@ const displayComponents = computed(() => {
 </script>
 
 <style scoped>
-
-
 /* 响应式设计 */
 @media (width <= 768px) {
   .dashboard-grid {

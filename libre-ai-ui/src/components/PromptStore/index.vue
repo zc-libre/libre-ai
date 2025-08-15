@@ -50,7 +50,8 @@ const defaultPrompts: Prompt[] = [
   {
     id: '1',
     title: '代码审查助手',
-    content: '请帮我审查以下代码，重点关注：\n1. 代码逻辑是否正确\n2. 是否存在潜在的bug\n3. 代码风格和最佳实践\n4. 性能优化建议\n\n代码：\n{code}',
+    content:
+      '请帮我审查以下代码，重点关注：\n1. 代码逻辑是否正确\n2. 是否存在潜在的bug\n3. 代码风格和最佳实践\n4. 性能优化建议\n\n代码：\n{code}',
     category: 'coding',
     tags: ['代码审查', '编程', 'bug修复'],
     isSystem: true,
@@ -61,7 +62,8 @@ const defaultPrompts: Prompt[] = [
   {
     id: '2',
     title: '文章写作助手',
-    content: '请帮我写一篇关于"{topic}"的文章，要求：\n1. 文章长度：{length}字\n2. 目标读者：{audience}\n3. 写作风格：{style}\n4. 包含要点：{points}\n\n请确保文章结构清晰、论点明确、语言流畅。',
+    content:
+      '请帮我写一篇关于"{topic}"的文章，要求：\n1. 文章长度：{length}字\n2. 目标读者：{audience}\n3. 写作风格：{style}\n4. 包含要点：{points}\n\n请确保文章结构清晰、论点明确、语言流畅。',
     category: 'writing',
     tags: ['写作', '文章', '内容创作'],
     isSystem: true,
@@ -72,7 +74,8 @@ const defaultPrompts: Prompt[] = [
   {
     id: '3',
     title: '数据分析专家',
-    content: '我有以下数据需要分析，请帮我：\n1. 识别数据中的关键趋势和模式\n2. 提供统计分析结果\n3. 给出可视化建议\n4. 总结主要发现和洞察\n\n数据：\n{data}',
+    content:
+      '我有以下数据需要分析，请帮我：\n1. 识别数据中的关键趋势和模式\n2. 提供统计分析结果\n3. 给出可视化建议\n4. 总结主要发现和洞察\n\n数据：\n{data}',
     category: 'analysis',
     tags: ['数据分析', '统计', '洞察'],
     isSystem: true,
@@ -83,7 +86,8 @@ const defaultPrompts: Prompt[] = [
   {
     id: '4',
     title: '专业翻译助手',
-    content: '请将以下文本从{source_lang}翻译成{target_lang}，要求：\n1. 保持原文的语气和风格\n2. 确保专业术语的准确性\n3. 适应目标语言的表达习惯\n4. 如有歧义，请提供多个翻译选项\n\n原文：\n{text}',
+    content:
+      '请将以下文本从{source_lang}翻译成{target_lang}，要求：\n1. 保持原文的语气和风格\n2. 确保专业术语的准确性\n3. 适应目标语言的表达习惯\n4. 如有歧义，请提供多个翻译选项\n\n原文：\n{text}',
     category: 'translation',
     tags: ['翻译', '语言', '本地化'],
     isSystem: true,
@@ -94,7 +98,8 @@ const defaultPrompts: Prompt[] = [
   {
     id: '5',
     title: '商业计划分析',
-    content: '请帮我分析以下商业计划/想法：\n\n计划概述：{plan}\n\n请从以下角度进行分析：\n1. 市场机会和竞争分析\n2. 可行性评估\n3. 潜在风险和挑战\n4. 改进建议\n5. 实施策略',
+    content:
+      '请帮我分析以下商业计划/想法：\n\n计划概述：{plan}\n\n请从以下角度进行分析：\n1. 市场机会和竞争分析\n2. 可行性评估\n3. 潜在风险和挑战\n4. 改进建议\n5. 实施策略',
     category: 'business',
     tags: ['商业分析', '计划', '策略'],
     isSystem: true,
@@ -110,22 +115,23 @@ const prompts = ref<Prompt[]>([]);
 // 过滤后的提示词
 const filteredPrompts = computed(() => {
   let filtered = prompts.value;
-  
+
   // 按分类筛选
   if (selectedCategory.value !== 'all') {
     filtered = filtered.filter(p => p.category === selectedCategory.value);
   }
-  
+
   // 按搜索关键词筛选
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter(p => 
-      p.title.toLowerCase().includes(query) ||
-      p.content.toLowerCase().includes(query) ||
-      p.tags.some(tag => tag.toLowerCase().includes(query))
+    filtered = filtered.filter(
+      p =>
+        p.title.toLowerCase().includes(query) ||
+        p.content.toLowerCase().includes(query) ||
+        p.tags.some(tag => tag.toLowerCase().includes(query))
     );
   }
-  
+
   // 按使用次数排序
   return filtered.sort((a, b) => b.usage - a.usage);
 });
@@ -160,7 +166,7 @@ function selectPrompt(prompt: Prompt) {
   // 增加使用次数
   prompt.usage++;
   savePrompts();
-  
+
   emit('select-prompt', prompt);
   emit('update:visible', false);
   ElMessage.success(`已选择提示词: ${prompt.title}`);
@@ -194,17 +200,19 @@ function editPrompt(prompt: Prompt) {
 // 保存提示词
 function savePrompt() {
   if (!editingPrompt.value) return;
-  
+
   const { title, content, category } = editingPrompt.value;
-  
+
   if (!title.trim() || !content.trim()) {
     ElMessage.warning('标题和内容不能为空');
     return;
   }
-  
+
   if (editingPrompt.value.id) {
     // 更新现有提示词
-    const index = prompts.value.findIndex(p => p.id === editingPrompt.value!.id);
+    const index = prompts.value.findIndex(
+      p => p.id === editingPrompt.value!.id
+    );
     if (index > -1) {
       prompts.value[index] = {
         ...editingPrompt.value,
@@ -221,7 +229,7 @@ function savePrompt() {
     };
     prompts.value.push(newPrompt);
   }
-  
+
   savePrompts();
   showPromptForm.value = false;
   editingPrompt.value = null;
@@ -234,7 +242,7 @@ function deletePrompt(prompt: Prompt) {
     ElMessage.warning('系统内置提示词不能删除');
     return;
   }
-  
+
   ElMessageBox.confirm('确认删除这个提示词吗？', '删除确认', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
@@ -298,7 +306,10 @@ function exportPrompts() {
 // 处理标签输入
 function handleTagInput(value: string) {
   if (!editingPrompt.value) return;
-  editingPrompt.value.tags = value.split(',').map(tag => tag.trim()).filter(Boolean);
+  editingPrompt.value.tags = value
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(Boolean);
 }
 </script>
 
@@ -323,8 +334,12 @@ function handleTagInput(value: string) {
             <Icon icon="ri:search-line" />
           </template>
         </el-input>
-        
-        <el-select v-model="selectedCategory" placeholder="选择分类" style="width: 120px">
+
+        <el-select
+          v-model="selectedCategory"
+          placeholder="选择分类"
+          style="width: 120px"
+        >
           <el-option
             v-for="category in categories"
             :key="category.value"
@@ -332,14 +347,14 @@ function handleTagInput(value: string) {
             :value="category.value"
           />
         </el-select>
-        
+
         <el-button type="primary" @click="createPrompt">
           <template #icon>
             <Icon icon="ri:add-line" />
           </template>
           新建
         </el-button>
-        
+
         <el-dropdown>
           <el-button>
             更多操作
@@ -359,9 +374,11 @@ function handleTagInput(value: string) {
           </template>
         </el-dropdown>
       </div>
-      
+
       <!-- 提示词列表 -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto"
+      >
         <div
           v-for="prompt in filteredPrompts"
           :key="prompt.id"
@@ -398,11 +415,11 @@ function handleTagInput(value: string) {
               </el-dropdown>
             </div>
           </div>
-          
+
           <p class="text-gray-600 text-xs mb-3 line-clamp-3">
             {{ prompt.content }}
           </p>
-          
+
           <div class="flex items-center justify-between text-xs text-gray-500">
             <div class="flex items-center space-x-2">
               <span class="bg-gray-100 px-2 py-1 rounded">
@@ -411,7 +428,7 @@ function handleTagInput(value: string) {
               <span>使用 {{ prompt.usage }} 次</span>
             </div>
           </div>
-          
+
           <div v-if="prompt.tags.length > 0" class="flex flex-wrap gap-1 mt-2">
             <span
               v-for="tag in prompt.tags.slice(0, 3)"
@@ -426,7 +443,7 @@ function handleTagInput(value: string) {
           </div>
         </div>
       </div>
-      
+
       <!-- 空状态 -->
       <div v-if="filteredPrompts.length === 0" class="text-center py-12">
         <Icon icon="ri:file-text-line" class="text-4xl text-gray-300 mb-4" />
@@ -436,12 +453,12 @@ function handleTagInput(value: string) {
         </el-button>
       </div>
     </div>
-    
+
     <template #footer>
       <el-button @click="emit('update:visible', false)">关闭</el-button>
     </template>
   </el-dialog>
-  
+
   <!-- 提示词编辑对话框 -->
   <el-dialog
     v-model="showPromptForm"
@@ -452,7 +469,7 @@ function handleTagInput(value: string) {
       <el-form-item label="标题">
         <el-input v-model="editingPrompt.title" placeholder="输入提示词标题" />
       </el-form-item>
-      
+
       <el-form-item label="分类">
         <el-select v-model="editingPrompt.category" style="width: 200px">
           <el-option
@@ -463,7 +480,7 @@ function handleTagInput(value: string) {
           />
         </el-select>
       </el-form-item>
-      
+
       <el-form-item label="标签">
         <el-input
           :model-value="editingPrompt.tags.join(', ')"
@@ -471,7 +488,7 @@ function handleTagInput(value: string) {
           @input="handleTagInput"
         />
       </el-form-item>
-      
+
       <el-form-item label="内容">
         <el-input
           v-model="editingPrompt.content"
@@ -481,7 +498,7 @@ function handleTagInput(value: string) {
         />
       </el-form-item>
     </el-form>
-    
+
     <template #footer>
       <el-button @click="showPromptForm = false">取消</el-button>
       <el-button type="primary" @click="savePrompt">保存</el-button>
@@ -515,21 +532,21 @@ function handleTagInput(value: string) {
     background: #374151;
     border-color: #4b5563;
     color: #f3f4f6;
-    
+
     &:hover {
       border-color: #3b82f6;
       background: #4b5563;
     }
   }
-  
+
   .text-gray-800 {
     color: #f3f4f6 !important;
   }
-  
+
   .text-gray-600 {
     color: #d1d5db !important;
   }
-  
+
   .text-gray-500 {
     color: #9ca3af !important;
   }

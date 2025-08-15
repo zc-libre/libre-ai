@@ -11,28 +11,24 @@ const chatStore = useChatStore();
 const userStore = useUserStore();
 
 onMounted(async () => {
-  await fetch();
 });
 
-async function fetch() {
-  loading.value = true;
-  chatStore.conversationId = userStore.info.id;
-  chatStore.messages = await getMessages(userStore.info.id);
-  loading.value = false;
-}
 </script>
 
 <template>
-  <div class="chat-container">
-    <el-card class="view-container">
-      <Header title="AI聊天助手" @reload="fetch" />
-      <div class="chat-content">
-        <main ref="contentRef" class="view-main overflow-y-auto">
-          <Chat />
-        </main>
+  <div class="modern-chat-container">
+    <!-- 现代化全屏聊天界面 -->
+    <div class="chat-layout">
+      <!-- 优化的头部工具栏 -->
+      <!-- 聊天内容区域 -->
+      <div class="chat-main-content">
+        <Chat/>
+        <!-- 加载状态 -->
       </div>
-    </el-card>
+
+    </div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

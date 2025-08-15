@@ -92,7 +92,7 @@ class ChatStorage {
       tags: [],
       settings: settings || {}
     };
-    
+
     rooms.unshift(newRoom);
     this.saveChatRooms(rooms);
     return newRoom;
@@ -101,7 +101,7 @@ class ChatStorage {
   updateChatRoom(roomId: string, updates: Partial<ChatRoom>): void {
     const rooms = this.getChatRooms();
     const index = rooms.findIndex(room => room.id === roomId);
-    
+
     if (index !== -1) {
       rooms[index] = {
         ...rooms[index],
@@ -116,34 +116,43 @@ class ChatStorage {
     const rooms = this.getChatRooms();
     const filteredRooms = rooms.filter(room => room.id !== roomId);
     this.saveChatRooms(filteredRooms);
-    
+
     // 同时删除该聊天室的所有消息
     this.clearRoomMessages(roomId);
   }
 
   // 消息管理
   getRoomMessages(roomId: string): ChatMessage[] {
-    const allMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
+    const allMessages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
     return allMessages.filter(msg => msg.roomId === roomId);
   }
 
   saveMessage(message: ChatMessage): void {
-    const allMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
+    const allMessages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
     allMessages.push(message);
     this.saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, allMessages);
-    
+
     // 更新聊天室的最后消息和消息计数
     this.updateRoomStats(message.roomId, message.message);
   }
 
   updateMessage(messageId: string, updates: Partial<ChatMessage>): void {
-    const allMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
+    const allMessages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
     const index = allMessages.findIndex(msg => msg.id === messageId);
-    
+
     if (index !== -1) {
       allMessages[index] = { ...allMessages[index], ...updates };
       this.saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, allMessages);
-      
+
       // 如果更新的是消息内容，也更新聊天室统计
       if (updates.message) {
         this.updateRoomStats(allMessages[index].roomId, updates.message);
@@ -152,16 +161,22 @@ class ChatStorage {
   }
 
   deleteMessage(messageId: string): void {
-    const allMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
+    const allMessages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
     const filteredMessages = allMessages.filter(msg => msg.id !== messageId);
     this.saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, filteredMessages);
   }
 
   clearRoomMessages(roomId: string): void {
-    const allMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
+    const allMessages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
     const filteredMessages = allMessages.filter(msg => msg.roomId !== roomId);
     this.saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, filteredMessages);
-    
+
     // 重置聊天室统计
     this.updateChatRoom(roomId, { messageCount: 0, lastMessage: undefined });
   }
@@ -169,12 +184,13 @@ class ChatStorage {
   private updateRoomStats(roomId: string, lastMessage: string): void {
     const rooms = this.getChatRooms();
     const room = rooms.find(r => r.id === roomId);
-    
+
     if (room) {
       const messageCount = this.getRoomMessages(roomId).length;
       this.updateChatRoom(roomId, {
         messageCount,
-        lastMessage: lastMessage.slice(0, 50) + (lastMessage.length > 50 ? '...' : '')
+        lastMessage:
+          lastMessage.slice(0, 50) + (lastMessage.length > 50 ? '...' : '')
       });
     }
   }
@@ -190,45 +206,60 @@ class ChatStorage {
 
   // 搜索功能
   searchMessages(query: string, roomId?: string): ChatMessage[] {
-    const allMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
-    const messages = roomId ? allMessages.filter(msg => msg.roomId === roomId) : allMessages;
-    
+    const allMessages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
+    const messages = roomId
+      ? allMessages.filter(msg => msg.roomId === roomId)
+      : allMessages;
+
     const lowerQuery = query.toLowerCase();
-    return messages.filter(msg => 
-      msg.message.toLowerCase().includes(lowerQuery) ||
-      msg.searchQuery?.toLowerCase().includes(lowerQuery) ||
-      msg.reasoning?.toLowerCase().includes(lowerQuery)
+    return messages.filter(
+      msg =>
+        msg.message.toLowerCase().includes(lowerQuery) ||
+        msg.searchQuery?.toLowerCase().includes(lowerQuery) ||
+        msg.reasoning?.toLowerCase().includes(lowerQuery)
     );
   }
 
   // 数据导出/导入
-  exportData(): { rooms: ChatRoom[], messages: ChatMessage[] } {
+  exportData(): { rooms: ChatRoom[]; messages: ChatMessage[] } {
     return {
       rooms: this.getChatRooms(),
-      messages: this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, [])
+      messages: this.loadFromStorage<ChatMessage[]>(
+        STORAGE_KEYS.CHAT_MESSAGES,
+        []
+      )
     };
   }
 
-  importData(data: { rooms: ChatRoom[], messages: ChatMessage[] }, merge = false): void {
+  importData(
+    data: { rooms: ChatRoom[]; messages: ChatMessage[] },
+    merge = false
+  ): void {
     if (merge) {
       // 合并数据
       const existingRooms = this.getChatRooms();
-      const existingMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
-      
+      const existingMessages = this.loadFromStorage<ChatMessage[]>(
+        STORAGE_KEYS.CHAT_MESSAGES,
+        []
+      );
+
       const newRooms = [...existingRooms];
       data.rooms.forEach(room => {
         if (!newRooms.find(r => r.id === room.id)) {
           newRooms.push(room);
         }
       });
-      
+
       const newMessages = [...existingMessages];
       data.messages.forEach(msg => {
         if (!newMessages.find(m => m.id === msg.id)) {
           newMessages.push(msg);
         }
       });
-      
+
       this.saveChatRooms(newRooms);
       this.saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, newMessages);
     } else {
@@ -245,8 +276,13 @@ class ChatStorage {
     const cutoffTime = cutoffDate.toISOString();
 
     // 清理过期消息
-    const allMessages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
-    const recentMessages = allMessages.filter(msg => msg.createTime > cutoffTime);
+    const allMessages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
+    const recentMessages = allMessages.filter(
+      msg => msg.createTime > cutoffTime
+    );
     this.saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, recentMessages);
 
     // 更新聊天室统计
@@ -255,23 +291,31 @@ class ChatStorage {
       const roomMessages = recentMessages.filter(msg => msg.roomId === room.id);
       this.updateChatRoom(room.id, {
         messageCount: roomMessages.length,
-        lastMessage: roomMessages.length > 0 
-          ? roomMessages[roomMessages.length - 1].message.slice(0, 50) + '...'
-          : undefined
+        lastMessage:
+          roomMessages.length > 0
+            ? roomMessages[roomMessages.length - 1].message.slice(0, 50) + '...'
+            : undefined
       });
     });
   }
 
   // 获取存储统计信息
-  getStorageStats(): { totalRooms: number, totalMessages: number, storageSize: string } {
+  getStorageStats(): {
+    totalRooms: number;
+    totalMessages: number;
+    storageSize: string;
+  } {
     const rooms = this.getChatRooms();
-    const messages = this.loadFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES, []);
-    
+    const messages = this.loadFromStorage<ChatMessage[]>(
+      STORAGE_KEYS.CHAT_MESSAGES,
+      []
+    );
+
     // 计算存储大小（近似值）
     const storageData = JSON.stringify({ rooms, messages });
     const sizeInBytes = new Blob([storageData]).size;
     const sizeInMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
-    
+
     return {
       totalRooms: rooms.length,
       totalMessages: messages.length,

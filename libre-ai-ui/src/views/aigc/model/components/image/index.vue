@@ -230,8 +230,6 @@ function handleDel(record: any) {
 </template>
 
 <style lang="scss" scoped>
-
-
 @keyframes rotate {
   from {
     transform: rotate(0deg);
@@ -285,11 +283,7 @@ function handleDel(record: any) {
   width: 200%;
   height: 200%;
   content: '';
-  background: radial-gradient(
-    circle,
-    rgb(147 51 234 / 8%) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgb(147 51 234 / 8%) 0%, transparent 70%);
   animation: rotate 20s linear infinite;
 }
 

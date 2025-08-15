@@ -43,3 +43,7 @@ export function genImage(data: any) {
 export function genMindMap(data: any) {
   return http.request('post', '/aigc/chat/mindmap', { data });
 }
+
+export function fetchRenameChatRoom(roomId: number, title: string) {
+  return http.request('put', `/aigc/chat/room/${roomId}`, { data: { title } });
+}

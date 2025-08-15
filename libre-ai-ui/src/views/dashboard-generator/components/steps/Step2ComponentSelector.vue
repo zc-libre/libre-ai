@@ -693,8 +693,6 @@ const updateData = () => {
 </script>
 
 <style scoped>
-
-
 /* 响应式设计 */
 @media (width <= 990px) {
   .component-card {

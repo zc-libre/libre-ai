@@ -250,8 +250,6 @@ const selectLayout = (layout: any) => {
 </script>
 
 <style scoped>
-
-
 /* 响应式设计 */
 @media (width <= 1200px) {
   .layout-card {

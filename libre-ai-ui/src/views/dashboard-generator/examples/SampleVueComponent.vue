@@ -252,8 +252,6 @@ const refreshData = () => {
 </script>
 
 <style scoped>
-
-
 /* 响应式调整 */
 @media (width <= 768px) {
   .chart-container {

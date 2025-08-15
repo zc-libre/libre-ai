@@ -223,8 +223,6 @@ function handleReturn() {
 </template>
 
 <style lang="scss" scoped>
-
-
 // 响应式优化
 @media (width <= 1024px) {
   .k-main-content {

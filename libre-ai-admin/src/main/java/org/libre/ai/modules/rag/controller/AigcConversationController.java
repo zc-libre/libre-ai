@@ -86,4 +86,23 @@ public class AigcConversationController {
 		return R.ok(aigcMessageService.addMessage(message));
 	}
 
+	/**
+	 * 更新聊天室设置
+	 */
+	@PutMapping("/{conversationId}/settings")
+	public R updateChatRoomSettings(@PathVariable String conversationId, @RequestBody AigcConversation settings) {
+		settings.setId(conversationId);
+		aigcMessageService.updateConversation(settings);
+		return R.ok();
+	}
+
+	/**
+	 * 获取聊天室设置
+	 */
+	@GetMapping("/{conversationId}/settings")
+	public R getChatRoomSettings(@PathVariable String conversationId) {
+		AigcConversation conversation = aigcMessageService.getConversation(conversationId);
+		return R.ok(conversation);
+	}
+
 }

@@ -37,6 +37,46 @@ public class AigcConversation implements Serializable {
 	private String title;
 
 	/**
+	 * 聊天模型
+	 */
+	private String chatModel;
+
+	/**
+	 * 是否使用上下文
+	 */
+	private Boolean usingContext;
+
+	/**
+	 * 最大上下文数量
+	 */
+	private Integer maxContextCount;
+
+	/**
+	 * 是否启用搜索
+	 */
+	private Boolean searchEnabled;
+
+	/**
+	 * 是否启用思考模式
+	 */
+	private Boolean thinkEnabled;
+
+	/**
+	 * 系统提示词
+	 */
+	private String systemPrompt;
+
+	/**
+	 * 温度参数
+	 */
+	private Double temperature;
+
+	/**
+	 * 最大Token数
+	 */
+	private Integer maxTokens;
+
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;

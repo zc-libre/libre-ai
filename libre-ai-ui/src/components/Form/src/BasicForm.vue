@@ -442,8 +442,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-
-
 // 响应式设计
 @media (width <= 768px) {
   .form-section {
@@ -714,5 +712,5 @@ html.dark {
       }
     }
   }
-}// 表单整体样式
+} // 表单整体样式
 </style>

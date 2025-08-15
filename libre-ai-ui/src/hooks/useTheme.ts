@@ -5,7 +5,9 @@ export type ThemeMode = 'light' | 'dark' | 'auto';
 const THEME_KEY = 'chat-theme-mode';
 
 // 主题状态
-const themeMode = ref<ThemeMode>((localStorage.getItem(THEME_KEY) as ThemeMode) || 'light');
+const themeMode = ref<ThemeMode>(
+  (localStorage.getItem(THEME_KEY) as ThemeMode) || 'light'
+);
 
 // 系统是否为深色模式
 const systemDark = ref(false);
@@ -22,8 +24,8 @@ const isDark = computed(() => {
 if (typeof window !== 'undefined') {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   systemDark.value = mediaQuery.matches;
-  
-  mediaQuery.addEventListener('change', (e) => {
+
+  mediaQuery.addEventListener('change', e => {
     systemDark.value = e.matches;
   });
 }
@@ -32,13 +34,13 @@ if (typeof window !== 'undefined') {
 watchEffect(() => {
   if (typeof document !== 'undefined') {
     const htmlElement = document.documentElement;
-    
+
     if (isDark.value) {
       htmlElement.classList.add('dark');
     } else {
       htmlElement.classList.remove('dark');
     }
-    
+
     // 保存到localStorage
     localStorage.setItem(THEME_KEY, themeMode.value);
   }
@@ -48,14 +50,14 @@ export function useTheme() {
   const setThemeMode = (mode: ThemeMode) => {
     themeMode.value = mode;
   };
-  
+
   const toggleTheme = () => {
     const modes: ThemeMode[] = ['light', 'dark', 'auto'];
     const currentIndex = modes.indexOf(themeMode.value);
     const nextIndex = (currentIndex + 1) % modes.length;
     setThemeMode(modes[nextIndex]);
   };
-  
+
   const getThemeIcon = () => {
     switch (themeMode.value) {
       case 'light':
@@ -68,7 +70,7 @@ export function useTheme() {
         return 'ri:sun-line';
     }
   };
-  
+
   const getThemeText = () => {
     switch (themeMode.value) {
       case 'light':
@@ -81,7 +83,7 @@ export function useTheme() {
         return '浅色模式';
     }
   };
-  
+
   return {
     themeMode: readonly(themeMode),
     isDark: readonly(isDark),

@@ -300,8 +300,6 @@ const getExampleTips = () => {
 </script>
 
 <style scoped>
-
-
 /* 响应式设计 - 与项目整体断点保持一致 */
 @media (width <= 990px) {
   .purpose-card {

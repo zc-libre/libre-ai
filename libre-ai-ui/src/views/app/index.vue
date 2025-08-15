@@ -419,8 +419,6 @@ function handleSearch() {
 </template>
 
 <style lang="scss" scoped>
-
-
 // 响应式优化
 @media (width <= 640px) {
   .header-section {

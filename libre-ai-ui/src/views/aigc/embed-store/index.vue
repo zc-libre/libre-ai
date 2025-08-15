@@ -511,8 +511,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-
-
 /* 响应式设计 */
 @media (width <= 990px) {
   .header-section {

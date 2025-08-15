@@ -173,8 +173,6 @@ const actionColumn = reactive({
 </template>
 
 <style lang="scss" scoped>
-
-
 @keyframes rotate {
   from {
     transform: rotate(0deg);
@@ -216,11 +214,7 @@ const actionColumn = reactive({
   width: 200%;
   height: 200%;
   content: '';
-  background: radial-gradient(
-    circle,
-    rgb(59 130 246 / 8%) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgb(59 130 246 / 8%) 0%, transparent 70%);
   animation: rotate 20s linear infinite;
 }
 

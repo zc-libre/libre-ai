@@ -106,8 +106,6 @@ const modelTabs = [
 </template>
 
 <style scoped>
-
-
 /* 响应式设计优化 */
 @media (width <= 960px) {
   .view-container {

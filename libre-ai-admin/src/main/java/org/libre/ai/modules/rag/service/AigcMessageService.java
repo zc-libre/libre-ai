@@ -35,6 +35,11 @@ public interface AigcMessageService extends IService<AigcMessage> {
 	 */
 	void delConversation(String conversationId);
 
+	/**
+	 * 获取会话详情
+	 */
+	AigcConversation getConversation(String conversationId);
+
 	AigcMessage addMessage(AigcMessage message);
 
 	void clearMessage(String conversationId);

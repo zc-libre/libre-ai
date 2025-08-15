@@ -223,8 +223,6 @@ function handleDel(record: any) {
 </template>
 
 <style lang="scss" scoped>
-
-
 @keyframes pulse {
   0%,
   100% {

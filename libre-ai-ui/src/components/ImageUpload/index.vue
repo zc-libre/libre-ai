@@ -43,7 +43,7 @@ const imageUrls = computed({
 });
 
 // 上传前验证
-const beforeUpload: UploadProps['beforeUpload'] = (file) => {
+const beforeUpload: UploadProps['beforeUpload'] = file => {
   const isImage = file.type.startsWith('image/');
   const isLt10M = file.size / 1024 / 1024 < props.maxSize;
 
@@ -55,19 +55,19 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
     ElMessage.error(`图片大小不能超过 ${props.maxSize}MB!`);
     return false;
   }
-  
+
   return true;
 };
 
 // 上传成功
 const handleSuccess = (response: any, file: any) => {
   uploading.value = false;
-  
+
   // 这里应该处理后端返回的图片URL
   // 暂时使用本地预览URL
   const url = URL.createObjectURL(file.raw);
   imageUrls.value = [...imageUrls.value, url];
-  
+
   ElMessage.success('图片上传成功');
 };
 
@@ -107,17 +107,17 @@ const handleExceed = () => {
 // 自定义上传
 const customUpload = (options: any) => {
   const { file } = options;
-  
+
   // 创建本地预览URL（实际项目中应该上传到服务器）
   const url = URL.createObjectURL(file);
-  
+
   // 模拟上传过程
   setTimeout(() => {
     imageUrls.value = [...imageUrls.value, url];
     uploading.value = false;
     ElMessage.success('图片上传成功');
   }, 1000);
-  
+
   uploading.value = true;
 };
 </script>
@@ -146,21 +146,24 @@ const customUpload = (options: any) => {
         <div class="text-xs text-gray-500 mt-1">点击上传</div>
       </div>
       <div v-else class="upload-loading">
-        <Icon icon="ri:loader-4-line" class="text-2xl text-blue-500 animate-spin" />
+        <Icon
+          icon="ri:loader-4-line"
+          class="text-2xl text-blue-500 animate-spin"
+        />
         <div class="text-xs text-blue-500 mt-1">上传中...</div>
       </div>
     </el-upload>
 
     <!-- 图片预览对话框 -->
-    <el-dialog 
-      v-model="dialogVisible" 
+    <el-dialog
+      v-model="dialogVisible"
       title="图片预览"
       width="70%"
       :modal="true"
     >
       <div class="text-center">
-        <img 
-          :src="dialogImageUrl" 
+        <img
+          :src="dialogImageUrl"
           alt="预览图片"
           class="max-w-full max-h-96 object-contain"
         />
@@ -171,7 +174,8 @@ const customUpload = (options: any) => {
     <div v-if="maxCount > 1" class="upload-tip">
       <div class="text-xs text-gray-500">
         <Icon icon="ri:information-line" class="mr-1" />
-        支持 {{ accept === 'image/*' ? '图片' : accept }} 格式，单个文件不超过 {{ maxSize }}MB，最多 {{ maxCount }} 张
+        支持 {{ accept === 'image/*' ? '图片' : accept }} 格式，单个文件不超过
+        {{ maxSize }}MB，最多 {{ maxCount }} 张
       </div>
     </div>
   </div>

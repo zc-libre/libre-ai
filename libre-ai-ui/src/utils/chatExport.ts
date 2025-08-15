@@ -35,8 +35,9 @@ export async function exportChatAsImage(options: ExportOptions = {}) {
     tempContainer.style.width = '800px';
     tempContainer.style.backgroundColor = backgroundColor;
     tempContainer.style.padding = '20px';
-    tempContainer.style.fontFamily = '"Inter", "Helvetica Neue", Arial, sans-serif';
-    
+    tempContainer.style.fontFamily =
+      '"Inter", "Helvetica Neue", Arial, sans-serif';
+
     document.body.appendChild(tempContainer);
 
     // 添加标题（如果需要）
@@ -61,21 +62,26 @@ export async function exportChatAsImage(options: ExportOptions = {}) {
 
     // 克隆聊天内容
     const chatClone = chatContainer.cloneNode(true) as HTMLElement;
-    
+
     // 清理克隆元素的样式，确保在截图容器中正确显示
     chatClone.style.width = '100%';
     chatClone.style.maxWidth = 'none';
     chatClone.style.padding = '0';
     chatClone.style.margin = '0';
-    
+
     // 移除一些可能影响截图的元素
-    const elementsToRemove = chatClone.querySelectorAll('.el-loading-mask, .el-overlay, .el-message, .el-notification');
+    const elementsToRemove = chatClone.querySelectorAll(
+      '.el-loading-mask, .el-overlay, .el-message, .el-notification'
+    );
     elementsToRemove.forEach(el => el.remove());
-    
+
     // 确保按钮等交互元素在截图中不显示
     const buttons = chatClone.querySelectorAll('button, .el-button');
     buttons.forEach((btn: any) => {
-      if (btn.textContent?.includes('停止响应') || btn.textContent?.includes('重新生成')) {
+      if (
+        btn.textContent?.includes('停止响应') ||
+        btn.textContent?.includes('重新生成')
+      ) {
         btn.style.display = 'none';
       }
     });
@@ -103,7 +109,7 @@ export async function exportChatAsImage(options: ExportOptions = {}) {
     // 转换为下载链接
     const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
     const dataUrl = canvas.toDataURL(mimeType, quality);
-    
+
     // 创建下载链接并触发下载
     const link = document.createElement('a');
     link.download = `${filename}.${format}`;
@@ -127,14 +133,16 @@ export function exportChatAsText(): string {
   }
 
   const messages = chatContainer.querySelectorAll('.message-container');
-  const chatText = Array.from(messages).map((msg: any) => {
-    const isUser = msg.querySelector('.message-bubble-user');
-    const text = msg.querySelector('.text-content')?.textContent || '';
-    const time = msg.querySelector('.text-xs')?.textContent || '';
-    
-    const role = isUser ? '用户' : 'AI助手';
-    return `[${time}] ${role}:\n${text}\n`;
-  }).join('\n');
+  const chatText = Array.from(messages)
+    .map((msg: any) => {
+      const isUser = msg.querySelector('.message-bubble-user');
+      const text = msg.querySelector('.text-content')?.textContent || '';
+      const time = msg.querySelector('.text-xs')?.textContent || '';
+
+      const role = isUser ? '用户' : 'AI助手';
+      return `[${time}] ${role}:\n${text}\n`;
+    })
+    .join('\n');
 
   const fullText = `AI 聊天记录
 导出时间：${new Date().toLocaleString('zh-CN')}
@@ -144,7 +152,7 @@ ${chatText}`;
 
   // 复制到剪贴板
   navigator.clipboard.writeText(fullText).catch(console.error);
-  
+
   return fullText;
 }
 
@@ -162,9 +170,11 @@ export function exportChatAsJSON() {
     const isUser = msg.querySelector('.message-bubble-user');
     const text = msg.querySelector('.text-content')?.textContent || '';
     const time = msg.querySelector('.text-xs')?.textContent || '';
-    const searchQuery = msg.querySelector('[class*="search-query"]')?.textContent || '';
-    const reasoning = msg.querySelector('[class*="reasoning"]')?.textContent || '';
-    
+    const searchQuery =
+      msg.querySelector('[class*="search-query"]')?.textContent || '';
+    const reasoning =
+      msg.querySelector('[class*="reasoning"]')?.textContent || '';
+
     return {
       role: isUser ? 'user' : 'assistant',
       content: text,
@@ -185,7 +195,7 @@ export function exportChatAsJSON() {
   };
 
   const jsonString = JSON.stringify(exportData, null, 2);
-  
+
   // 创建下载链接
   const blob = new Blob([jsonString], { type: 'application/json' });
   const url = URL.createObjectURL(blob);

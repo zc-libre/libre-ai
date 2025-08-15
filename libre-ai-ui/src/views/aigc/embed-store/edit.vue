@@ -499,7 +499,6 @@ defineExpose({ show });
               inline-prompt
               :active-icon="CircleCheck"
               style="
-
                 --el-switch-on-color: #10b981;
                 --el-switch-off-color: #ef4444;
               "
@@ -528,8 +527,6 @@ defineExpose({ show });
 </template>
 
 <style lang="scss" scoped>
-
-
 // 响应式设计
 @media (width <= 768px) {
   .dialog-header {
@@ -810,5 +807,5 @@ html.dark {
     background: #1e293b;
     border-top-color: #334155;
   }
-}// 弹窗样式
+} // 弹窗样式
 </style>

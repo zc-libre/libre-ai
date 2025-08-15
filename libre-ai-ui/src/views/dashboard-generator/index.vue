@@ -253,8 +253,6 @@ watch(
 </script>
 
 <style scoped>
-
-
 /* 响应式高度调整 */
 @media (width <= 760px) {
   .dashboard-generator-app {

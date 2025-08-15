@@ -141,8 +141,6 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-
-
 /* 响应式设计 - 简化版本 */
 @media (width <= 990px) {
   .basic-table .data-table :deep(.el-table) {
